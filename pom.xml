@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<!--
+ * Copyright (c) 2013, bibrarian.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met: 1) Redistributions of source code must retain the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer. 2) Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3) Neither the name of the bibrarian.com nor
+ * the names of its contributors may be used to endorse or promote
+ * products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.jcabi</groupId>
+        <artifactId>parent</artifactId>
+        <version>0.7.13</version>
+    </parent>
+    <groupId>com.bibrarian</groupId>
+    <artifactId>bibrarian</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>bibrarian</name>
+    <modules>
+        <module>bibrarian-web</module>
+    </modules>
+    <description>Bibrarian.com, Bibliography Manager</description>
+    <url>http://www.bibrarian.com</url>
+    <inceptionYear>2013</inceptionYear>
+    <organization>
+        <name>Bibrarian Inc.</name>
+        <url>http://www.bibrarian.com</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>BSD</name>
+            <url>http://maven.fazend.com/LICENSE.txt</url>
+            <distribution>site</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>1</id>
+            <name>Yegor Bugayenko</name>
+            <email>yegor@tpc2.com</email>
+            <organization>TPC2</organization>
+            <organizationUrl>http://www.tpc2.com</organizationUrl>
+            <roles>
+                <role>Architect</role>
+                <role>Developer</role>
+            </roles>
+            <timezone>-7</timezone>
+        </developer>
+    </developers>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/yegor256/bibrarian/issues</url>
+    </issueManagement>
+    <scm>
+        <connection>scm:git:git@github.com:yegor256/bibrarian.git</connection>
+        <developerConnection>scm:git:git@github.com:yegor256/bibrarian.git</developerConnection>
+        <url>https://github.com/yegor256/bibrarian</url>
+    </scm>
+    <ciManagement>
+        <system>jenkins</system>
+        <url>http://ci.fazend.com:8080/job/bibrarian/</url>
+    </ciManagement>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>repo.bibrarian.com</id>
+            <url>s3://repo.bibrarian.com/snapshot</url>
+        </snapshotRepository>
+        <repository>
+            <id>repo.bibrarian.com</id>
+            <url>s3://repo.bibrarian.com/release</url>
+        </repository>
+        <site>
+            <id>maven.bibrarian.com</id>
+            <url>s3://maven.bibrarian.com/</url>
+        </site>
+    </distributionManagement>
+</project>
