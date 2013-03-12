@@ -188,7 +188,7 @@
                             <goal>deploy</goal>
                         </goals>
                         <configuration>
-                            <name>bibrarian-web</name>
+                            <name>bibrarian</name>
                             <artifacts>
                                 <artifact>${project.groupId}:${project.artifactId}:war::${project.version}</artifact>
                             </artifacts>
