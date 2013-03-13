@@ -192,7 +192,7 @@
                             <artifacts>
                                 <artifact>${project.groupId}:${project.artifactId}:war::${project.version}</artifact>
                             </artifacts>
-                            <procfile>web: java -Xmx256m -jar ./${artfactId}.war ${PORT}</procfile>
+                            <procfile>web: java -Xmx256m -jar ./${project.artifactId}.war ${PORT}</procfile>
                         </configuration>
                     </execution>
                 </executions>
