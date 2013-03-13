@@ -98,4 +98,10 @@
             <url>s3://maven.bibrarian.com/</url>
         </site>
     </distributionManagement>
+    <repositories>
+        <repository>
+            <id>repo.bibrarian.com</id>
+            <url>s3://repo.bibrarian.com/snapshot</url>
+        </repository>
+    </repositories>
 </project>
