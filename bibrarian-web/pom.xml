@@ -133,6 +133,15 @@
                                 <Bibrarian-Version>${project.version}</Bibrarian-Version>
                                 <Bibrarian-Revision>${buildNumber}</Bibrarian-Revision>
                                 <Bibrarian-Date>${maven.build.timestamp}</Bibrarian-Date>
+                                <Bibrarian-FbId>${fb.id}</Bibrarian-FbId>
+                                <Bibrarian-FbSecret>${fb.secret}</Bibrarian-FbSecret>
+                                <Bibrarian-GoogleId>${google.id}</Bibrarian-GoogleId>
+                                <Bibrarian-GoogleSecret>${google.secret}</Bibrarian-GoogleSecret>
+                                <Bibrarian-SecurityKey>${security.key}</Bibrarian-SecurityKey>
+                                <Bibrarian-SecuritySalt>${security.salt}</Bibrarian-SecuritySalt>
+                                <Bibrarian-AwsDynamoKey>${dynamo.key}</Bibrarian-AwsDynamoKey>
+                                <Bibrarian-AwsDynamoSecret>${dynamo.secret}</Bibrarian-AwsDynamoSecret>
+                                <Bibrarian-AwsDynamoTable>${dynamo.prefix}</Bibrarian-AwsDynamoTable>
                             </manifestEntries>
                             <manifest>
                                 <mainClass>com.rexsl.standalone.RexslMain</mainClass>
