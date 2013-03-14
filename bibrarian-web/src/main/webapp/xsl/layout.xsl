@@ -43,11 +43,13 @@
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">
                         <xsl:text>/css/screen.css?</xsl:text>
+                        <xsl:value-of select="/page/version/revision"/>
                     </xsl:attribute>
                 </link>
                 <link rel="icon" type="image/gif">
                     <xsl:attribute name="href">
-                        <xsl:text>http://img.bibrarian.com/favicon.gif</xsl:text>
+                        <xsl:text>http://img.bibrarian.com/favicon.ico?</xsl:text>
+                        <xsl:value-of select="/page/version/revision"/>
                     </xsl:attribute>
                 </link>
                 <xsl:call-template name="head"/>
@@ -55,6 +57,14 @@
             <body>
                 <xsl:apply-templates select="version"/>
                 <div id="content">
+                    <p>
+                        <img alt="bibrarian logo">
+                            <xsl:attribute name="src">
+                                <xsl:text>http://img.bibrarian.com/logo.png?</xsl:text>
+                                <xsl:value-of select="/page/version/revision"/>
+                            </xsl:attribute>
+                        </link>
+                    </p>
                     <xsl:call-template name="content"/>
                 </div>
             </body>
