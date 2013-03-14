@@ -63,7 +63,7 @@
                                 <xsl:text>http://img.bibrarian.com/logo.png?</xsl:text>
                                 <xsl:value-of select="/page/version/revision"/>
                             </xsl:attribute>
-                        </link>
+                        </img>
                     </p>
                     <xsl:call-template name="content"/>
                 </div>
