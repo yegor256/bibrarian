@@ -53,6 +53,16 @@
                     </xsl:attribute>
                 </link>
                 <xsl:call-template name="head"/>
+                <script type="text/javascript"><![CDATA[
+                  var _gaq = _gaq || [];
+                  _gaq.push(['_setAccount', 'UA-1963507-26']);
+                  _gaq.push(['_trackPageview']);
+                  (function() {
+                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                  })();
+                ]]></script>
             </head>
             <body>
                 <xsl:apply-templates select="version"/>
@@ -65,7 +75,36 @@
                             </xsl:attribute>
                         </img>
                     </p>
-                    <xsl:call-template name="content"/>
+                    <xsl:apply-templates select="flash"/>
+                    <xsl:choose>
+                        <xsl:when test="/page/identity">
+                            <xsl:apply-templates select="identity"/>
+                            <xsl:call-template name="content"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:call-template name="login"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    <p style="border-top: 1px solid #ccc; margin-top: 2em; padding-top: 1em;">
+                        <xsl:text>bibraian.com is an open source project, hosted at </xsl:text>
+                        <a href="https://github.com/yegor256/bibrarian">
+                            <xsl:text>github</xsl:text>
+                        </a>
+                        <xsl:text>. The service is absolutely free of charge, since it is sponsored by </xsl:text>
+                        <a href="http://www.tpc2.com/">
+                            <xsl:text>tpc2.com</xsl:text>
+                        </a>
+                        <xsl:text>. See also terms of use, privacy policy and license agreement at </xsl:text>
+                        <a href="/misc/LICENSE.txt">
+                            <xsl:text>LICENSE.txt</xsl:text>
+                        </a>
+                        <xsl:text>.</xsl:text>
+                        <xsl:text> This website is using </xsl:text>
+                        <a href="http://www.rexsl.com/">
+                            <xsl:text>ReXSL</xsl:text>
+                        </a>
+                        <xsl:text>, Java RESTful development framework.</xsl:text>
+                    </p>
                 </div>
             </body>
         </html>
@@ -93,5 +132,67 @@
                 <xsl:with-param name="millis" select="/page/millis"/>
             </xsl:call-template>
         </div>
+    </xsl:template>
+    <xsl:template match="flash">
+        <div id="flash">
+            <xsl:attribute name="class">
+                <xsl:value-of select="level"/>
+            </xsl:attribute>
+            <xsl:value-of select="message"/>
+        </div>
+    </xsl:template>
+    <xsl:template match="identity">
+        <p>
+            <img style="width: 25px; height: 25px;">
+                <xsl:attribute name="src">
+                    <xsl:value-of select="photo"/>
+                </xsl:attribute>
+                <xsl:attribute name="alt">
+                    <xsl:value-of select="name"/>
+                </xsl:attribute>
+            </img>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="name"/>
+            <img style="margin-left: 0.5em;" alt="account type">
+                <xsl:attribute name="src">
+                    <xsl:text>http://img.bibrarian.com/icons/</xsl:text>
+                    <xsl:choose>
+                        <xsl:when test="starts-with(urn, 'urn:facebook:')">
+                            <xsl:text>facebook</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="starts-with(urn, 'urn:google:')">
+                            <xsl:text>google</xsl:text>
+                        </xsl:when>
+                    </xsl:choose>
+                    <xsl:text>-small.png</xsl:text>
+                </xsl:attribute>
+            </img>
+            <xsl:text> </xsl:text>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='auth-logout']/@href"/>
+                </xsl:attribute>
+                <xsl:text>logout</xsl:text>
+            </a>
+        </p>
+    </xsl:template>
+    <xsl:template name="login">
+        <p>
+            <xsl:text>To start, login using one of your accounts at:</xsl:text>
+        </p>
+        <p>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
+                </xsl:attribute>
+                <img class="auth-icon" src="http://img.bibrarian.com/icons/facebook.png" alt="facebook icon"/>
+            </a>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
+                </xsl:attribute>
+                <img class="auth-icon" src="http://img.bibrarian.com/icons/google.png" alt="google icon"/>
+            </a>
+        </p>
     </xsl:template>
 </xsl:stylesheet>
