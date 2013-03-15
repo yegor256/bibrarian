@@ -29,27 +29,32 @@
  */
 package com.bibrarian.web;
 
+import com.bibrarian.om.Hypothesis;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.PageBuilder;
+import com.rexsl.page.inset.FlashInset;
+import java.util.logging.Level;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
- * Index resource, front page of the website.
+ * CRUD of Hypothesizes.
  *
  * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
  */
-@Path("/")
+@Path("/h")
 @Loggable(Loggable.DEBUG)
-public final class IndexRs extends BaseRs {
+public final class HypothesizesRs extends BaseRs {
 
     /**
-     * Get entrance page JAX-RS response.
+     * Get them all.
      * @return The JAX-RS response
      * @throws Exception If some problem inside
      */
@@ -57,12 +62,68 @@ public final class IndexRs extends BaseRs {
     @Path("/")
     public Response index() throws Exception {
         return new PageBuilder()
-            .stylesheet("/xsl/index.xsl")
+            .stylesheet("/xsl/hypothesizes.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new JaxbBundle("message", "Hello, world!"))
+            .append(
+                JaxbGroup.build(
+                    this.bibrarian().hypothesizes(),
+                    "hypothesizes"
+                )
+            )
             .render()
             .build();
+    }
+
+    /**
+     * Remove by label.
+     * @param label The label to use
+     * @return The JAX-RS response
+     * @throws Exception If some problem inside
+     */
+    @GET
+    @Path("/remove")
+    public Response remove(@QueryParam("label") @NotNull final String label)
+        throws Exception {
+        if (!this.bibrarian().hypothesizes().remove(label)) {
+            throw FlashInset.forward(
+                this.indexUri(),
+                "hypothesis was NOT deleted",
+                Level.WARNING
+            );
+        }
+        throw FlashInset.forward(
+            this.indexUri(),
+            "hypothesis was deleted successfully",
+            Level.INFO
+        );
+    }
+
+    /**
+     * Add new hypothesis.
+     * @param label The label to use
+     * @param description The description to use
+     * @return The JAX-RS response
+     * @throws Exception If some problem inside
+     */
+    @GET
+    @Path("/add")
+    public Response add(@QueryParam("label") @NotNull final String label,
+        @QueryParam("description") @NotNull final String description)
+        throws Exception {
+        if (!this.bibrarian().hypothesizes()
+            .add(new Hypothesis.Simple(label, description))) {
+            throw FlashInset.forward(
+                this.indexUri(),
+                "hypothesis was NOT added",
+                Level.WARNING
+            );
+        }
+        throw FlashInset.forward(
+            this.indexUri(),
+            "hypothesis was added successfully",
+            Level.INFO
+        );
     }
 
 }

@@ -29,27 +29,49 @@
  */
 package com.bibrarian.web;
 
+import com.bibrarian.om.Artifact;
+import com.bibrarian.om.Book;
+import com.bibrarian.om.Discovery;
+import com.bibrarian.om.Hypothesis;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.PageBuilder;
+import com.rexsl.page.inset.FlashInset;
+import java.util.logging.Level;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
- * Index resource, front page of the website.
+ * Single artifact.
  *
  * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
  */
-@Path("/")
+@Path("/a")
 @Loggable(Loggable.DEBUG)
-public final class IndexRs extends BaseRs {
+public final class ArtifactRs extends BaseRs {
 
     /**
-     * Get entrance page JAX-RS response.
+     * Artifact to work with.
+     */
+    private transient Artifact artifact;
+
+    /**
+     * Set artifact.
+     * @param label The label of it
+     */
+    @QueryParam("label")
+    public void setArtifact(@NotNull final String label) {
+        this.artifact = this.bibrarian().artifacts()
+            .fetch(new Book.Simple(label));
+    }
+
+    /**
+     * Show full details.
      * @return The JAX-RS response
      * @throws Exception If some problem inside
      */
@@ -57,12 +79,48 @@ public final class IndexRs extends BaseRs {
     @Path("/")
     public Response index() throws Exception {
         return new PageBuilder()
-            .stylesheet("/xsl/index.xsl")
+            .stylesheet("/xsl/artifact.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new JaxbBundle("message", "Hello, world!"))
+            .append(new JaxbArtifact(this.artifact))
             .render()
             .build();
+    }
+
+    /**
+     * Add new discovery.
+     * @param label Book label
+     * @param quote The quote
+     * @param pages The pages
+     * @param relevance The relevance
+     * @return The JAX-RS response
+     * @throws Exception If some problem inside
+     */
+    @GET
+    @Path("/add")
+    public Response add(@QueryParam("label") @NotNull final String label,
+        @QueryParam("quote") @NotNull final String quote,
+        @QueryParam("pages") @NotNull final String pages,
+        @QueryParam("relevance") @NotNull final String relevance)
+        throws Exception {
+        final Discovery discovery = new Discovery.Simple(
+            new Hypothesis.Simple(label),
+            quote,
+            pages,
+            Float.parseFloat(relevance)
+        );
+        if (!this.artifact.discoveries().add(discovery)) {
+            throw FlashInset.forward(
+                this.indexUri(),
+                "discovery was NOT added",
+                Level.WARNING
+            );
+        }
+        throw FlashInset.forward(
+            this.indexUri(),
+            "discovery was added successfully",
+            Level.INFO
+        );
     }
 
 }

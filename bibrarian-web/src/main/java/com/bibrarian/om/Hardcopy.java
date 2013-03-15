@@ -27,42 +27,23 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.web;
+package com.bibrarian.om;
 
-import com.jcabi.aspects.Loggable;
-import com.rexsl.page.JaxbBundle;
-import com.rexsl.page.PageBuilder;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import com.jcabi.aspects.Immutable;
 
 /**
- * Index resource, front page of the website.
- *
- * <p>The class is mutable and NOT thread-safe.
+ * Scanned and saved copy of the artifact.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
-@Path("/")
-@Loggable(Loggable.DEBUG)
-public final class IndexRs extends BaseRs {
+@Immutable
+public interface Hardcopy {
 
     /**
-     * Get entrance page JAX-RS response.
-     * @return The JAX-RS response
-     * @throws Exception If some problem inside
+     * Names of S3 file (inside {@code s3://docs.bibrarian.com}).
+     * @return File name
      */
-    @GET
-    @Path("/")
-    public Response index() throws Exception {
-        return new PageBuilder()
-            .stylesheet("/xsl/index.xsl")
-            .build(EmptyPage.class)
-            .init(this)
-            .append(new JaxbBundle("message", "Hello, world!"))
-            .render()
-            .build();
-    }
+    String location();
 
 }

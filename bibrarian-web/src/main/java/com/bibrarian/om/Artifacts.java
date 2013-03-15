@@ -27,42 +27,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.web;
+package com.bibrarian.om;
 
-import com.jcabi.aspects.Loggable;
-import com.rexsl.page.JaxbBundle;
-import com.rexsl.page.PageBuilder;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import com.jcabi.aspects.Immutable;
+import java.util.Set;
 
 /**
- * Index resource, front page of the website.
- *
- * <p>The class is mutable and NOT thread-safe.
+ * Collection of artifacts.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
-@Path("/")
-@Loggable(Loggable.DEBUG)
-public final class IndexRs extends BaseRs {
+@Immutable
+public interface Artifacts extends Set<Artifact> {
 
     /**
-     * Get entrance page JAX-RS response.
-     * @return The JAX-RS response
-     * @throws Exception If some problem inside
+     * Search it using the query.
+     * @param query Query to use for searching
+     * @return The artifacts
      */
-    @GET
-    @Path("/")
-    public Response index() throws Exception {
-        return new PageBuilder()
-            .stylesheet("/xsl/index.xsl")
-            .build(EmptyPage.class)
-            .init(this)
-            .append(new JaxbBundle("message", "Hello, world!"))
-            .render()
-            .build();
-    }
+    Artifacts query(Query query);
+
+    /**
+     * Get an artifact by the label (creates a new one if it wasn't
+     * used before).
+     * @param book The book it is related to
+     * @return The artifact
+     */
+    Artifact fetch(Book book);
 
 }
