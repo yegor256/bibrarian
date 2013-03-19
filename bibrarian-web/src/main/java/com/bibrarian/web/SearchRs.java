@@ -29,14 +29,21 @@
  */
 package com.bibrarian.web;
 
+import com.bibrarian.om.Artifact;
+import com.bibrarian.om.Discovery;
+import com.bibrarian.om.Hypothesis;
 import com.bibrarian.om.Query;
 import com.jcabi.aspects.Loggable;
+import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.JaxbGroup;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import java.util.Set;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import org.w3c.dom.Element;
 
 /**
  * Search resource.
@@ -65,13 +72,57 @@ public final class SearchRs extends BaseRs {
             .build(EmptyPage.class)
             .init(this)
             .append(
-                JaxbGroup.build(
-                    this.bibrarian().artifacts().query(new Query.Simple(query)),
-                    "artifacts"
+                this.jaxb(
+                    this.bibrarian().artifacts().query(new Query.Simple(query))
                 )
             )
             .render()
             .build();
+    }
+
+    /**
+     * Convert artifacts to a JAXB element.
+     * @param artifacts The list of them
+     * @return JAXB object
+     */
+    private Element jaxb(final Set<Artifact> artifacts) {
+        return new JaxbBundle.Group<Artifact>(artifacts) {
+            @Override
+            public Element toElement(final Artifact artifact) {
+                return new JaxbBundle("artifact")
+                    .add("book")
+                        .add("label", artifact.book().label()).up()
+                        .add("bibitem", artifact.book().bibitem()).up().up()
+                    .add("referat", artifact.referat()).up()
+                    .add(
+                        "discoveries",
+                        new JaxbBundle.Group<Discovery>(artifact.discoveries()) {
+                            @Override
+                            public Element toElement(final Discovery discovery) {
+                                return new JaxbBundle("discovery")
+                                    .add("label", discovery.hypothesis().label()).up()
+                                    .add("pages", discovery.pages()).up()
+                                    .add("quote", discovery.quote()).up()
+                                    .add("relevance", discovery.relevance()).up()
+                                    .add(
+                                        new Link(
+                                            "remove",
+                                            ArtifactRs.this.uriInfo()
+                                                .getBaseUriBuilder()
+                                                .clone()
+                                                .path(ArtifactRs.class)
+                                                .path(ArtifactRs.class, "remove")
+                                                .queryParam("label", "{label}")
+                                                .build(discovery.hypothesis().label())
+                                        )
+                                    )
+                                    .element();
+                            }
+                        }
+                    )
+                    .element();
+            }
+        }.element();
     }
 
 }

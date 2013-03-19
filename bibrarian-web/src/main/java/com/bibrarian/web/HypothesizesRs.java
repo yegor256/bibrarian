@@ -29,17 +29,24 @@
  */
 package com.bibrarian.web;
 
+import com.bibrarian.om.Artifact;
+import com.bibrarian.om.Discovery;
 import com.bibrarian.om.Hypothesis;
 import com.jcabi.aspects.Loggable;
+import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.JaxbGroup;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
+import java.net.URI;
+import java.util.Set;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import org.w3c.dom.Element;
 
 /**
  * CRUD of Hypothesizes.
@@ -65,12 +72,8 @@ public final class HypothesizesRs extends BaseRs {
             .stylesheet("/xsl/hypothesizes.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(
-                JaxbGroup.build(
-                    this.bibrarian().hypothesizes(),
-                    "hypothesizes"
-                )
-            )
+            .append(this.jaxb(this.bibrarian().hypothesizes()))
+            .append(new Link("add", "./add"))
             .render()
             .build();
     }
@@ -124,6 +127,35 @@ public final class HypothesizesRs extends BaseRs {
             "hypothesis was added successfully",
             Level.INFO
         );
+    }
+
+    /**
+     * Convert hypothesizes to a JAXB element.
+     * @param hypothesizes The list of them
+     * @return JAXB object
+     */
+    private Element jaxb(final Set<Hypothesis> hypothesizes) {
+        return new JaxbBundle.Group<Hypothesis>(hypothesizes) {
+            @Override
+            public Element toElement(final Hypothesis hypothesis) {
+                return new JaxbBundle("hypothesis")
+                    .add("label", hypothesis.label()).up()
+                    .add("description", hypothesis.description()).up()
+                    .add(
+                        new Link(
+                            "remove",
+                            HypothesizesRs.this.uriInfo()
+                                .getBaseUriBuilder()
+                                .clone()
+                                .path(HypothesizesRs.class)
+                                .path(HypothesizesRs.class, "remove")
+                                .queryParam("label", "{label}")
+                                .build(hypothesis.label())
+                        )
+                    )
+                    .element();
+            }
+        }.element();
     }
 
 }

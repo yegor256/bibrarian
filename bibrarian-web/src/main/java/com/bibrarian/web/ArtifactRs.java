@@ -34,14 +34,21 @@ import com.bibrarian.om.Book;
 import com.bibrarian.om.Discovery;
 import com.bibrarian.om.Hypothesis;
 import com.jcabi.aspects.Loggable;
+import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.JaxbGroup;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
+import java.net.URI;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import org.w3c.dom.Element;
 
 /**
  * Single artifact.
@@ -82,7 +89,7 @@ public final class ArtifactRs extends BaseRs {
             .stylesheet("/xsl/artifact.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new JaxbArtifact(this.artifact))
+            .append(this.jaxb(this.artifact))
             .render()
             .build();
     }
@@ -121,6 +128,104 @@ public final class ArtifactRs extends BaseRs {
             "discovery was added successfully",
             Level.INFO
         );
+    }
+
+    /**
+     * Remove discovery.
+     * @param label Book label
+     * @return The JAX-RS response
+     * @throws Exception If some problem inside
+     */
+    @GET
+    @Path("/remove")
+    public Response remove(@QueryParam("label") @NotNull final String label)
+        throws Exception {
+        final Discovery discovery = new Discovery.Simple(
+            new Hypothesis.Simple(label)
+        );
+        if (!this.artifact.discoveries().remove(discovery)) {
+            throw FlashInset.forward(
+                this.indexUri(),
+                "discovery was NOT removed",
+                Level.WARNING
+            );
+        }
+        throw FlashInset.forward(
+            this.indexUri(),
+            "discovery was removed successfully",
+            Level.INFO
+        );
+    }
+
+    /**
+     * Set new text of referat.
+     * @param text Text of it
+     * @return The JAX-RS response
+     * @throws Exception If some problem inside
+     */
+    @POST
+    @Path("/referat")
+    public Response referat(@FormParam("text") @NotNull final String text)
+        throws Exception {
+        this.artifact.referat(text);
+        throw FlashInset.forward(
+            this.indexUri(),
+            "referat was changed successfully",
+            Level.INFO
+        );
+    }
+
+    /**
+     * Convert artifact to a JAXB element.
+     * @param artifact The artifact
+     * @return JAXB object
+     */
+    private Element jaxb(final Artifact artifact) {
+        return new JaxbBundle("artifact")
+            .add("book")
+                .add("label", artifact.book().label()).up()
+                .add("bibitem", artifact.book().bibitem()).up().up()
+            .add(
+                "hardcopies",
+                new JaxbBundle.Group<URI>(artifact.hardcopies()) {
+                    @Override
+                    public Element toElement(final URI uri) {
+                        return new JaxbBundle("hardcopy")
+                            .add("uri", uri).up()
+                            .element();
+                    }
+                }
+            )
+            .add(
+                "discoveries",
+                new JaxbBundle.Group<Discovery>(artifact.discoveries()) {
+                    @Override
+                    public Element toElement(final Discovery discovery) {
+                        return new JaxbBundle("discovery")
+                            .add("label", discovery.hypothesis().label()).up()
+                            .add("pages", discovery.pages()).up()
+                            .add("quote", discovery.quote()).up()
+                            .add("relevance", discovery.relevance()).up()
+                            .add(
+                                new Link(
+                                    "remove",
+                                    ArtifactRs.this.uriInfo()
+                                        .getBaseUriBuilder()
+                                        .clone()
+                                        .path(ArtifactRs.class)
+                                        .path(ArtifactRs.class, "remove")
+                                        .queryParam("label", "{label}")
+                                        .build(discovery.hypothesis().label())
+                                )
+                            )
+                            .element();
+                    }
+                }
+            )
+            .add("referat", artifact.referat()).up()
+            .add(new Link("referat", "./referat")).up()
+            .add(new Link("add", "./add")).up()
+            .element();
     }
 
 }

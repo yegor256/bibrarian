@@ -112,6 +112,13 @@ public interface Discovery {
         /**
          * Public ctor.
          * @param hypothesis The hypothesis
+         */
+        public Simple(@NotNull final Hypothesis hypothesis) {
+            this(hypothesis, "", "", 0f);
+        }
+        /**
+         * Public ctor.
+         * @param hypothesis The hypothesis
          * @param quote The description
          * @param pages The pages
          * @param relevance The relevance
