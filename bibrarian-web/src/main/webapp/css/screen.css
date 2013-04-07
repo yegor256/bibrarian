@@ -28,6 +28,14 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+@font-face {
+    font-family: 'Quadon-Regular';
+    src: url('http://img.bibrarian.com/fonts/quadon-regular.eot');
+    src: url('http://img.bibrarian.com/fonts/quadon-regular.eot?#iefix') format('embedded-opentype');
+    src: url('http://img.bibrarian.com/fonts/quadon-regular.woff') format('woff');
+    src: url('http://img.bibrarian.com/fonts/quadon-regular.ttf') format('truetype');
+}
+
 /* all elements */
 a,
 img,
@@ -37,8 +45,8 @@ h1,
 h2,
 h3,
 textarea {
-    font-family: verdana, arial, helvetica, clean, sans-serif;
-    font-size: 12px;
+    font-family: 'Quadon-Regular', Verdana, Arial, Helvetica, Sans-Serif;
+    font-size: 15px;
     font-variant: normal;
     font-stretch: normal;
     font-weight: normal;

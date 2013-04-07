@@ -31,22 +31,19 @@ package com.bibrarian.web;
 
 import com.bibrarian.om.Artifact;
 import com.bibrarian.om.Discovery;
-import com.bibrarian.om.Hypothesis;
 import com.bibrarian.om.Query;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
-import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
-import java.util.Set;
+import java.util.Collection;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import org.w3c.dom.Element;
 
 /**
- * Search resource.
+ * Search and find artifacts.
  *
  * <p>The class is mutable and NOT thread-safe.
  *
@@ -58,7 +55,7 @@ import org.w3c.dom.Element;
 public final class SearchRs extends BaseRs {
 
     /**
-     * Search results.
+     * Search and show found artifacts.
      * @param query The query
      * @return The JAX-RS response
      * @throws Exception If some problem inside
@@ -67,13 +64,20 @@ public final class SearchRs extends BaseRs {
     @Path("/")
     public Response index(@QueryParam("query") final String query)
         throws Exception {
+        final Collection<Artifact> artifacts = this.bibrarian()
+            .artifacts().query(new Query.Simple(query));
         return new PageBuilder()
             .stylesheet("/xsl/search.xsl")
             .build(EmptyPage.class)
             .init(this)
             .append(
-                this.jaxb(
-                    this.bibrarian().artifacts().query(new Query.Simple(query))
+                new JaxbBundle("artifacts").add(
+                    new JaxbBundle.Group<Artifact>(artifacts) {
+                        @Override
+                        public JaxbBundle bundle(final Artifact artifact) {
+                            return SearchRs.this.bundle(artifact);
+                        }
+                    }
                 )
             )
             .render()
@@ -81,48 +85,58 @@ public final class SearchRs extends BaseRs {
     }
 
     /**
-     * Convert artifacts to a JAXB element.
-     * @param artifacts The list of them
+     * Convert artifact to a JAXB element.
+     * @param artifact The artifact
      * @return JAXB object
      */
-    private Element jaxb(final Set<Artifact> artifacts) {
-        return new JaxbBundle.Group<Artifact>(artifacts) {
-            @Override
-            public Element toElement(final Artifact artifact) {
-                return new JaxbBundle("artifact")
-                    .add("book")
-                        .add("label", artifact.book().label()).up()
-                        .add("bibitem", artifact.book().bibitem()).up().up()
-                    .add("referat", artifact.referat()).up()
-                    .add(
-                        "discoveries",
-                        new JaxbBundle.Group<Discovery>(artifact.discoveries()) {
-                            @Override
-                            public Element toElement(final Discovery discovery) {
-                                return new JaxbBundle("discovery")
-                                    .add("label", discovery.hypothesis().label()).up()
-                                    .add("pages", discovery.pages()).up()
-                                    .add("quote", discovery.quote()).up()
-                                    .add("relevance", discovery.relevance()).up()
-                                    .add(
-                                        new Link(
-                                            "remove",
-                                            ArtifactRs.this.uriInfo()
-                                                .getBaseUriBuilder()
-                                                .clone()
-                                                .path(ArtifactRs.class)
-                                                .path(ArtifactRs.class, "remove")
-                                                .queryParam("label", "{label}")
-                                                .build(discovery.hypothesis().label())
-                                        )
-                                    )
-                                    .element();
-                            }
+    private JaxbBundle bundle(final Artifact artifact) {
+        return new JaxbBundle("artifact")
+            .add("book")
+                .add("label", artifact.book().label())
+                .up()
+                .add("bibitem", artifact.book().bibitem())
+                .up()
+            .up()
+            .add("referat", artifact.referat())
+            .up()
+            .add("discoveries")
+                .add(
+                    new JaxbBundle.Group<Discovery>(artifact.discoveries()) {
+                        @Override
+                        public JaxbBundle bundle(final Discovery discovery) {
+                            return SearchRs.this.bundle(discovery);
                         }
-                    )
-                    .element();
-            }
-        }.element();
+                    }
+                )
+            .up();
+
+    }
+
+    /**
+     * Convert discovery to a JAXB bundle.
+     * @param discovery The discovery
+     * @return Bundle
+     */
+    private JaxbBundle bundle(final Discovery discovery) {
+        return new JaxbBundle("discovery")
+            .add("label", discovery.hypothesis().label())
+            .up()
+            .add("pages", discovery.pages())
+            .up()
+            .add("quote", discovery.quote())
+            .up()
+            .add("relevance", Float.toString(discovery.relevance()))
+            .up()
+            .link(
+                new Link(
+                    "remove",
+                    this.uriInfo().getBaseUriBuilder().clone()
+                        .path(ArtifactRs.class)
+                        .path(ArtifactRs.class, "remove")
+                        .queryParam("label", "{label}")
+                        .build(discovery.hypothesis().label())
+                )
+            );
     }
 
 }

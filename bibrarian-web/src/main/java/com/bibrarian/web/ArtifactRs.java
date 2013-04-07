@@ -35,7 +35,6 @@ import com.bibrarian.om.Discovery;
 import com.bibrarian.om.Hypothesis;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
-import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
@@ -48,7 +47,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import org.w3c.dom.Element;
 
 /**
  * Single artifact.
@@ -63,6 +61,11 @@ import org.w3c.dom.Element;
 public final class ArtifactRs extends BaseRs {
 
     /**
+     * Query ID.
+     */
+    private static final String QUERY_LABEL = "label";
+
+    /**
      * Artifact to work with.
      */
     private transient Artifact artifact;
@@ -71,7 +74,7 @@ public final class ArtifactRs extends BaseRs {
      * Set artifact.
      * @param label The label of it
      */
-    @QueryParam("label")
+    @QueryParam(ArtifactRs.QUERY_LABEL)
     public void setArtifact(@NotNull final String label) {
         this.artifact = this.bibrarian().artifacts()
             .fetch(new Book.Simple(label));
@@ -180,52 +183,85 @@ public final class ArtifactRs extends BaseRs {
      * @param artifact The artifact
      * @return JAXB object
      */
-    private Element jaxb(final Artifact artifact) {
+    private JaxbBundle jaxb(final Artifact artifact) {
         return new JaxbBundle("artifact")
             .add("book")
-                .add("label", artifact.book().label()).up()
-                .add("bibitem", artifact.book().bibitem()).up().up()
-            .add(
-                "hardcopies",
-                new JaxbBundle.Group<URI>(artifact.hardcopies()) {
-                    @Override
-                    public Element toElement(final URI uri) {
-                        return new JaxbBundle("hardcopy")
-                            .add("uri", uri).up()
-                            .element();
+                .add("label", artifact.book().label())
+                .up()
+                .add("bibitem", artifact.book().bibitem())
+                .up()
+            .up()
+            .add("hardcopies")
+                .add(
+                    new JaxbBundle.Group<URI>(artifact.hardcopies()) {
+                        @Override
+                        public JaxbBundle bundle(final URI uri) {
+                            return new JaxbBundle("hardcopy")
+                                .add("uri", uri.toString()).up();
+                        }
                     }
-                }
-            )
-            .add(
-                "discoveries",
-                new JaxbBundle.Group<Discovery>(artifact.discoveries()) {
-                    @Override
-                    public Element toElement(final Discovery discovery) {
-                        return new JaxbBundle("discovery")
-                            .add("label", discovery.hypothesis().label()).up()
-                            .add("pages", discovery.pages()).up()
-                            .add("quote", discovery.quote()).up()
-                            .add("relevance", discovery.relevance()).up()
-                            .add(
-                                new Link(
-                                    "remove",
-                                    ArtifactRs.this.uriInfo()
-                                        .getBaseUriBuilder()
-                                        .clone()
-                                        .path(ArtifactRs.class)
-                                        .path(ArtifactRs.class, "remove")
-                                        .queryParam("label", "{label}")
-                                        .build(discovery.hypothesis().label())
-                                )
-                            )
-                            .element();
+                )
+            .up()
+            .add("discoveries")
+                .add(
+                    new JaxbBundle.Group<Discovery>(artifact.discoveries()) {
+                        @Override
+                        public JaxbBundle bundle(final Discovery discovery) {
+                            return ArtifactRs.this.bundle(discovery);
+                        }
                     }
-                }
             )
-            .add("referat", artifact.referat()).up()
-            .add(new Link("referat", "./referat")).up()
-            .add(new Link("add", "./add")).up()
-            .element();
+            .add("referat", artifact.referat())
+            .up()
+            .link(
+                new Link(
+                    "referat",
+                    this.uriInfo().getBaseUriBuilder().clone()
+                        .path(ArtifactRs.class)
+                        .path(ArtifactRs.class, "referat")
+                        .queryParam(ArtifactRs.QUERY_LABEL, "{x1}")
+                        .build(this.artifact.book().label())
+                )
+            )
+            .link(
+                new Link(
+                    "add",
+                    this.uriInfo().getBaseUriBuilder().clone()
+                        .path(ArtifactRs.class)
+                        .path(ArtifactRs.class, "add")
+                        .queryParam(ArtifactRs.QUERY_LABEL, "{x2}")
+                        .build(this.artifact.book().label())
+                )
+            );
+    }
+
+    /**
+     * Convert to JAXB bundle.
+     * @param discovery The discovery
+     * @return Bundle
+     */
+    private JaxbBundle bundle(final Discovery discovery) {
+        return new JaxbBundle("discovery")
+            .add("label", discovery.hypothesis().label())
+            .up()
+            .add("pages", discovery.pages())
+            .up()
+            .add("quote", discovery.quote())
+            .up()
+            .add("relevance", Float.toString(discovery.relevance()))
+            .up()
+            .link(
+                new Link(
+                    "remove",
+                    ArtifactRs.this.uriInfo()
+                        .getBaseUriBuilder()
+                        .clone()
+                        .path(ArtifactRs.class)
+                        .path(ArtifactRs.class, "remove")
+                        .queryParam(ArtifactRs.QUERY_LABEL, "{x3}")
+                        .build(discovery.hypothesis().label())
+                )
+            );
     }
 
 }

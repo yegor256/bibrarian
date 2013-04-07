@@ -29,38 +29,56 @@
  */
 package com.bibrarian.web;
 
+import com.bibrarian.dynamo.DynamoBibrarians;
+import com.bibrarian.om.Bibrarians;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.page.PageBuilder;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import com.jcabi.manifests.Manifests;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /**
- * Index resource, front page of the website.
+ * Lifespan controller of the {@link Bibrarians}.
  *
- * <p>The class is mutable and NOT thread-safe.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @author Yegor Bugayenko (yegor@woquo.com)
+ * @version $Id: BoardsLifespan.java 2114 2013-04-01 15:16:55Z yegor@tpc2.com $
  */
-@Path("/")
-@Loggable(Loggable.DEBUG)
-public final class IndexRs extends BaseRs {
+@Loggable(Loggable.INFO)
+public final class BibrariansLifespan implements ServletContextListener {
 
     /**
-     * Get entrance page JAX-RS response.
-     * @return The JAX-RS response
-     * @throws Exception If some problem inside
+     * Bibrarians.
      */
-    @GET
-    @Path("/")
-    public Response index() throws Exception {
-        return new PageBuilder()
-            .stylesheet("/xsl/index.xsl")
-            .build(EmptyPage.class)
-            .init(this)
-            .render()
-            .build();
+    private transient Bibrarians bibrarians;
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>These attributes is used later in
+     * {@link com.woquo.www.BaseRs#setServletContext(ServletContext)}.
+     */
+    @Override
+    public void contextInitialized(final ServletContextEvent event) {
+        try {
+            Manifests.append(event.getServletContext());
+        } catch (java.io.IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+        this.bibrarians = new DynamoBibrarians(
+            Manifests.read("Bibrarian-DynamoKey"),
+            Manifests.read("Bibrarian-DynamoSecret"),
+            Manifests.read("Bibrarian-DynamoPrefix")
+        );
+        event.getServletContext().setAttribute(
+            Bibrarians.class.getName(), this.bibrarians
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void contextDestroyed(final ServletContextEvent event) {
+        // nothing to do
     }
 
 }

@@ -125,7 +125,13 @@ public class BaseRs extends BaseResource {
      * @return The bibrarians
      */
     protected final Bibrarians bibrarians() {
-        return null;
+        final Bibrarians bibrarians = Bibrarians.class.cast(
+            this.servletContext().getAttribute(Bibrarians.class.getName())
+        );
+        if (bibrarians == null) {
+            throw new IllegalStateException("BIBRARIANS is not initialized");
+        }
+        return bibrarians;
     }
 
     /**
