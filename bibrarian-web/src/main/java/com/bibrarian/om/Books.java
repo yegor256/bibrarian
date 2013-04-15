@@ -27,43 +27,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.web;
+package com.bibrarian.om;
 
-import com.rexsl.page.HttpHeadersMocker;
-import com.rexsl.page.UriInfoMocker;
-import com.rexsl.test.JaxbConverter;
-import com.rexsl.test.XhtmlMatchers;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import org.hamcrest.MatcherAssert;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.jcabi.aspects.Immutable;
+import java.util.Set;
 
 /**
- * Test case for {@link IndexRs}.
+ * All books known to the system.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: IndexRsTest.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
-public final class IndexRsTest {
+@Immutable
+public interface Books extends Set<Book> {
 
     /**
-     * IndexRs can render front page.
-     * @throws Exception If some problem inside
+     * Find a book by label (or creates one if it's first time the label
+     * is used).
+     * @param label The label
+     * @return The book
      */
-    @Test
-    public void rendersFrontPage() throws Exception {
-        final IndexRs res = new IndexRs();
-        res.setUriInfo(new UriInfoMocker().mock());
-        res.setHttpHeaders(new HttpHeadersMocker().mock());
-        res.setSecurityContext(Mockito.mock(SecurityContext.class));
-        final Response response = res.index();
-        MatcherAssert.assertThat(
-            JaxbConverter.the(response.getEntity()),
-            XhtmlMatchers.hasXPaths(
-                "/page/millis",
-                "/page/version[name='1.0-SNAPSHOT']"
-            )
-        );
-    }
+    Book fetch(String label);
 
 }

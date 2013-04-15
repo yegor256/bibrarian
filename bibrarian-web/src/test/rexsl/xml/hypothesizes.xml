@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2013, bibrarian.com
  * All rights reserved.
  *
@@ -26,44 +27,27 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.bibrarian.web;
-
-import com.rexsl.page.HttpHeadersMocker;
-import com.rexsl.page.UriInfoMocker;
-import com.rexsl.test.JaxbConverter;
-import com.rexsl.test.XhtmlMatchers;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import org.hamcrest.MatcherAssert;
-import org.junit.Test;
-import org.mockito.Mockito;
-
-/**
- * Test case for {@link IndexRs}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: IndexRsTest.java 2344 2013-01-13 18:28:44Z guard $
- */
-public final class IndexRsTest {
-
-    /**
-     * IndexRs can render front page.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void rendersFrontPage() throws Exception {
-        final IndexRs res = new IndexRs();
-        res.setUriInfo(new UriInfoMocker().mock());
-        res.setHttpHeaders(new HttpHeadersMocker().mock());
-        res.setSecurityContext(Mockito.mock(SecurityContext.class));
-        final Response response = res.index();
-        MatcherAssert.assertThat(
-            JaxbConverter.the(response.getEntity()),
-            XhtmlMatchers.hasXPaths(
-                "/page/millis",
-                "/page/version[name='1.0-SNAPSHOT']"
-            )
-        );
-    }
-
-}
+ -->
+<?xml-stylesheet type='text/xsl' href='/xsl/hypothesizes.xsl'?>
+<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
+    <version>
+        <name>1.0-SNAPSHOT</name>
+        <revision>123</revision>
+        <date>22-Aug-2012</date>
+    </version>
+    <links>
+        <link href="http://localhost:9099/" rel="self" type="text/xml"/>
+        <link href="http://localhost:9099/" rel="home" type="text/xml"/>
+    </links>
+    <millis>16</millis>
+    <hypothesizes>
+        <hypothesis>
+            <label>H1</label>
+            <description>some text here</description>
+        </hypothesis>
+        <hypothesis>
+            <label>H2</label>
+            <description>some other text here</description>
+        </hypothesis>
+    </hypothesizes>
+</page>

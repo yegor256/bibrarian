@@ -29,6 +29,7 @@
  */
 package com.bibrarian.web;
 
+import com.jcabi.aspects.Loggable;
 import com.rexsl.page.BasePage;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -47,5 +48,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "page")
 @XmlAccessorType(XmlAccessType.NONE)
+@Loggable(Loggable.DEBUG)
 public class EmptyPage extends BasePage<EmptyPage, BaseRs> {
 }

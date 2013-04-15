@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2013, bibrarian.com
  * All rights reserved.
  *
@@ -26,44 +27,37 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.bibrarian.web;
-
-import com.rexsl.page.HttpHeadersMocker;
-import com.rexsl.page.UriInfoMocker;
-import com.rexsl.test.JaxbConverter;
-import com.rexsl.test.XhtmlMatchers;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import org.hamcrest.MatcherAssert;
-import org.junit.Test;
-import org.mockito.Mockito;
-
-/**
- * Test case for {@link IndexRs}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: IndexRsTest.java 2344 2013-01-13 18:28:44Z guard $
- */
-public final class IndexRsTest {
-
-    /**
-     * IndexRs can render front page.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void rendersFrontPage() throws Exception {
-        final IndexRs res = new IndexRs();
-        res.setUriInfo(new UriInfoMocker().mock());
-        res.setHttpHeaders(new HttpHeadersMocker().mock());
-        res.setSecurityContext(Mockito.mock(SecurityContext.class));
-        final Response response = res.index();
-        MatcherAssert.assertThat(
-            JaxbConverter.the(response.getEntity()),
-            XhtmlMatchers.hasXPaths(
-                "/page/millis",
-                "/page/version[name='1.0-SNAPSHOT']"
-            )
-        );
-    }
-
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+    <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:include href="/xsl/layout.xsl"/>
+    <xsl:template name="head">
+        <title>
+            <xsl:text>hypothesizes</xsl:text>
+        </title>
+    </xsl:template>
+    <xsl:template name="content">
+        <form method="post">
+            <xsl:attribute name="action">
+                <xsl:value-of select="/page/links/link[@rel='self']/@href"/>
+            </xsl:attribute>
+            <p>
+                <label for="label"><xsl:text>label: </xsl:text></label>
+                <input name="label" size="4"/>
+                <label for="description"><xsl:text>desc: </xsl:text></label>
+                <input name="description" size="50"/>
+                <input type="submit"/>
+            </p>
+        </form>
+        <xsl:apply-templates select="hypothesizes/hypothesis"/>
+    </xsl:template>
+    <xsl:template match="hypothesis">
+        <p>
+            <span>
+                <xsl:value-of select="label"/>
+            </span>
+            <xsl:text>: </xsl:text>
+            <xsl:value-of select="description"/>
+        </p>
+    </xsl:template>
+</xsl:stylesheet>

@@ -29,6 +29,7 @@
  */
 package com.bibrarian.web;
 
+import com.jcabi.aspects.Loggable;
 import com.rexsl.page.PageBuilder;
 import java.net.HttpURLConnection;
 import javax.ws.rs.GET;
@@ -45,6 +46,7 @@ import javax.ws.rs.core.Response;
  * @version $Id: ErrorRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Path("/error")
+@Loggable(Loggable.DEBUG)
 public final class ErrorRs extends BaseRs {
 
     /**

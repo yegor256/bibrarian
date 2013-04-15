@@ -29,41 +29,51 @@
  */
 package com.bibrarian.web;
 
-import com.rexsl.page.HttpHeadersMocker;
-import com.rexsl.page.UriInfoMocker;
-import com.rexsl.test.JaxbConverter;
-import com.rexsl.test.XhtmlMatchers;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import org.hamcrest.MatcherAssert;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.bibrarian.dynamo.DynamoBibrarians;
+import com.bibrarian.om.Bibrarians;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.manifests.Manifests;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /**
- * Test case for {@link IndexRs}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: IndexRsTest.java 2344 2013-01-13 18:28:44Z guard $
+ * Lifespan controller of the {@link Bibrarians}.
+ *
+ * @author Yegor Bugayenko (yegor@woquo.com)
+ * @version $Id: BoardsLifespan.java 2114 2013-04-01 15:16:55Z yegor@tpc2.com $
  */
-public final class IndexRsTest {
+@Loggable(Loggable.INFO)
+public final class BibrariansLifespan implements ServletContextListener {
 
     /**
-     * IndexRs can render front page.
-     * @throws Exception If some problem inside
+     * {@inheritDoc}
+     *
+     * <p>These attributes is used later in
+     * {@link com.woquo.www.BaseRs#setServletContext(ServletContext)}.
      */
-    @Test
-    public void rendersFrontPage() throws Exception {
-        final IndexRs res = new IndexRs();
-        res.setUriInfo(new UriInfoMocker().mock());
-        res.setHttpHeaders(new HttpHeadersMocker().mock());
-        res.setSecurityContext(Mockito.mock(SecurityContext.class));
-        final Response response = res.index();
-        MatcherAssert.assertThat(
-            JaxbConverter.the(response.getEntity()),
-            XhtmlMatchers.hasXPaths(
-                "/page/millis",
-                "/page/version[name='1.0-SNAPSHOT']"
-            )
+    @Override
+    public void contextInitialized(final ServletContextEvent event) {
+        try {
+            Manifests.append(event.getServletContext());
+        } catch (java.io.IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+        final Bibrarians bibrarians = new DynamoBibrarians(
+            Manifests.read("Bibrarian-DynamoKey"),
+            Manifests.read("Bibrarian-DynamoSecret"),
+            Manifests.read("Bibrarian-DynamoPrefix")
         );
+        event.getServletContext().setAttribute(
+            Bibrarians.class.getName(), bibrarians
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void contextDestroyed(final ServletContextEvent event) {
+        // nothing to do
     }
 
 }

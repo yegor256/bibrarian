@@ -29,7 +29,7 @@
  */
 package com.bibrarian.web;
 
-import com.rexsl.page.JaxbBundle;
+import com.jcabi.aspects.Loggable;
 import com.rexsl.page.PageBuilder;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -44,6 +44,7 @@ import javax.ws.rs.core.Response;
  * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Path("/")
+@Loggable(Loggable.DEBUG)
 public final class IndexRs extends BaseRs {
 
     /**
@@ -58,7 +59,6 @@ public final class IndexRs extends BaseRs {
             .stylesheet("/xsl/index.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new JaxbBundle("message", "Hello, world!"))
             .render()
             .build();
     }
