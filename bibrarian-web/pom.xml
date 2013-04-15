@@ -42,6 +42,12 @@
         <rexsl.version>0.4.10</rexsl.version>
         <jersey.version>1.17.1</jersey.version>
     </properties>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>cloudbees-public-release</id>
+            <url>http://repository-cloudbees.forge.cloudbees.com/public-release</url>
+        </pluginRepository>
+    </pluginRepositories>
     <dependencies>
         <dependency>
             <groupId>org.hamcrest</groupId>
