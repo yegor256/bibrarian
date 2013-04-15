@@ -49,6 +49,7 @@ import javax.ws.rs.core.Response;
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Path("/s")
 @Loggable(Loggable.DEBUG)
@@ -99,17 +100,15 @@ public final class SearchRs extends BaseRs {
             .up()
             .add("referat", artifact.referat())
             .up()
-            .add("discoveries")
-                .add(
-                    new JaxbBundle.Group<Discovery>(artifact.discoveries()) {
-                        @Override
-                        public JaxbBundle bundle(final Discovery discovery) {
-                            return SearchRs.this.bundle(discovery);
-                        }
+            .add("discoveries").add(
+                new JaxbBundle.Group<Discovery>(artifact.discoveries()) {
+                    @Override
+                    public JaxbBundle bundle(final Discovery discovery) {
+                        return SearchRs.this.bundle(discovery);
                     }
-                )
+                }
+            )
             .up();
-
     }
 
     /**

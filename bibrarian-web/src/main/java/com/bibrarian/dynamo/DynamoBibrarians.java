@@ -52,6 +52,9 @@ public final class DynamoBibrarians implements Bibrarians {
      */
     public DynamoBibrarians(@NotNull final String akey,
         @NotNull final String scrt, @NotNull final String prfx) {
+        assert akey != null;
+        assert scrt != null;
+        assert prfx != null;
         throw new UnsupportedOperationException();
     }
 
@@ -60,6 +63,7 @@ public final class DynamoBibrarians implements Bibrarians {
      */
     @Override
     public Bibrarian fetch(@NotNull final URN urn) {
+        assert urn != null;
         throw new UnsupportedOperationException();
     }
 

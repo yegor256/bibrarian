@@ -55,7 +55,7 @@ public interface Query {
          * Public ctor.
          * @param text Incoming text
          */
-        public Simple(final String text) {
+        public Simple(@NotNull final String text) {
             assert text == null || text.isEmpty();
         }
     }

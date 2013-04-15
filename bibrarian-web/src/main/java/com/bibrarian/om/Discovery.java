@@ -42,6 +42,7 @@ import lombok.ToString;
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
+@SuppressWarnings("PMD.TooManyMethods")
 public interface Discovery {
 
     /**
@@ -122,6 +123,7 @@ public interface Discovery {
          * @param quote The description
          * @param pages The pages
          * @param relevance The relevance
+         * @checkstyle ParameterNumber (5 lines)
          */
         public Simple(@NotNull final Hypothesis hypothesis,
             @NotNull final String quote, @NotNull final String pages,
@@ -171,7 +173,7 @@ public interface Discovery {
          */
         @Override
         public float relevance() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException();
         }
         /**
          * {@inheritDoc}

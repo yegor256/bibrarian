@@ -164,7 +164,7 @@ label {
 
 /* bottom right label about deployed version */
 #version {
-    font-size: 0.9em;
+    font-size: 0.8em;
     position: fixed;
     right: 0;
     bottom: 0;

@@ -55,9 +55,11 @@ import javax.ws.rs.core.Response;
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Path("/a")
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class ArtifactRs extends BaseRs {
 
     /**
@@ -105,6 +107,7 @@ public final class ArtifactRs extends BaseRs {
      * @param relevance The relevance
      * @return The JAX-RS response
      * @throws Exception If some problem inside
+     * @checkstyle ParameterNumber (7 lines)
      */
     @GET
     @Path("/add")
@@ -180,38 +183,36 @@ public final class ArtifactRs extends BaseRs {
 
     /**
      * Convert artifact to a JAXB element.
-     * @param artifact The artifact
+     * @param artfct The artifact
      * @return JAXB object
      */
-    private JaxbBundle jaxb(final Artifact artifact) {
+    private JaxbBundle jaxb(final Artifact artfct) {
         return new JaxbBundle("artifact")
             .add("book")
-                .add("label", artifact.book().label())
+                .add("label", artfct.book().label())
                 .up()
-                .add("bibitem", artifact.book().bibitem())
+                .add("bibitem", artfct.book().bibitem())
                 .up()
             .up()
-            .add("hardcopies")
-                .add(
-                    new JaxbBundle.Group<URI>(artifact.hardcopies()) {
-                        @Override
-                        public JaxbBundle bundle(final URI uri) {
-                            return new JaxbBundle("hardcopy")
-                                .add("uri", uri.toString()).up();
-                        }
+            .add("hardcopies").add(
+                new JaxbBundle.Group<URI>(artfct.hardcopies()) {
+                    @Override
+                    public JaxbBundle bundle(final URI uri) {
+                        return new JaxbBundle("hardcopy")
+                            .add("uri", uri.toString()).up();
                     }
-                )
-            .up()
-            .add("discoveries")
-                .add(
-                    new JaxbBundle.Group<Discovery>(artifact.discoveries()) {
-                        @Override
-                        public JaxbBundle bundle(final Discovery discovery) {
-                            return ArtifactRs.this.bundle(discovery);
-                        }
-                    }
+                }
             )
-            .add("referat", artifact.referat())
+            .up()
+            .add("discoveries").add(
+                new JaxbBundle.Group<Discovery>(artfct.discoveries()) {
+                    @Override
+                    public JaxbBundle bundle(final Discovery discovery) {
+                        return ArtifactRs.this.bundle(discovery);
+                    }
+                }
+            )
+            .add("referat", artfct.referat())
             .up()
             .link(
                 new Link(

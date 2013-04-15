@@ -112,7 +112,7 @@ public interface Hypothesis {
          * {@inheritDoc}
          */
         @Override
-        public void description(String text) {
+        public void description(final String text) {
             throw new UnsupportedOperationException();
         }
     }

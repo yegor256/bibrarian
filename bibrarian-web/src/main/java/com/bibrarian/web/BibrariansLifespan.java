@@ -46,11 +46,6 @@ import javax.servlet.ServletContextListener;
 public final class BibrariansLifespan implements ServletContextListener {
 
     /**
-     * Bibrarians.
-     */
-    private transient Bibrarians bibrarians;
-
-    /**
      * {@inheritDoc}
      *
      * <p>These attributes is used later in
@@ -63,13 +58,13 @@ public final class BibrariansLifespan implements ServletContextListener {
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
-        this.bibrarians = new DynamoBibrarians(
+        final Bibrarians bibrarians = new DynamoBibrarians(
             Manifests.read("Bibrarian-DynamoKey"),
             Manifests.read("Bibrarian-DynamoSecret"),
             Manifests.read("Bibrarian-DynamoPrefix")
         );
         event.getServletContext().setAttribute(
-            Bibrarians.class.getName(), this.bibrarians
+            Bibrarians.class.getName(), bibrarians
         );
     }
 

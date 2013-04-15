@@ -27,26 +27,17 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.web.rexsl.xhtml
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
+import com.rexsl.test.XhtmlMatchers
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
 
-/**
- * All known bibrarians.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
- */
-@Immutable
-public interface Bibrarians {
-
-    /**
-     * Get bibrarian by URN (always returns a valid object, even if such a user
-     * was not used before).
-     * @param urn The name of it
-     * @return The found bibrarian
-     */
-    Bibrarian fetch(URN urn);
-
-}
+MatcherAssert.assertThat(
+    rexsl.document,
+    XhtmlMatchers.hasXPaths(
+        '//xhtml:div[@id="version"]',
+        '//xhtml:div[@id="version" and contains(.,"123")]',
+        '//xhtml:div[@id="version" and contains(.,"16ms")]'
+    )
+)

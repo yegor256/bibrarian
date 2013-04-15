@@ -42,7 +42,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import org.w3c.dom.Element;
 
 /**
  * CRUD of Hypothesizes.
@@ -51,9 +50,11 @@ import org.w3c.dom.Element;
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Path("/h")
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class HypothesizesRs extends BaseRs {
 
     /**
@@ -132,6 +133,7 @@ public final class HypothesizesRs extends BaseRs {
      */
     private JaxbBundle jaxb(final Set<Hypothesis> hypothesizes) {
         return new JaxbBundle("hypothesizes").add(
+            // @checkstyle AnonInnerLength (50 lines)
             new JaxbBundle.Group<Hypothesis>(hypothesizes) {
                 @Override
                 public JaxbBundle bundle(final Hypothesis hypothesis) {
