@@ -53,7 +53,6 @@ textarea {
     color: black;
     padding: 0;
     margin: 0;
-    border: 0;
     text-decoration: none;
 }
 
@@ -110,6 +109,12 @@ label {
     display: block;
 }
 
+/* any submit button */
+input[type='submit'] {
+    display: block;
+    margin-top: .5em;
+}
+
 #content {
     padding: 20pt;
 }
@@ -151,11 +156,11 @@ img.auth-icon {
 /* login icon */
 img.login-icon {
     margin-left: 0.5em;
-    width: 16pt;
-    height: 16pt;
+    width: 11pt;
+    height: 11pt;
 }
 /* photo of a logged in user */
 img.photo-icon {
-    width: 25pt;
-    height: 25pt;
+    width: 20pt;
+    height: 20pt;
 }

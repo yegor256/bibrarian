@@ -29,10 +29,14 @@
  */
 package com.bibrarian.web;
 
+import com.bibrarian.om.Discovery;
 import com.bibrarian.om.Hypothesis;
+import com.bibrarian.om.Query;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import java.util.Collection;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -74,11 +78,10 @@ public final class HypothesisRs extends BaseRs {
     /**
      * Show it.
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/")
-    public Response index() throws Exception {
+    public Response index() {
         return new PageBuilder()
             .stylesheet("/xsl/hypothesis.xsl")
             .build(EmptyPage.class)
@@ -90,8 +93,63 @@ public final class HypothesisRs extends BaseRs {
                     .add("description", this.hypothesis.description())
                     .up()
             )
+            .append(
+                this.jaxb(
+                    this.bibrarian().discoveries().query(
+                        new Query.Simple(
+                            String.format(
+                                "hypothesis:%s",
+                                this.hypothesis.label()
+                            )
+                        )
+                    )
+                )
+            )
             .render()
             .build();
+    }
+
+    /**
+     * Convert discoveries to a JAXB element.
+     * @param discoveries The list of them
+     * @return JAXB object
+     */
+    private JaxbBundle jaxb(final Collection<Discovery> discoveries) {
+        return new JaxbBundle("discoveries").add(
+            new JaxbBundle.Group<Discovery>(discoveries) {
+                @Override
+                public JaxbBundle bundle(final Discovery discovery) {
+                    return HypothesisRs.this.bundle(discovery);
+                }
+            }
+        );
+    }
+
+    /**
+     * Convert discovery to a JAXB element.
+     * @param discovery The discovery
+     * @return JAXB object
+     */
+    private JaxbBundle bundle(final Discovery discovery) {
+        return new JaxbBundle("discovery")
+            .add("quotes", discovery.quote())
+            .up()
+            .add("pages", discovery.pages())
+            .up()
+            .add("relevance", Double.toString(discovery.relevance()))
+            .up()
+            .link(
+                new Link(
+                    "remove",
+                    HypothesisRs.this.uriInfo()
+                        .getBaseUriBuilder()
+                        .clone()
+                        .path(HypothesisRs.class)
+                        .path(HypothesisRs.class, "remove")
+                        .queryParam("date", "{d}")
+                        .build(Long.toString(discovery.date().getTime()))
+                )
+            );
     }
 
 }

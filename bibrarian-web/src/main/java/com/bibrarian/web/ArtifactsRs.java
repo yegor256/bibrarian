@@ -61,11 +61,10 @@ public final class ArtifactsRs extends BaseRs {
     /**
      * Get them all.
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/")
-    public Response index() throws Exception {
+    public Response index() {
         return new PageBuilder()
             .stylesheet("/xsl/artifacts.xsl")
             .build(EmptyPage.class)
@@ -80,12 +79,10 @@ public final class ArtifactsRs extends BaseRs {
      * Remove by label.
      * @param label The label to use
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/remove")
-    public Response remove(@QueryParam("label") @NotNull final String label)
-        throws Exception {
+    public Response remove(@QueryParam("label") @NotNull final String label) {
         final Artifact artifact = new Artifact.Simple(
             this.bibrarians().books().fetch(label)
         );
@@ -107,12 +104,10 @@ public final class ArtifactsRs extends BaseRs {
      * Add new artifact.
      * @param label The label of the book to use
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/add")
-    public Response add(@QueryParam("label") @NotNull final String label)
-        throws Exception {
+    public Response add(@QueryParam("label") @NotNull final String label) {
         final Artifact artifact = new Artifact.Simple(
             this.bibrarians().books().fetch(label)
         );

@@ -28,42 +28,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<?xml-stylesheet type='text/xsl' href='/xsl/hypothesizes.xsl'?>
-<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
-    <identity>
-        <urn>urn:facebook:555</urn>
-        <name>Local Host</name>
-        <photo>http://1.bp.blogspot.com/_FB8KgRxKX2A/SEN_7ZY-SZI/AAAAAAAAAX4/840iz5CCOoY/s320/The_Big_Lebowski___Jeff_Bridges.jpg</photo>
-    </identity>
-    <version>
-        <name>1.0-SNAPSHOT</name>
-        <revision>123</revision>
-        <date>22-Aug-2012</date>
-    </version>
-    <links>
-        <link href="" rel="self" type="text/xml"/>
-        <link href="/xml/discoveries.xml" rel="home" type="text/xml"/>
-        <link href="/xml/artifacts.xml" rel="artifacts" type="text/xml"/>
-        <link href="/xml/hypothesizes.xml" rel="hypothesizes" type="text/xml"/>
-        <link href="/xml/books.xml" rel="books" type="text/xml"/>
-    </links>
-    <millis>16</millis>
-    <hypothesizes>
-        <hypothesis>
-            <label>H1</label>
-            <description>some text here</description>
-            <links>
-                <link href="/xml/hypothesis.xml" rel="see" type="text/xml"/>
-                <link href="" rel="remove" type="text/xml"/>
-            </links>
-        </hypothesis>
-        <hypothesis>
-            <label>H2</label>
-            <description>some other text here</description>
-            <links>
-                <link href="/xml/hypothesis.xml" rel="see" type="text/xml"/>
-                <link href="" rel="remove" type="text/xml"/>
-            </links>
-        </hypothesis>
-    </hypothesizes>
-</page>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+    <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:include href="/xsl/layout.xsl"/>
+    <xsl:template name="head">
+        <title>
+            <xsl:text>discoveries</xsl:text>
+        </title>
+    </xsl:template>
+    <xsl:template name="content">
+        <form method="post">
+            <xsl:attribute name="action">
+                <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
+            </xsl:attribute>
+            <p>
+                <label for="label"><xsl:text>hypothesis label: </xsl:text></label>
+                <input name="label" size="4"/>
+                <input type="submit"/>
+            </p>
+        </form>
+        <xsl:apply-templates select="discoveries/discovery"/>
+    </xsl:template>
+    <xsl:template match="discovery">
+        <p>
+            <span>
+                <xsl:value-of select="label"/>
+            </span>
+            <xsl:value-of select="quote"/>
+            <xsl:value-of select="pages"/>
+        </p>
+    </xsl:template>
+</xsl:stylesheet>

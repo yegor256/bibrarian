@@ -60,11 +60,10 @@ public final class HypothesizesRs extends BaseRs {
     /**
      * Get them all.
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/")
-    public Response index() throws Exception {
+    public Response index() {
         return new PageBuilder()
             .stylesheet("/xsl/hypothesizes.xsl")
             .build(EmptyPage.class)
@@ -79,12 +78,10 @@ public final class HypothesizesRs extends BaseRs {
      * Remove by label.
      * @param label The label to use
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/remove")
-    public Response remove(@QueryParam("label") @NotNull final String label)
-        throws Exception {
+    public Response remove(@QueryParam("label") @NotNull final String label) {
         final Hypothesis hypothesis = new Hypothesis.Simple(label);
         if (!this.bibrarian().hypothesizes().remove(hypothesis)) {
             throw FlashInset.forward(
@@ -105,13 +102,11 @@ public final class HypothesizesRs extends BaseRs {
      * @param label The label to use
      * @param desc The description to use
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/add")
     public Response add(@QueryParam("label") @NotNull final String label,
-        @QueryParam("description") @NotNull final String desc)
-        throws Exception {
+        @QueryParam("description") @NotNull final String desc) {
         final Hypothesis hypothesis = new Hypothesis.Simple(label, desc);
         if (!this.bibrarian().hypothesizes().add(hypothesis)) {
             throw FlashInset.forward(

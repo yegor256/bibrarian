@@ -53,11 +53,21 @@
     </xsl:template>
     <xsl:template match="hypothesis">
         <p>
-            <span>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="links/link[@rel='see']/@href"/>
+                </xsl:attribute>
                 <xsl:value-of select="label"/>
-            </span>
+            </a>
             <xsl:text>: </xsl:text>
             <xsl:value-of select="description"/>
+            <xsl:text> </xsl:text>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="links/link[@rel='remove']/@href"/>
+                </xsl:attribute>
+                <xsl:text>remove</xsl:text>
+            </a>
         </p>
     </xsl:template>
 </xsl:stylesheet>

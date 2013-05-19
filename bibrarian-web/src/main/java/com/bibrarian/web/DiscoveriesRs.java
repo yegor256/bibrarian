@@ -60,11 +60,10 @@ public final class DiscoveriesRs extends BaseRs {
     /**
      * List of them.
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/")
-    public Response index() throws Exception {
+    public Response index() {
         return new PageBuilder()
             .stylesheet("/xsl/discoveries.xsl")
             .build(EmptyPage.class)
@@ -80,13 +79,11 @@ public final class DiscoveriesRs extends BaseRs {
      * @param label The book label to use
      * @param date When it happened
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/remove")
     public Response remove(@QueryParam("label") @NotNull final String label,
-        @QueryParam("date") @NotNull final String date)
-        throws Exception {
+        @QueryParam("date") @NotNull final String date) {
         final Artifact artifact = this.bibrarian().artifacts().fetch(
             this.bibrarians().books().fetch(label)
         );
@@ -112,14 +109,12 @@ public final class DiscoveriesRs extends BaseRs {
      * @param quote Quote
      * @param pages Pages
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/add")
     public Response add(@QueryParam("label") @NotNull final String label,
         @QueryParam("quote") @NotNull final String quote,
-        @QueryParam("pages") @NotNull final String pages)
-        throws Exception {
+        @QueryParam("pages") @NotNull final String pages) {
         final Discovery discovery = new Discovery.Simple(
             new Date(),
             this.bibrarian().hypothesizes().fetch(label),

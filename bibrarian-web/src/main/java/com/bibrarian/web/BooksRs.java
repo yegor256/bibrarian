@@ -52,18 +52,17 @@ import javax.ws.rs.core.Response;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: DiscoveriesRs.java 2344 2013-01-13 18:28:44Z guard $
  */
-@Path("/")
+@Path("/b")
 @Loggable(Loggable.DEBUG)
 public final class BooksRs extends BaseRs {
 
     /**
      * List of them.
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/")
-    public Response index() throws Exception {
+    public Response index() {
         return new PageBuilder()
             .stylesheet("/xsl/books.xsl")
             .build(EmptyPage.class)
@@ -78,12 +77,10 @@ public final class BooksRs extends BaseRs {
      * Remove by label.
      * @param label The book label to use
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/remove")
-    public Response remove(@QueryParam("label") @NotNull final String label)
-        throws Exception {
+    public Response remove(@QueryParam("label") @NotNull final String label) {
         final Book book = new Book.Simple(label);
         if (!this.bibrarians().books().remove(book)) {
             throw FlashInset.forward(
@@ -104,13 +101,11 @@ public final class BooksRs extends BaseRs {
      * @param label The label of the book
      * @param bibitem Bibitem
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/add")
     public Response add(@QueryParam("label") @NotNull final String label,
-        @QueryParam("bibitem") @NotNull final String bibitem)
-        throws Exception {
+        @QueryParam("bibitem") @NotNull final String bibitem) {
         final Book book = new Book.Simple(label, new Bibitem.Simple(bibitem));
         if (!this.bibrarians().books().add(book)) {
             throw FlashInset.forward(

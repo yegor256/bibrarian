@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<?xml-stylesheet type='text/xsl' href='/xsl/hypothesizes.xsl'?>
+<?xml-stylesheet type='text/xsl' href='/xsl/books.xsl'?>
 <page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
     <identity>
         <urn>urn:facebook:555</urn>
@@ -47,23 +47,33 @@
         <link href="/xml/hypothesizes.xml" rel="hypothesizes" type="text/xml"/>
         <link href="/xml/books.xml" rel="books" type="text/xml"/>
     </links>
-    <millis>16</millis>
-    <hypothesizes>
-        <hypothesis>
-            <label>H1</label>
-            <description>some text here</description>
-            <links>
-                <link href="/xml/hypothesis.xml" rel="see" type="text/xml"/>
-                <link href="" rel="remove" type="text/xml"/>
-            </links>
-        </hypothesis>
-        <hypothesis>
-            <label>H2</label>
-            <description>some other text here</description>
-            <links>
-                <link href="/xml/hypothesis.xml" rel="see" type="text/xml"/>
-                <link href="" rel="remove" type="text/xml"/>
-            </links>
-        </hypothesis>
-    </hypothesizes>
+    <millis>160</millis>
+    <books>
+        <book>
+            <label>bugayenko2009</label>
+            <bibitem>
+                @incollection{bugayenko2009,
+                  title={Method for Software Cost Estimating Using Scope Champions},
+                  author={Bugayenko, Yegor},
+                  booktitle={Product-Focused Software Process Improvement},
+                  pages={59--70},
+                  year={2009},
+                  publisher={Springer}
+                }
+            </bibitem>
+        </book>
+        <book>
+            <label>bugayenko2</label>
+            <bibitem>
+                @incollection{bugayenko2,
+                  title={Competitive Risk Identification Method for Distributed Teams},
+                  author={Bugayenko, Yegor},
+                  booktitle={Software Engineering Approaches for Offshore and Outsourced Development},
+                  pages={96--101},
+                  year={2009},
+                  publisher={Springer}
+                }
+            </bibitem>
+        </book>
+    </books>
 </page>

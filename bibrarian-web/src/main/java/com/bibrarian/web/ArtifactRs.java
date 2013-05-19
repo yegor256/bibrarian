@@ -84,11 +84,10 @@ public final class ArtifactRs extends BaseRs {
     /**
      * Show full details.
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @GET
     @Path("/")
-    public Response index() throws Exception {
+    public Response index() {
         return new PageBuilder()
             .stylesheet("/xsl/artifact.xsl")
             .build(EmptyPage.class)
@@ -102,12 +101,10 @@ public final class ArtifactRs extends BaseRs {
      * Set new text of referat.
      * @param text Text of it
      * @return The JAX-RS response
-     * @throws Exception If some problem inside
      */
     @POST
     @Path("/referat")
-    public Response referat(@FormParam("text") @NotNull final String text)
-        throws Exception {
+    public Response referat(@FormParam("text") @NotNull final String text) {
         this.artifact.referat(text);
         throw FlashInset.forward(
             this.indexUri(),
