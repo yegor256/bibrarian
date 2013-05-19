@@ -84,7 +84,7 @@ public interface Book extends Comparable<Book> {
          * @param label The label
          */
         public Simple(@NotNull final String label) {
-            this(label, new Bibitem.Simple());
+            this(label, new Bibitem.Simple(""));
         }
         /**
          * Public ctor.

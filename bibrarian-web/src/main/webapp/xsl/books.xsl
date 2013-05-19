@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2013, bibrarian.com
  * All rights reserved.
  *
@@ -26,49 +27,37 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.bibrarian.om;
-
-import com.jcabi.aspects.Immutable;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import javax.validation.constraints.NotNull;
-
-/**
- * One bibitem.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
- */
-@Immutable
-public interface Bibitem extends Map<Bibitem.Field, String> {
-
-    /**
-     * Field.
-     */
-    enum Field {
-        AUTHOR,
-        ISBN;
-    };
-
-    /**
-     * Simple implementation.
-     */
-    final class Simple extends
-        ConcurrentHashMap<Bibitem.Field, String>
-        implements Bibitem {
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = 0x8732ab4efeb4662eL;
-        /**
-         * Public ctor.
-         * @param text Text to parse
-         */
-        public Simple(@NotNull final String text) {
-            super();
-            assert text != null;
-        }
-    }
-
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+    <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:include href="/xsl/layout.xsl"/>
+    <xsl:template name="head">
+        <title>
+            <xsl:text>books</xsl:text>
+        </title>
+    </xsl:template>
+    <xsl:template name="content">
+        <form method="post">
+            <xsl:attribute name="action">
+                <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
+            </xsl:attribute>
+            <p>
+                <label for="label"><xsl:text>book label: </xsl:text></label>
+                <input name="label" size="4"/>
+                <label for="bibitem"><xsl:text>bibitem: </xsl:text></label>
+                <textarea name="bibitem"></textarea>
+                <input type="submit"/>
+            </p>
+        </form>
+        <xsl:apply-templates select="books/book"/>
+    </xsl:template>
+    <xsl:template match="book">
+        <p>
+            <span>
+                <xsl:value-of select="label"/>
+            </span>
+            <xsl:text>: </xsl:text>
+            <xsl:value-of select="bibitem"/>
+        </p>
+    </xsl:template>
+</xsl:stylesheet>

@@ -79,6 +79,35 @@
                     <xsl:choose>
                         <xsl:when test="/page/identity">
                             <xsl:apply-templates select="identity"/>
+                            <p>
+                                <a title="Your discoveries">
+                                    <xsl:attribute name="href">
+                                        <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
+                                    </xsl:attribute>
+                                    <xsl:text>Discoveries</xsl:text>
+                                </a>
+                                <xsl:text> | </xsl:text>
+                                <a title="All artifacts discovered by you">
+                                    <xsl:attribute name="href">
+                                        <xsl:value-of select="/page/links/link[@rel='artifacts']/@href"/>
+                                    </xsl:attribute>
+                                    <xsl:text>Artifacts</xsl:text>
+                                </a>
+                                <xsl:text> | </xsl:text>
+                                <a title="Your hypothesizes">
+                                    <xsl:attribute name="href">
+                                        <xsl:value-of select="/page/links/link[@rel='hypothesizes']/@href"/>
+                                    </xsl:attribute>
+                                    <xsl:text>Hypothesizes</xsl:text>
+                                </a>
+                                <xsl:text> | </xsl:text>
+                                <a title="All books">
+                                    <xsl:attribute name="href">
+                                        <xsl:value-of select="/page/links/link[@rel='books']/@href"/>
+                                    </xsl:attribute>
+                                    <xsl:text>Books</xsl:text>
+                                </a>
+                            </p>
                             <xsl:call-template name="content"/>
                         </xsl:when>
                         <xsl:otherwise>
