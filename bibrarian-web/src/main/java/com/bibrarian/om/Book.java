@@ -56,13 +56,13 @@ public interface Book extends Comparable<Book> {
      * @return The text of it
      */
     @NotNull
-    String bibitem();
+    Bibitem bibitem();
 
     /**
      * Set its bibitem.
      * @param bibitem The text of it
      */
-    void bibitem(@NotNull String bibitem);
+    void bibitem(@NotNull Bibitem bibitem);
 
     /**
      * Simple implementation.
@@ -78,13 +78,13 @@ public interface Book extends Comparable<Book> {
         /**
          * Description.
          */
-        private final transient String item;
+        private final transient Bibitem item;
         /**
          * Public ctor.
          * @param label The label
          */
         public Simple(@NotNull final String label) {
-            this(label, "");
+            this(label, new Bibitem.Simple());
         }
         /**
          * Public ctor.
@@ -92,7 +92,7 @@ public interface Book extends Comparable<Book> {
          * @param bibitem The bibitem
          */
         public Simple(@NotNull final String label,
-            @NotNull final String bibitem) {
+            @NotNull final Bibitem bibitem) {
             this.lbl = label;
             this.item = bibitem;
         }
@@ -109,7 +109,7 @@ public interface Book extends Comparable<Book> {
          */
         @Override
         @NotNull
-        public String bibitem() {
+        public Bibitem bibitem() {
             return this.item;
         }
         /**
@@ -117,7 +117,7 @@ public interface Book extends Comparable<Book> {
          */
         @Override
         @NotNull
-        public void bibitem(final String text) {
+        public void bibitem(final Bibitem text) {
             throw new UnsupportedOperationException();
         }
         /**

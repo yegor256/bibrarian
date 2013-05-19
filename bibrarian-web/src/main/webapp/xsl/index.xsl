@@ -38,7 +38,33 @@
     </xsl:template>
     <xsl:template name="content">
         <p>
-            <xsl:value-of select="/page/message"/>
+            <a title="Your discoveries">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
+                </xsl:attribute>
+                <xsl:text>Discoveries</xsl:text>
+            </a>
+            <xsl:text> | </xsl:text>
+            <a title="All artifacts discovered by you">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='artifacts']/@href"/>
+                </xsl:attribute>
+                <xsl:text>Artifacts</xsl:text>
+            </a>
+            <xsl:text> | </xsl:text>
+            <a title="Your hypothesizes">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='hypothesizes']/@href"/>
+                </xsl:attribute>
+                <xsl:text>Hypothesizes</xsl:text>
+            </a>
+            <xsl:text> | </xsl:text>
+            <a title="All books">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='books']/@href"/>
+                </xsl:attribute>
+                <xsl:text>Books</xsl:text>
+            </a>
         </p>
     </xsl:template>
 </xsl:stylesheet>

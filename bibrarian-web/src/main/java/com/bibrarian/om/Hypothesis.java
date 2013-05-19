@@ -81,6 +81,12 @@ public interface Hypothesis extends Comparable<Hypothesis> {
         private final transient String desc;
         /**
          * Public ctor.
+         */
+        public Simple() {
+            this("unknown", "");
+        }
+        /**
+         * Public ctor.
          * @param label The label
          */
         public Simple(@NotNull final String label) {

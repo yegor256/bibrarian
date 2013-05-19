@@ -31,6 +31,7 @@ package com.bibrarian.dynamo;
 
 import com.bibrarian.om.Bibrarian;
 import com.bibrarian.om.Bibrarians;
+import com.bibrarian.om.Books;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
 import javax.validation.constraints.NotNull;
@@ -64,6 +65,14 @@ public final class DynamoBibrarians implements Bibrarians {
     @Override
     public Bibrarian fetch(@NotNull final URN urn) {
         assert urn != null;
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Books books() {
         throw new UnsupportedOperationException();
     }
 

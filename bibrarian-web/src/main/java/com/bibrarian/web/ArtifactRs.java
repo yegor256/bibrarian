@@ -32,7 +32,6 @@ package com.bibrarian.web;
 import com.bibrarian.om.Artifact;
 import com.bibrarian.om.Book;
 import com.bibrarian.om.Discovery;
-import com.bibrarian.om.Hypothesis;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
@@ -57,7 +56,7 @@ import javax.ws.rs.core.Response;
  * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
  * @checkstyle MultipleStringLiterals (500 lines)
  */
-@Path("/a")
+@Path("/ar")
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class ArtifactRs extends BaseRs {
@@ -65,7 +64,7 @@ public final class ArtifactRs extends BaseRs {
     /**
      * Query ID.
      */
-    private static final String QUERY_LABEL = "label";
+    public static final String QUERY_LABEL = "label";
 
     /**
      * Artifact to work with.
@@ -100,70 +99,6 @@ public final class ArtifactRs extends BaseRs {
     }
 
     /**
-     * Add new discovery.
-     * @param label Book label
-     * @param quote The quote
-     * @param pages The pages
-     * @param relevance The relevance
-     * @return The JAX-RS response
-     * @throws Exception If some problem inside
-     * @checkstyle ParameterNumber (7 lines)
-     */
-    @GET
-    @Path("/add")
-    public Response add(@QueryParam("label") @NotNull final String label,
-        @QueryParam("quote") @NotNull final String quote,
-        @QueryParam("pages") @NotNull final String pages,
-        @QueryParam("relevance") @NotNull final String relevance)
-        throws Exception {
-        final Discovery discovery = new Discovery.Simple(
-            new Hypothesis.Simple(label),
-            quote,
-            pages,
-            Float.parseFloat(relevance)
-        );
-        if (!this.artifact.discoveries().add(discovery)) {
-            throw FlashInset.forward(
-                this.indexUri(),
-                "discovery was NOT added",
-                Level.WARNING
-            );
-        }
-        throw FlashInset.forward(
-            this.indexUri(),
-            "discovery was added successfully",
-            Level.INFO
-        );
-    }
-
-    /**
-     * Remove discovery.
-     * @param label Book label
-     * @return The JAX-RS response
-     * @throws Exception If some problem inside
-     */
-    @GET
-    @Path("/remove")
-    public Response remove(@QueryParam("label") @NotNull final String label)
-        throws Exception {
-        final Discovery discovery = new Discovery.Simple(
-            new Hypothesis.Simple(label)
-        );
-        if (!this.artifact.discoveries().remove(discovery)) {
-            throw FlashInset.forward(
-                this.indexUri(),
-                "discovery was NOT removed",
-                Level.WARNING
-            );
-        }
-        throw FlashInset.forward(
-            this.indexUri(),
-            "discovery was removed successfully",
-            Level.INFO
-        );
-    }
-
-    /**
      * Set new text of referat.
      * @param text Text of it
      * @return The JAX-RS response
@@ -191,7 +126,7 @@ public final class ArtifactRs extends BaseRs {
             .add("book")
                 .add("label", artfct.book().label())
                 .up()
-                .add("bibitem", artfct.book().bibitem())
+                .add("bibitem", artfct.book().bibitem().toString())
                 .up()
             .up()
             .add("hardcopies").add(
@@ -249,7 +184,7 @@ public final class ArtifactRs extends BaseRs {
             .up()
             .add("quote", discovery.quote())
             .up()
-            .add("relevance", Float.toString(discovery.relevance()))
+            .add("relevance", Double.toString(discovery.relevance()))
             .up()
             .link(
                 new Link(

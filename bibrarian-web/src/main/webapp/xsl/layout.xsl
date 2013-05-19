@@ -68,7 +68,7 @@
                 <xsl:apply-templates select="version"/>
                 <div id="content">
                     <p>
-                        <img alt="bibrarian logo">
+                        <img alt="bibrarian logo" style="width: 120px: height: 35px;">
                             <xsl:attribute name="src">
                                 <xsl:text>http://img.bibrarian.com/logo.png?</xsl:text>
                                 <xsl:value-of select="/page/version/revision"/>
@@ -143,7 +143,7 @@
     </xsl:template>
     <xsl:template match="identity">
         <p>
-            <img style="width: 25px; height: 25px;">
+            <img class="photo-icon">
                 <xsl:attribute name="src">
                     <xsl:value-of select="photo"/>
                 </xsl:attribute>
@@ -153,7 +153,7 @@
             </img>
             <xsl:text> </xsl:text>
             <xsl:value-of select="name"/>
-            <img style="margin-left: 0.5em;" alt="account type">
+            <img class="login-icon" alt="account type">
                 <xsl:attribute name="src">
                     <xsl:text>http://img.bibrarian.com/icons/</xsl:text>
                     <xsl:choose>

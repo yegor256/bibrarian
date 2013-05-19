@@ -29,13 +29,15 @@
  */
 package com.bibrarian.web;
 
-import com.bibrarian.om.Hypothesis;
+import com.bibrarian.om.Artifact;
+import com.bibrarian.om.Discovery;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
 import java.util.Collection;
+import java.util.Date;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -44,21 +46,19 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
- * CRUD of Hypothesizes.
+ * List of all discoveries.
  *
  * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
- * @checkstyle MultipleStringLiterals (500 lines)
+ * @version $Id: DiscoveriesRs.java 2344 2013-01-13 18:28:44Z guard $
  */
-@Path("/h")
+@Path("/")
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
-public final class HypothesizesRs extends BaseRs {
+public final class DiscoveriesRs extends BaseRs {
 
     /**
-     * Get them all.
+     * List of them.
      * @return The JAX-RS response
      * @throws Exception If some problem inside
      */
@@ -66,116 +66,128 @@ public final class HypothesizesRs extends BaseRs {
     @Path("/")
     public Response index() throws Exception {
         return new PageBuilder()
-            .stylesheet("/xsl/hypothesizes.xsl")
+            .stylesheet("/xsl/discoveries.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(this.jaxb(this.bibrarian().hypothesizes()))
+            .append(this.jaxb(this.bibrarian().discoveries()))
             .append(new Link("add", "./add"))
             .render()
             .build();
     }
 
     /**
-     * Remove by label.
-     * @param label The label to use
+     * Remove by book label and date.
+     * @param label The book label to use
+     * @param date When it happened
      * @return The JAX-RS response
      * @throws Exception If some problem inside
      */
     @GET
     @Path("/remove")
-    public Response remove(@QueryParam("label") @NotNull final String label)
+    public Response remove(@QueryParam("label") @NotNull final String label,
+        @QueryParam("date") @NotNull final String date)
         throws Exception {
-        final Hypothesis hypothesis = new Hypothesis.Simple(label);
-        if (!this.bibrarian().hypothesizes().remove(hypothesis)) {
+        final Artifact artifact = this.bibrarian().artifacts().fetch(
+            this.bibrarians().books().fetch(label)
+        );
+        final Discovery discovery =
+            new Discovery.Simple(new Date(Long.parseLong(date)));
+        if (!artifact.discoveries().remove(discovery)) {
             throw FlashInset.forward(
                 this.indexUri(),
-                "hypothesis was NOT deleted",
+                "discovery was NOT deleted",
                 Level.WARNING
             );
         }
         throw FlashInset.forward(
             this.indexUri(),
-            "hypothesis was deleted successfully",
+            "discovery was deleted successfully",
             Level.INFO
         );
     }
 
     /**
-     * Add new hypothesis.
-     * @param label The label to use
-     * @param desc The description to use
+     * Add new discovery.
+     * @param label The label of the hypothesis
+     * @param quote Quote
+     * @param pages Pages
      * @return The JAX-RS response
      * @throws Exception If some problem inside
      */
     @GET
     @Path("/add")
     public Response add(@QueryParam("label") @NotNull final String label,
-        @QueryParam("description") @NotNull final String desc)
+        @QueryParam("quote") @NotNull final String quote,
+        @QueryParam("pages") @NotNull final String pages)
         throws Exception {
-        final Hypothesis hypothesis = new Hypothesis.Simple(label, desc);
-        if (!this.bibrarian().hypothesizes().add(hypothesis)) {
+        final Discovery discovery = new Discovery.Simple(
+            new Date(),
+            this.bibrarian().hypothesizes().fetch(label),
+            quote,
+            pages,
+            1d
+        );
+        if (!this.bibrarian().discoveries().add(discovery)) {
             throw FlashInset.forward(
                 this.indexUri(),
-                "hypothesis was NOT added",
+                "discovery was NOT added",
                 Level.WARNING
             );
         }
         throw FlashInset.forward(
             this.indexUri(),
-            "hypothesis was added successfully",
+            "discovery was added successfully",
             Level.INFO
         );
     }
 
     /**
-     * Convert hypothesizes to a JAXB element.
+     * Convert discoveries to a JAXB element.
      * @param hypothesizes The list of them
      * @return JAXB object
      */
-    private JaxbBundle jaxb(final Collection<Hypothesis> hypothesizes) {
-        return new JaxbBundle("hypothesizes").add(
-            new JaxbBundle.Group<Hypothesis>(hypothesizes) {
+    private JaxbBundle jaxb(final Collection<Discovery> discoveries) {
+        return new JaxbBundle("discoveries").add(
+            new JaxbBundle.Group<Discovery>(discoveries) {
                 @Override
-                public JaxbBundle bundle(final Hypothesis hypothesis) {
-                    return HypothesizesRs.this.bundle(hypothesis);
+                public JaxbBundle bundle(final Discovery discovery) {
+                    return DiscoveriesRs.this.bundle(discovery);
                 }
             }
         );
     }
 
     /**
-     * Convert hypothesis to a JAXB element.
-     * @param hypothesis The element
+     * Convert discovery to a JAXB element.
+     * @param discovery The discovery
      * @return JAXB object
      */
-    private JaxbBundle bundle(final Hypothesis hypothesis) {
-        return new JaxbBundle("hypothesis")
-            .add("label", hypothesis.label())
+    private JaxbBundle bundle(final Discovery discovery) {
+        return new JaxbBundle("discovery")
+            .add("hypothesis")
+                .add("label", discovery.hypothesis().label())
+                .up()
             .up()
-            .add("description", hypothesis.description())
+            .add("quotes", discovery.quote())
             .up()
-            .link(
-                new Link(
-                    "see",
-                    HypothesizesRs.this.uriInfo()
-                        .getBaseUriBuilder()
-                        .clone()
-                        .path(HypothesisRs.class)
-                        .path(HypothesisRs.class, "index")
-                        .queryParam(HypothesisRs.QUERY_LABEL, "{x}")
-                        .build(hypothesis.label())
-                )
-            )
+            .add("pages", discovery.pages())
+            .up()
+            .add("relevance", Double.toString(discovery.relevance()))
+            .up()
             .link(
                 new Link(
                     "remove",
-                    HypothesizesRs.this.uriInfo()
+                    DiscoveriesRs.this.uriInfo()
                         .getBaseUriBuilder()
                         .clone()
-                        .path(HypothesizesRs.class)
-                        .path(HypothesizesRs.class, "remove")
-                        .queryParam("label", "{z}")
-                        .build(hypothesis.label())
+                        .path(DiscoveriesRs.class)
+                        .path(DiscoveriesRs.class, "remove")
+                        .queryParam("label", "{l}")
+                        .queryParam("date", "{d}")
+                        .build(
+                            discovery.hypothesis().label(),
+                            Long.toString(discovery.date().getTime())
+                        )
                 )
             );
     }

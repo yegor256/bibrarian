@@ -51,4 +51,10 @@ public interface Bibrarians {
     @NotNull
     Bibrarian fetch(@NotNull URN urn);
 
+    /**
+     * All known books.
+     * @return Books
+     */
+    Books books();
+
 }

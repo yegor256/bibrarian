@@ -27,39 +27,71 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.web;
 
-import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
+import com.bibrarian.om.Hypothesis;
+import com.jcabi.aspects.Loggable;
+import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.PageBuilder;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 
 /**
- * One bibrarian (user of the system).
+ * One Hypothesis.
+ *
+ * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
-@Immutable
-public interface Bibrarian {
+@Path("/hp")
+@Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
+public final class HypothesisRs extends BaseRs {
 
     /**
-     * Get a read-only list of all his artifacts.
-     * @return The artifacts
+     * Query ID.
      */
-    @NotNull
-    Artifacts artifacts();
+    public static final String QUERY_LABEL = "label";
 
     /**
-     * Get all hypothesizes.
-     * @return The hypothesizes
+     * The hypothesis under work.
      */
-    @NotNull
-    Hypothesizes hypothesizes();
+    private transient Hypothesis hypothesis;
 
     /**
-     * Get all discoveries.
-     * @return The discoveries
+     * Set it from query string.
+     * @param label Name of it
      */
-    @NotNull
-    Discoveries discoveries();
+    @QueryParam(HypothesisRs.QUERY_LABEL)
+    public void setHypothesis(final String label) {
+        this.hypothesis = this.bibrarian().hypothesizes().fetch(label);
+    }
+
+    /**
+     * Show it.
+     * @return The JAX-RS response
+     * @throws Exception If some problem inside
+     */
+    @GET
+    @Path("/")
+    public Response index() throws Exception {
+        return new PageBuilder()
+            .stylesheet("/xsl/hypothesis.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .append(
+                new JaxbBundle("hypothesis")
+                    .add("label", this.hypothesis.label())
+                    .up()
+                    .add("description", this.hypothesis.description())
+                    .up()
+            )
+            .render()
+            .build();
+    }
 
 }

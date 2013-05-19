@@ -31,6 +31,7 @@ package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import java.util.Date;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -44,6 +45,13 @@ import lombok.ToString;
 @Immutable
 @SuppressWarnings("PMD.TooManyMethods")
 public interface Discovery extends Comparable<Discovery> {
+
+    /**
+     * Moment of discovery.
+     * @return When was it discovered
+     */
+    @NotNull
+    Date date();
 
     /**
      * Hypothesis it is related to.
@@ -79,24 +87,29 @@ public interface Discovery extends Comparable<Discovery> {
     void pages(@NotNull String pages);
 
     /**
-     * Relevance.
+     * Relevance, in [0..1] interval.
      * @return The relevance
      */
-    float relevance();
+    double relevance();
 
     /**
-     * Set relevance.
+     * Set relevance, in [0..1] interval.
      * @param relevance The relevance
      */
-    void relevance(float relevance);
+    void relevance(double relevance);
 
     /**
      * Simple implementation.
      */
     @Loggable(Loggable.DEBUG)
+    @Immutable
     @ToString
-    @EqualsAndHashCode(of = { "hypo", "qte", "pgs", "rlv" })
+    @EqualsAndHashCode(of = { "when", "hypo", "qte", "pgs", "rlv" })
     final class Simple implements Discovery {
+        /**
+         * When.
+         */
+        private final transient long when;
         /**
          * Hypothesis.
          */
@@ -112,29 +125,46 @@ public interface Discovery extends Comparable<Discovery> {
         /**
          * Relevance.
          */
-        private final transient float rlv;
+        private final transient double rlv;
         /**
          * Public ctor.
          * @param hypothesis The hypothesis
          */
         public Simple(@NotNull final Hypothesis hypothesis) {
-            this(hypothesis, "", "", 0f);
+            this(new Date(), hypothesis, "", "", 0f);
         }
         /**
          * Public ctor.
+         * @param date When it happened
+         */
+        public Simple(@NotNull final Date date) {
+            this(date, new Hypothesis.Simple(), "", "", 0f);
+        }
+        /**
+         * Public ctor.
+         * @param date When it happened
          * @param hypothesis The hypothesis
          * @param quote The description
          * @param pages The pages
          * @param relevance The relevance
          * @checkstyle ParameterNumber (5 lines)
          */
-        public Simple(@NotNull final Hypothesis hypothesis,
+        public Simple(@NotNull final Date date,
+            @NotNull final Hypothesis hypothesis,
             @NotNull final String quote, @NotNull final String pages,
-            @NotNull final float relevance) {
+            @NotNull final double relevance) {
+            this.when = date.getTime();
             this.hypo = hypothesis;
             this.qte = quote;
             this.pgs = pages;
             this.rlv = relevance;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Date date() {
+            return new Date(this.when);
         }
         /**
          * {@inheritDoc}
@@ -175,14 +205,14 @@ public interface Discovery extends Comparable<Discovery> {
          * {@inheritDoc}
          */
         @Override
-        public float relevance() {
+        public double relevance() {
             throw new UnsupportedOperationException();
         }
         /**
          * {@inheritDoc}
          */
         @Override
-        public void relevance(final float relevance) {
+        public void relevance(final double relevance) {
             throw new UnsupportedOperationException();
         }
         /**

@@ -30,9 +30,13 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import java.net.URI;
 import java.util.SortedSet;
+import java.util.TreeSet;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * One artifact.
@@ -76,6 +80,70 @@ public interface Artifact extends Comparable<Artifact> {
      * @return The discoveries
      */
     @NotNull
-    SortedSet<Discovery> discoveries();
+    Discoveries discoveries();
+
+    /**
+     * Simple implementation.
+     */
+    @Loggable(Loggable.DEBUG)
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "bkk")
+    final class Simple implements Artifact {
+        /**
+         * Book.
+         */
+        private final transient Book bkk;
+        /**
+         * Public ctor.
+         * @param book Book to encapsulate
+         */
+        public Simple(@NotNull final Book book) {
+            this.bkk = book;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull
+        public Book book() {
+            return this.bkk;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public SortedSet<URI> hardcopies() {
+            return new TreeSet<URI>();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String referat() {
+            return "";
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void referat(final String text) {
+            throw new UnsupportedOperationException();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Discoveries discoveries() {
+            throw new UnsupportedOperationException();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int compareTo(final Artifact artifact) {
+            return this.book().compareTo(artifact.book());
+        }
+    }
 
 }

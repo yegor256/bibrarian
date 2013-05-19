@@ -31,19 +31,21 @@ package com.bibrarian.web;
 
 import com.bibrarian.om.Artifact;
 import com.bibrarian.om.Discovery;
-import com.bibrarian.om.Query;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rexsl.page.inset.FlashInset;
 import java.util.Collection;
+import java.util.logging.Level;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
- * Search and find artifacts.
+ * CRUD of Artifacts.
  *
  * <p>The class is mutable and NOT thread-safe.
  *
@@ -51,38 +53,97 @@ import javax.ws.rs.core.Response;
  * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
  * @checkstyle MultipleStringLiterals (500 lines)
  */
-@Path("/s")
+@Path("/a")
 @Loggable(Loggable.DEBUG)
-public final class SearchRs extends BaseRs {
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
+public final class ArtifactsRs extends BaseRs {
 
     /**
-     * Search and show found artifacts.
-     * @param query The query
+     * Get them all.
      * @return The JAX-RS response
      * @throws Exception If some problem inside
      */
     @GET
     @Path("/")
-    public Response index(@QueryParam("query") final String query)
-        throws Exception {
-        final Collection<Artifact> artifacts = this.bibrarian()
-            .artifacts().query(new Query.Simple(query));
+    public Response index() throws Exception {
         return new PageBuilder()
-            .stylesheet("/xsl/search.xsl")
+            .stylesheet("/xsl/artifacts.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(
-                new JaxbBundle("artifacts").add(
-                    new JaxbBundle.Group<Artifact>(artifacts) {
-                        @Override
-                        public JaxbBundle bundle(final Artifact artifact) {
-                            return SearchRs.this.bundle(artifact);
-                        }
-                    }
-                )
-            )
+            .append(this.jaxb(this.bibrarian().artifacts()))
+            .append(new Link("add", "./add"))
             .render()
             .build();
+    }
+
+    /**
+     * Remove by label.
+     * @param label The label to use
+     * @return The JAX-RS response
+     * @throws Exception If some problem inside
+     */
+    @GET
+    @Path("/remove")
+    public Response remove(@QueryParam("label") @NotNull final String label)
+        throws Exception {
+        final Artifact artifact = new Artifact.Simple(
+            this.bibrarians().books().fetch(label)
+        );
+        if (!this.bibrarian().artifacts().remove(artifact)) {
+            throw FlashInset.forward(
+                this.indexUri(),
+                "artifact was NOT deleted",
+                Level.WARNING
+            );
+        }
+        throw FlashInset.forward(
+            this.indexUri(),
+            "artifact was deleted successfully",
+            Level.INFO
+        );
+    }
+
+    /**
+     * Add new artifact.
+     * @param label The label of the book to use
+     * @return The JAX-RS response
+     * @throws Exception If some problem inside
+     */
+    @GET
+    @Path("/add")
+    public Response add(@QueryParam("label") @NotNull final String label)
+        throws Exception {
+        final Artifact artifact = new Artifact.Simple(
+            this.bibrarians().books().fetch(label)
+        );
+        if (!this.bibrarian().artifacts().add(artifact)) {
+            throw FlashInset.forward(
+                this.indexUri(),
+                "artifact was NOT added",
+                Level.WARNING
+            );
+        }
+        throw FlashInset.forward(
+            this.indexUri(),
+            "artifact was added successfully",
+            Level.INFO
+        );
+    }
+
+    /**
+     * Convert hypothesizes to a JAXB element.
+     * @param hypothesizes The list of them
+     * @return JAXB object
+     */
+    private JaxbBundle jaxb(final Collection<Artifact> artifacts) {
+        return new JaxbBundle("artifacts").add(
+            new JaxbBundle.Group<Artifact>(artifacts) {
+                @Override
+                public JaxbBundle bundle(final Artifact artifact) {
+                    return ArtifactsRs.this.bundle(artifact);
+                }
+            }
+        );
     }
 
     /**
@@ -95,7 +156,7 @@ public final class SearchRs extends BaseRs {
             .add("book")
                 .add("label", artifact.book().label())
                 .up()
-                .add("bibitem", artifact.book().bibitem())
+                .add("bibitem", artifact.book().bibitem().toString())
                 .up()
             .up()
             .add("referat", artifact.referat())
@@ -104,11 +165,35 @@ public final class SearchRs extends BaseRs {
                 new JaxbBundle.Group<Discovery>(artifact.discoveries()) {
                     @Override
                     public JaxbBundle bundle(final Discovery discovery) {
-                        return SearchRs.this.bundle(discovery);
+                        return ArtifactsRs.this.bundle(discovery);
                     }
                 }
             )
-            .up();
+            .up()
+            .link(
+                new Link(
+                    "see",
+                    ArtifactsRs.this.uriInfo()
+                        .getBaseUriBuilder()
+                        .clone()
+                        .path(ArtifactRs.class)
+                        .path(ArtifactRs.class, "index")
+                        .queryParam(ArtifactRs.QUERY_LABEL, "{x}")
+                        .build(artifact.book().label())
+                )
+            )
+            .link(
+                new Link(
+                    "remove",
+                    ArtifactsRs.this.uriInfo()
+                        .getBaseUriBuilder()
+                        .clone()
+                        .path(HypothesizesRs.class)
+                        .path(HypothesizesRs.class, "remove")
+                        .queryParam("label", "{z}")
+                        .build(artifact.book().label())
+                )
+            );
     }
 
     /**
@@ -124,7 +209,7 @@ public final class SearchRs extends BaseRs {
             .up()
             .add("quote", discovery.quote())
             .up()
-            .add("relevance", Float.toString(discovery.relevance()))
+            .add("relevance", Double.toString(discovery.relevance()))
             .up()
             .link(
                 new Link(

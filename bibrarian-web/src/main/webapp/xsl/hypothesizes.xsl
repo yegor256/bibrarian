@@ -39,7 +39,7 @@
     <xsl:template name="content">
         <form method="post">
             <xsl:attribute name="action">
-                <xsl:value-of select="/page/links/link[@rel='self']/@href"/>
+                <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
             </xsl:attribute>
             <p>
                 <label for="label"><xsl:text>label: </xsl:text></label>

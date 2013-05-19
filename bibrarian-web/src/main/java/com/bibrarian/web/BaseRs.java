@@ -36,6 +36,7 @@ import com.jcabi.manifests.Manifests;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
+import com.rexsl.page.Link;
 import com.rexsl.page.Resource;
 import com.rexsl.page.auth.AuthInset;
 import com.rexsl.page.auth.Facebook;
@@ -88,6 +89,23 @@ public class BaseRs extends BaseResource {
                 final Response.ResponseBuilder builder) {
                 builder.type(MediaType.TEXT_XML);
                 builder.header(HttpHeaders.VARY, "Cookie");
+            }
+        };
+    }
+
+    /**
+     * Links.
+     * @return The inset
+     */
+    @Inset.Runtime
+    public final Inset insetLinks() {
+        return new Inset() {
+            @Override
+            public void render(final BasePage<?, ?> page,
+                final Response.ResponseBuilder builder) {
+                page.link(new Link("hypothesizes", "/h"));
+                page.link(new Link("artifacts", "/a"));
+                page.link(new Link("books", "/b"));
             }
         };
     }

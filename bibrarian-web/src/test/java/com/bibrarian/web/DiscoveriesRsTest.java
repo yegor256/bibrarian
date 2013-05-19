@@ -27,39 +27,43 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.web;
 
-import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
+import com.rexsl.page.HttpHeadersMocker;
+import com.rexsl.page.UriInfoMocker;
+import com.rexsl.test.JaxbConverter;
+import com.rexsl.test.XhtmlMatchers;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * One bibrarian (user of the system).
- *
+ * Test case for {@link DiscoveriesRs}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id: DiscoveriesRsTest.java 2344 2013-01-13 18:28:44Z guard $
  */
-@Immutable
-public interface Bibrarian {
+public final class DiscoveriesRsTest {
 
     /**
-     * Get a read-only list of all his artifacts.
-     * @return The artifacts
+     * DiscoveriesRs can render front page.
+     * @throws Exception If some problem inside
      */
-    @NotNull
-    Artifacts artifacts();
-
-    /**
-     * Get all hypothesizes.
-     * @return The hypothesizes
-     */
-    @NotNull
-    Hypothesizes hypothesizes();
-
-    /**
-     * Get all discoveries.
-     * @return The discoveries
-     */
-    @NotNull
-    Discoveries discoveries();
+    @Test
+    public void rendersFrontPage() throws Exception {
+        final DiscoveriesRs res = new DiscoveriesRs();
+        res.setUriInfo(new UriInfoMocker().mock());
+        res.setHttpHeaders(new HttpHeadersMocker().mock());
+        res.setSecurityContext(Mockito.mock(SecurityContext.class));
+        final Response response = res.index();
+        MatcherAssert.assertThat(
+            JaxbConverter.the(response.getEntity()),
+            XhtmlMatchers.hasXPaths(
+                "/page/millis",
+                "/page/version[name='1.0-SNAPSHOT']"
+            )
+        );
+    }
 
 }
