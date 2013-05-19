@@ -37,6 +37,7 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <h1><xsl:text>Artifacts</xsl:text></h1>
         <xsl:apply-templates select="artifacts/artifact"/>
     </xsl:template>
     <xsl:template match="artifact">
@@ -57,17 +58,27 @@
     </xsl:template>
     <xsl:template match="discovery">
         <li>
-            <xsl:text>&quot;</xsl:text>
-            <xsl:value-of select="quote"/>
-            <xsl:text>&quot;, pp.</xsl:text>
-            <xsl:value-of select="pages"/>
-            <xsl:text> for </xsl:text>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="links/link[@rel='hypothesis']/@href"/>
                 </xsl:attribute>
                 <xsl:value-of select="label"/>
             </a>
+            <xsl:text>: </xsl:text>
+            <i>
+                <xsl:text>&quot;</xsl:text>
+                <xsl:value-of select="quote"/>
+                <xsl:text>&quot;</xsl:text>
+            </i>
+            <xsl:text>, </xsl:text>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="links/link[@rel='artifact']/@href"/>
+                </xsl:attribute>
+                <xsl:value-of select="artifact"/>
+            </a>
+            <xsl:text>, pp.</xsl:text>
+            <xsl:value-of select="pages"/>
         </li>
     </xsl:template>
 </xsl:stylesheet>

@@ -139,20 +139,6 @@ public interface Discovery {
         private final transient double rlv;
         /**
          * Public ctor.
-         * @param hypothesis The hypothesis
-         */
-        public Simple(@NotNull final Hypothesis hypothesis) {
-            this(new Date(), hypothesis, null, "", "", 0f);
-        }
-        /**
-         * Public ctor.
-         * @param date When it happened
-         */
-        public Simple(@NotNull final Date date) {
-            this(date, new Hypothesis.Simple(), null, "", "", 0f);
-        }
-        /**
-         * Public ctor.
          * @param date When it happened
          * @param hypothesis The hypothesis
          * @param artifact Artifact

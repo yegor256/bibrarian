@@ -29,7 +29,6 @@
  */
 package com.bibrarian.web;
 
-import com.bibrarian.om.Artifact;
 import com.bibrarian.om.Discovery;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
@@ -75,21 +74,28 @@ public final class DiscoveriesRs extends BaseRs {
     }
 
     /**
-     * Remove by book label and date.
-     * @param label The book label to use
+     * Remove by bibitem label and date.
+     * @param label Label of hypothesis
+     * @param item The bibitem label to use
      * @param date When it happened
      * @return The JAX-RS response
      */
     @GET
     @Path("/remove")
     public Response remove(@QueryParam("label") @NotNull final String label,
+        @QueryParam("item") @NotNull final String item,
         @QueryParam("date") @NotNull final String date) {
-        final Artifact artifact = this.bibrarian().artifacts()
-            .query().with("bibitem", label).refine()
-            .iterator().next();
-        final Discovery discovery =
-            new Discovery.Simple(new Date(Long.parseLong(date)));
-        if (!artifact.discoveries().remove(discovery)) {
+        final Discovery discovery = new Discovery.Simple(
+            new Date(Long.parseLong(date)),
+            this.bibrarian().hypothesizes()
+                .query().with("label", label).refine()
+                .iterator().next(),
+            this.bibrarian().artifacts()
+                .query().with("bibitem", item).refine()
+                .iterator().next(),
+            "", "", 1d
+        );
+        if (!this.bibrarian().discoveries().remove(discovery)) {
             throw FlashInset.forward(
                 this.indexUri(),
                 "discovery was NOT deleted",

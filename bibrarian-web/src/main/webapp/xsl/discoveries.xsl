@@ -37,25 +37,49 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <h1><xsl:text>New Discovery</xsl:text></h1>
         <form method="post">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
             </xsl:attribute>
             <p>
-                <label for="label"><xsl:text>hypothesis label: </xsl:text></label>
+                <label for="label"><xsl:text>hypothesis: </xsl:text></label>
                 <input name="label" size="4"/>
+                <label for="artifact"><xsl:text>artifact: </xsl:text></label>
+                <input name="artifact" size="8"/>
+                <label for="quote"><xsl:text>quote: </xsl:text></label>
+                <textarea name="quote" style="width: 350pt; height: 50pt;"></textarea>
+                <label for="pages"><xsl:text>pages: </xsl:text></label>
+                <input name="pages" size="7"/>
                 <input type="submit"/>
             </p>
         </form>
+        <h1><xsl:text>Previous Discoveries</xsl:text></h1>
         <xsl:apply-templates select="discoveries/discovery"/>
     </xsl:template>
     <xsl:template match="discovery">
-        <p>
-            <span>
+        <li>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="links/link[@rel='hypothesis']/@href"/>
+                </xsl:attribute>
                 <xsl:value-of select="label"/>
-            </span>
-            <xsl:value-of select="quote"/>
+            </a>
+            <xsl:text>: </xsl:text>
+            <i>
+                <xsl:text>&quot;</xsl:text>
+                <xsl:value-of select="quote"/>
+                <xsl:text>&quot;</xsl:text>
+            </i>
+            <xsl:text>, </xsl:text>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="links/link[@rel='artifact']/@href"/>
+                </xsl:attribute>
+                <xsl:value-of select="artifact"/>
+            </a>
+            <xsl:text>, pp.</xsl:text>
             <xsl:value-of select="pages"/>
-        </p>
+        </li>
     </xsl:template>
 </xsl:stylesheet>

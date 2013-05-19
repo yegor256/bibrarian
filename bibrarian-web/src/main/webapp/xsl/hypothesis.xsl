@@ -37,7 +37,9 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <h1><xsl:value-of select="label"/><xsl:text> Hypothesis</xsl:text></h1>
         <xsl:apply-templates select="/page/hypothesis"/>
+        <h1><xsl:text>Discoveries</xsl:text></h1>
         <xsl:apply-templates select="discoveries/discovery"/>
     </xsl:template>
     <xsl:template match="hypothesis">

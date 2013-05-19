@@ -37,6 +37,7 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <h1><xsl:text>New Hypothesis</xsl:text></h1>
         <form method="post">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
@@ -49,6 +50,7 @@
                 <input type="submit"/>
             </p>
         </form>
+        <h1><xsl:text>Hypothesises</xsl:text></h1>
         <xsl:apply-templates select="hypothesizes/hypothesis"/>
     </xsl:template>
     <xsl:template match="hypothesis">

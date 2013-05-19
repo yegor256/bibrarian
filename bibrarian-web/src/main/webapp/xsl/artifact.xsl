@@ -37,25 +37,21 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <xsl:apply-templates select="/page/artifact"/>
+    </xsl:template>
+    <xsl:template match="artifact">
+        <h1><xsl:value-of select="bibitem/label"/></h1>
         <form method="post">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
             </xsl:attribute>
             <p>
                 <label for="referat"><xsl:text>referat: </xsl:text></label>
-                <textarea name="referat"></textarea>
+                <textarea name="referat" style="width: 350pt; height: 50pt;"><xsl:value-of select="referat"/></textarea>
                 <input type="submit" value="Save"/>
             </p>
         </form>
-        <xsl:apply-templates select="/page/artifact"/>
-    </xsl:template>
-    <xsl:template match="artifact">
-        <p>
-            <xsl:value-of select="bibitem/label"/>
-            <xsl:text> </xsl:text>
-            <xsl:text>: </xsl:text>
-            <xsl:value-of select="referat"/>
-        </p>
+        <h1><xsl:text>Discoveries</xsl:text></h1>
         <ul>
             <xsl:apply-templates select="discoveries/discovery"/>
         </ul>

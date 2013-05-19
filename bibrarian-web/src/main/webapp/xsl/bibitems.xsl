@@ -37,6 +37,7 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <h1><xsl:text>New Bibitem</xsl:text></h1>
         <form method="post">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
@@ -47,6 +48,7 @@
                 <input type="submit" value="Add New Bibitem"/>
             </p>
         </form>
+        <h1><xsl:text>All Bibitems</xsl:text></h1>
         <xsl:apply-templates select="bibitems/bibitem"/>
     </xsl:template>
     <xsl:template match="bibitem">
