@@ -30,34 +30,32 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Search query.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @param <T> Type of result
  */
 @Immutable
-public interface Query {
+public interface Query<T> {
 
     /**
-     * Simple implementation.
+     * Add this term and return a new query.
+     * @param key The key
+     * @param value The value
+     * @return Query ready for further refinement
      */
-    @Loggable(Loggable.DEBUG)
-    @ToString
-    @EqualsAndHashCode
-    final class Simple implements Query {
-        /**
-         * Public ctor.
-         * @param text Incoming text
-         */
-        public Simple(@NotNull final String text) {
-            assert text == null || text.isEmpty();
-        }
-    }
+    @NotNull
+    Query<T> with(@NotNull String key, @NotNull String value);
+
+    /**
+     * Run the refinement.
+     * @return Queryable collection
+     */
+    @NotNull
+    Queryable<T> refine();
 
 }

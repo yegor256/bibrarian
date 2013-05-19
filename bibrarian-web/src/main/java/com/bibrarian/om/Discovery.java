@@ -44,7 +44,7 @@ import lombok.ToString;
  */
 @Immutable
 @SuppressWarnings("PMD.TooManyMethods")
-public interface Discovery extends Comparable<Discovery> {
+public interface Discovery {
 
     /**
      * Moment of discovery.
@@ -59,6 +59,13 @@ public interface Discovery extends Comparable<Discovery> {
      */
     @NotNull
     Hypothesis hypothesis();
+
+    /**
+     * Where was it discovered.
+     * @return The artifact
+     */
+    @NotNull
+    Artifact artifact();
 
     /**
      * Quote.
@@ -104,7 +111,7 @@ public interface Discovery extends Comparable<Discovery> {
     @Loggable(Loggable.DEBUG)
     @Immutable
     @ToString
-    @EqualsAndHashCode(of = { "when", "hypo", "qte", "pgs", "rlv" })
+    @EqualsAndHashCode(of = { "when", "hypo", "art", "qte", "pgs", "rlv" })
     final class Simple implements Discovery {
         /**
          * When.
@@ -114,6 +121,10 @@ public interface Discovery extends Comparable<Discovery> {
          * Hypothesis.
          */
         private final transient Hypothesis hypo;
+        /**
+         * Artifact.
+         */
+        private final transient Artifact art;
         /**
          * Quote.
          */
@@ -131,19 +142,20 @@ public interface Discovery extends Comparable<Discovery> {
          * @param hypothesis The hypothesis
          */
         public Simple(@NotNull final Hypothesis hypothesis) {
-            this(new Date(), hypothesis, "", "", 0f);
+            this(new Date(), hypothesis, null, "", "", 0f);
         }
         /**
          * Public ctor.
          * @param date When it happened
          */
         public Simple(@NotNull final Date date) {
-            this(date, new Hypothesis.Simple(), "", "", 0f);
+            this(date, new Hypothesis.Simple(), null, "", "", 0f);
         }
         /**
          * Public ctor.
          * @param date When it happened
          * @param hypothesis The hypothesis
+         * @param artifact Artifact
          * @param quote The description
          * @param pages The pages
          * @param relevance The relevance
@@ -151,10 +163,12 @@ public interface Discovery extends Comparable<Discovery> {
          */
         public Simple(@NotNull final Date date,
             @NotNull final Hypothesis hypothesis,
+            @NotNull final Artifact artifact,
             @NotNull final String quote, @NotNull final String pages,
             @NotNull final double relevance) {
             this.when = date.getTime();
             this.hypo = hypothesis;
+            this.art = artifact;
             this.qte = quote;
             this.pgs = pages;
             this.rlv = relevance;
@@ -165,6 +179,13 @@ public interface Discovery extends Comparable<Discovery> {
         @Override
         public Date date() {
             return new Date(this.when);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Artifact artifact() {
+            return this.art;
         }
         /**
          * {@inheritDoc}
@@ -214,13 +235,6 @@ public interface Discovery extends Comparable<Discovery> {
         @Override
         public void relevance(final double relevance) {
             throw new UnsupportedOperationException();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public int compareTo(final Discovery discovery) {
-            return this.qte.compareTo(discovery.quote());
         }
     }
 

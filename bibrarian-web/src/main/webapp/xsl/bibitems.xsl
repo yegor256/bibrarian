@@ -33,7 +33,7 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:text>books</xsl:text>
+            <xsl:text>bibitems</xsl:text>
         </title>
     </xsl:template>
     <xsl:template name="content">
@@ -42,22 +42,19 @@
                 <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
             </xsl:attribute>
             <p>
-                <label for="label"><xsl:text>book label: </xsl:text></label>
-                <input name="label" size="4"/>
                 <label for="bibitem"><xsl:text>bibitem: </xsl:text></label>
-                <textarea name="bibitem"></textarea>
-                <input type="submit"/>
+                <textarea name="bibitem" style="width: 350pt; height: 100pt;"></textarea>
+                <input type="submit" value="Add New Bibitem"/>
             </p>
         </form>
-        <xsl:apply-templates select="books/book"/>
+        <xsl:apply-templates select="bibitems/bibitem"/>
     </xsl:template>
-    <xsl:template match="book">
+    <xsl:template match="bibitem">
         <p>
             <span>
                 <xsl:value-of select="label"/>
             </span>
-            <xsl:text>: </xsl:text>
-            <xsl:value-of select="bibitem"/>
         </p>
+        <pre><xsl:value-of select="tex"/></pre>
     </xsl:template>
 </xsl:stylesheet>

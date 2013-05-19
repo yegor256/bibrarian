@@ -45,15 +45,15 @@
         <link href="/xml/discoveries.xml" rel="home" type="text/xml"/>
         <link href="/xml/artifacts.xml" rel="artifacts" type="text/xml"/>
         <link href="/xml/hypothesizes.xml" rel="hypothesizes" type="text/xml"/>
-        <link href="/xml/books.xml" rel="books" type="text/xml"/>
+        <link href="/xml/bibitems.xml" rel="bibitems" type="text/xml"/>
     </links>
     <millis>160</millis>
     <artifacts>
         <artifact>
             <referat>It's a very interesting article... Highly recommend</referat>
-            <book>
+            <bibitem>
                 <label>bugayenko2009</label>
-                <bibitem>
+                <tex>
                     @incollection{bugayenko2009,
                       title={Method for Software Cost Estimating Using Scope Champions},
                       author={Bugayenko, Yegor},
@@ -62,8 +62,8 @@
                       year={2009},
                       publisher={Springer}
                     }
-                </bibitem>
-            </book>
+                </tex>
+            </bibitem>
             <discoveries>
                 <discovery>
                     <label>H13</label>
@@ -88,7 +88,6 @@
             </discoveries>
             <links>
                <link href="/xml/artifact.xml" rel="see" type="text/xml"/>
-               <link href="" rel="remove" type="text/xml"/>
             </links>
         </artifact>
         <artifact>
@@ -109,7 +108,6 @@
             <discoveries/>
             <links>
                <link href="/xml/artifact.xml" rel="see" type="text/xml"/>
-               <link href="" rel="remove" type="text/xml"/>
             </links>
         </artifact>
     </artifacts>

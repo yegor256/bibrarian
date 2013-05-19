@@ -29,25 +29,23 @@
  */
 package com.bibrarian.om;
 
-import com.jcabi.aspects.Immutable;
-import java.util.SortedSet;
+import java.util.Collection;
 import javax.validation.constraints.NotNull;
 
 /**
- * Collection of discoveries.
+ * Queryable collection.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @param <T> Type of encapsulated elements
  */
-@Immutable
-public interface Discoveries extends SortedSet<Discovery> {
+public interface Queryable<T> extends Collection<T> {
 
     /**
-     * Search it using the query.
-     * @param query Query to use for searching
-     * @return The subset of discoveries
+     * Create a query for refinement.
+     * @return Query ready for refinement
      */
     @NotNull
-    Discoveries query(@NotNull Query query);
+    Query<T> query();
 
 }

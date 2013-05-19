@@ -45,7 +45,7 @@
         <link href="/xml/discoveries.xml" rel="home" type="text/xml"/>
         <link href="/xml/artifacts.xml" rel="artifacts" type="text/xml"/>
         <link href="/xml/hypothesizes.xml" rel="hypothesizes" type="text/xml"/>
-        <link href="/xml/books.xml" rel="books" type="text/xml"/>
+        <link href="/xml/bibitems.xml" rel="bibitems" type="text/xml"/>
     </links>
     <millis>16</millis>
     <hypothesis>

@@ -37,28 +37,17 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <form method="post">
-            <xsl:attribute name="action">
-                <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
-            </xsl:attribute>
-            <p>
-                <label for="label"><xsl:text>book label: </xsl:text></label>
-                <input name="label" size="4"/>
-                <input type="submit"/>
-            </p>
-        </form>
         <xsl:apply-templates select="artifacts/artifact"/>
     </xsl:template>
     <xsl:template match="artifact">
         <p>
-            <xsl:value-of select="book/label"/>
-            <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="links/link[@rel='remove']/@href"/>
+                    <xsl:value-of select="links/link[@rel='see']/@href"/>
                 </xsl:attribute>
-                <xsl:text>&#x2716;</xsl:text>
+                <xsl:value-of select="bibitem/label"/>
             </a>
+            <xsl:text> </xsl:text>
             <xsl:text>: </xsl:text>
             <xsl:value-of select="referat"/>
         </p>
@@ -68,14 +57,17 @@
     </xsl:template>
     <xsl:template match="discovery">
         <li>
+            <xsl:text>&quot;</xsl:text>
+            <xsl:value-of select="quote"/>
+            <xsl:text>&quot;, pp.</xsl:text>
+            <xsl:value-of select="pages"/>
+            <xsl:text> for </xsl:text>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="links/link[@rel='hypothesis']/@href"/>
                 </xsl:attribute>
                 <xsl:value-of select="label"/>
             </a>
-            <xsl:value-of select="quote"/>
-            <xsl:value-of select="pages"/>
         </li>
     </xsl:template>
 </xsl:stylesheet>

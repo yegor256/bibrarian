@@ -30,13 +30,11 @@
 package com.bibrarian.web;
 
 import com.bibrarian.om.Bibitem;
-import com.bibrarian.om.Book;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
-import java.util.Collection;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -45,7 +43,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
- * List of all books.
+ * List of all bibitems.
  *
  * <p>The class is mutable and NOT thread-safe.
  *
@@ -54,7 +52,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("/b")
 @Loggable(Loggable.DEBUG)
-public final class BooksRs extends BaseRs {
+public final class BibitemsRs extends BaseRs {
 
     /**
      * List of them.
@@ -64,100 +62,75 @@ public final class BooksRs extends BaseRs {
     @Path("/")
     public Response index() {
         return new PageBuilder()
-            .stylesheet("/xsl/books.xsl")
+            .stylesheet("/xsl/bibitems.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(this.jaxb(this.bibrarians().books()))
+            .append(this.jaxb(this.bibrarians().bibitems()))
             .append(new Link("add", "./add"))
             .render()
             .build();
     }
 
     /**
-     * Remove by label.
-     * @param label The book label to use
-     * @return The JAX-RS response
-     */
-    @GET
-    @Path("/remove")
-    public Response remove(@QueryParam("label") @NotNull final String label) {
-        final Book book = new Book.Simple(label);
-        if (!this.bibrarians().books().remove(book)) {
-            throw FlashInset.forward(
-                this.indexUri(),
-                "book was NOT deleted",
-                Level.WARNING
-            );
-        }
-        throw FlashInset.forward(
-            this.indexUri(),
-            "book was deleted successfully",
-            Level.INFO
-        );
-    }
-
-    /**
-     * Add new book.
-     * @param label The label of the book
-     * @param bibitem Bibitem
+     * Add new bibitem.
+     * @param tex Text in BibTeX format
      * @return The JAX-RS response
      */
     @GET
     @Path("/add")
-    public Response add(@QueryParam("label") @NotNull final String label,
-        @QueryParam("bibitem") @NotNull final String bibitem) {
-        final Book book = new Book.Simple(label, new Bibitem.Simple(bibitem));
-        if (!this.bibrarians().books().add(book)) {
+    public Response add(@QueryParam("tex") @NotNull final String tex) {
+        final Bibitem item = new Bibitem.Simple(tex);
+        if (!this.bibrarians().bibitems().add(item)) {
             throw FlashInset.forward(
                 this.indexUri(),
-                "book was NOT added",
+                "bibitem was NOT added",
                 Level.WARNING
             );
         }
         throw FlashInset.forward(
             this.indexUri(),
-            "book was added successfully",
+            "bibitem was added successfully",
             Level.INFO
         );
     }
 
     /**
-     * Convert books to a JAXB element.
-     * @param books List of them
+     * Convert bibitems to a JAXB element.
+     * @param bibitems List of them
      * @return JAXB object
      */
-    private JaxbBundle jaxb(final Collection<Book> books) {
-        return new JaxbBundle("books").add(
-            new JaxbBundle.Group<Book>(books) {
+    private JaxbBundle jaxb(final Iterable<Bibitem> bibitems) {
+        return new JaxbBundle("bibitems").add(
+            new JaxbBundle.Group<Bibitem>(bibitems) {
                 @Override
-                public JaxbBundle bundle(final Book book) {
-                    return BooksRs.this.bundle(book);
+                public JaxbBundle bundle(final Bibitem bibitem) {
+                    return BibitemsRs.this.bundle(bibitem);
                 }
             }
         );
     }
 
     /**
-     * Convert book to a JAXB element.
-     * @param book The book
+     * Convert bibitem to a JAXB element.
+     * @param bibitem The bibitem
      * @return JAXB object
      */
-    private JaxbBundle bundle(final Book book) {
+    private JaxbBundle bundle(final Bibitem bibitem) {
         return new JaxbBundle("discovery")
-            .add("label", book.label())
+            .add("label", bibitem.label())
             .up()
-            .add("bibitem", book.bibitem().toString())
+            .add("tex", bibitem.toString())
             .up()
             .link(
                 new Link(
                     "remove",
-                    BooksRs.this.uriInfo()
+                    BibitemsRs.this.uriInfo()
                         .getBaseUriBuilder()
                         .clone()
-                        .path(BooksRs.class)
-                        .path(BooksRs.class, "remove")
+                        .path(BibitemsRs.class)
+                        .path(BibitemsRs.class, "remove")
                         .queryParam("label", "{l}")
-                        .build(book.label())
+                        .build(bibitem.label())
                 )
             );
     }

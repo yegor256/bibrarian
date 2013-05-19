@@ -52,9 +52,9 @@ public interface Bibrarians {
     Bibrarian fetch(@NotNull URN urn);
 
     /**
-     * All known books.
-     * @return Books
+     * All known bibitems.
+     * @return Bibitems
      */
-    Books books();
+    Queryable<Bibitem> bibitems();
 
 }

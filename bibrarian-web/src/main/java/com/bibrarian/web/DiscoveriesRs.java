@@ -84,9 +84,9 @@ public final class DiscoveriesRs extends BaseRs {
     @Path("/remove")
     public Response remove(@QueryParam("label") @NotNull final String label,
         @QueryParam("date") @NotNull final String date) {
-        final Artifact artifact = this.bibrarian().artifacts().fetch(
-            this.bibrarians().books().fetch(label)
-        );
+        final Artifact artifact = this.bibrarian().artifacts()
+            .query().with("bibitem", label).refine()
+            .iterator().next();
         final Discovery discovery =
             new Discovery.Simple(new Date(Long.parseLong(date)));
         if (!artifact.discoveries().remove(discovery)) {
@@ -106,6 +106,7 @@ public final class DiscoveriesRs extends BaseRs {
     /**
      * Add new discovery.
      * @param label The label of the hypothesis
+     * @param item Item name/label
      * @param quote Quote
      * @param pages Pages
      * @return The JAX-RS response
@@ -113,11 +114,17 @@ public final class DiscoveriesRs extends BaseRs {
     @GET
     @Path("/add")
     public Response add(@QueryParam("label") @NotNull final String label,
+        @QueryParam("item") @NotNull final String item,
         @QueryParam("quote") @NotNull final String quote,
         @QueryParam("pages") @NotNull final String pages) {
         final Discovery discovery = new Discovery.Simple(
             new Date(),
-            this.bibrarian().hypothesizes().fetch(label),
+            this.bibrarian().hypothesizes()
+                .query().with("label", label).refine()
+                .iterator().next(),
+            this.bibrarian().artifacts()
+                .query().with("bibitem", item).refine()
+                .iterator().next(),
             quote,
             pages,
             1d

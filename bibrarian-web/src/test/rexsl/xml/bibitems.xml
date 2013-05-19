@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<?xml-stylesheet type='text/xsl' href='/xsl/books.xsl'?>
+<?xml-stylesheet type='text/xsl' href='/xsl/bibitems.xsl'?>
 <page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
     <identity>
         <urn>urn:facebook:555</urn>
@@ -45,35 +45,32 @@
         <link href="/xml/discoveries.xml" rel="home" type="text/xml"/>
         <link href="/xml/artifacts.xml" rel="artifacts" type="text/xml"/>
         <link href="/xml/hypothesizes.xml" rel="hypothesizes" type="text/xml"/>
-        <link href="/xml/books.xml" rel="books" type="text/xml"/>
+        <link href="/xml/bibitems.xml" rel="bibitems" type="text/xml"/>
     </links>
     <millis>160</millis>
-    <books>
-        <book>
+    <query>conan doyle</query>
+    <bibitems>
+        <bibitem>
             <label>bugayenko2009</label>
-            <bibitem>
-                @incollection{bugayenko2009,
-                  title={Method for Software Cost Estimating Using Scope Champions},
-                  author={Bugayenko, Yegor},
-                  booktitle={Product-Focused Software Process Improvement},
-                  pages={59--70},
-                  year={2009},
-                  publisher={Springer}
-                }
-            </bibitem>
-        </book>
-        <book>
+            <tex>@incollection{bugayenko2009,
+  title={Method for Software Cost Estimating Using Scope Champions},
+  author={Bugayenko, Yegor},
+  bibitemtitle={Product-Focused Software Process Improvement},
+  pages={59--70},
+  year={2009},
+  publisher={Springer}
+}</tex>
+        </bibitem>
+        <bibitem>
             <label>bugayenko2</label>
-            <bibitem>
-                @incollection{bugayenko2,
-                  title={Competitive Risk Identification Method for Distributed Teams},
-                  author={Bugayenko, Yegor},
-                  booktitle={Software Engineering Approaches for Offshore and Outsourced Development},
-                  pages={96--101},
-                  year={2009},
-                  publisher={Springer}
-                }
-            </bibitem>
-        </book>
-    </books>
+            <tex>@incollection{bugayenko2,
+  title={Competitive Risk Identification Method for Distributed Teams},
+  author={Bugayenko, Yegor},
+  bibitemtitle={Software Engineering Approaches for Offshore and Outsourced Development},
+  pages={96--101},
+  year={2009},
+  publisher={Springer}
+}</tex>
+        </bibitem>
+    </bibitems>
 </page>

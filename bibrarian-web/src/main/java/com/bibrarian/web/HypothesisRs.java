@@ -31,7 +31,6 @@ package com.bibrarian.web;
 
 import com.bibrarian.om.Discovery;
 import com.bibrarian.om.Hypothesis;
-import com.bibrarian.om.Query;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
@@ -72,7 +71,9 @@ public final class HypothesisRs extends BaseRs {
      */
     @QueryParam(HypothesisRs.QUERY_LABEL)
     public void setHypothesis(final String label) {
-        this.hypothesis = this.bibrarian().hypothesizes().fetch(label);
+        this.hypothesis = this.bibrarian().hypothesizes()
+            .query().with("label", label).refine()
+            .iterator().next();
     }
 
     /**
@@ -95,14 +96,9 @@ public final class HypothesisRs extends BaseRs {
             )
             .append(
                 this.jaxb(
-                    this.bibrarian().discoveries().query(
-                        new Query.Simple(
-                            String.format(
-                                "hypothesis:%s",
-                                this.hypothesis.label()
-                            )
-                        )
-                    )
+                    this.bibrarian().discoveries()
+                        .query().with("hypothesis", this.hypothesis.label())
+                        .refine()
                 )
             )
             .render()

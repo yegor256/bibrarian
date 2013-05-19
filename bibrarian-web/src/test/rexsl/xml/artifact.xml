@@ -45,12 +45,12 @@
         <link href="/xml/discoveries.xml" rel="home" type="text/xml"/>
         <link href="/xml/artifacts.xml" rel="artifacts" type="text/xml"/>
         <link href="/xml/hypothesizes.xml" rel="hypothesizes" type="text/xml"/>
-        <link href="/xml/books.xml" rel="books" type="text/xml"/>
+        <link href="/xml/bibitems.xml" rel="bibitems" type="text/xml"/>
     </links>
     <millis>160</millis>
     <artifact>
         <referat>It's a very interesting article... Highly recommend</referat>
-        <book>
+        <bibitem>
             <label>bugayenko2009</label>
             <bibitem>
                 @incollection{bugayenko2009,
@@ -62,7 +62,7 @@
                   publisher={Springer}
                 }
             </bibitem>
-        </book>
+        </bibitem>
         <discoveries>
             <discovery>
                 <label>H13</label>
@@ -70,7 +70,8 @@
                 <relevance>0.75</relevance>
                 <quote>Saturday, Donny, is Shabbos, the Jewish day of rest. That means that I don't work, I don't drive a car, I don't fucking ride in a car, I don't handle money, I don't turn on the oven, and I sure as shit *don't fucking roll*!</quote>
                 <links>
-                   <link href="http://localhost:9099/" rel="remove" type="text/xml"/>
+                   <link href="" rel="remove" type="text/xml"/>
+                   <link href="/xml/hypothesis.xml" rel="hypothesis" type="text/xml"/>
                 </links>
             </discovery>
             <discovery>
@@ -79,7 +80,8 @@
                 <relevance>0.95</relevance>
                 <quote>They did not receive the money, you nitwit! They did not receive the money! Her life was in your hands!</quote>
                 <links>
-                   <link href="http://localhost:9099/" rel="remove" type="text/xml"/>
+                   <link href="" rel="remove" type="text/xml"/>
+                   <link href="/xml/hypothesis.xml" rel="hypothesis" type="text/xml"/>
                 </links>
             </discovery>
         </discoveries>

@@ -68,12 +68,17 @@
                 <xsl:apply-templates select="version"/>
                 <div id="content">
                     <p>
-                        <img alt="bibrarian logo" style="width: 120px: height: 35px;">
-                            <xsl:attribute name="src">
-                                <xsl:text>http://img.bibrarian.com/logo.png?</xsl:text>
-                                <xsl:value-of select="/page/version/revision"/>
+                        <a>
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                             </xsl:attribute>
-                        </img>
+                            <img alt="bibrarian logo" style="width: 120px: height: 35px;">
+                                <xsl:attribute name="src">
+                                    <xsl:text>http://img.bibrarian.com/logo.png?</xsl:text>
+                                    <xsl:value-of select="/page/version/revision"/>
+                                </xsl:attribute>
+                            </img>
+                        </a>
                     </p>
                     <xsl:apply-templates select="flash"/>
                     <xsl:choose>
@@ -101,13 +106,25 @@
                                     <xsl:text>Hypothesizes</xsl:text>
                                 </a>
                                 <xsl:text> | </xsl:text>
-                                <a title="All books">
+                                <a title="All bibitems">
                                     <xsl:attribute name="href">
-                                        <xsl:value-of select="/page/links/link[@rel='books']/@href"/>
+                                        <xsl:value-of select="/page/links/link[@rel='bibitems']/@href"/>
                                     </xsl:attribute>
-                                    <xsl:text>Books</xsl:text>
+                                    <xsl:text>Bibitems</xsl:text>
                                 </a>
                             </p>
+                            <form method="get">
+                                <xsl:attribute name="action">
+                                    <xsl:value-of select="/page/links/link[@rel='self']/@href"/>
+                                </xsl:attribute>
+                                <p>
+                                    <input name="query" style="width: 250pt;">
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="/page/query"/>
+                                        </xsl:attribute>
+                                    </input>
+                                </p>
+                            </form>
                             <xsl:call-template name="content"/>
                         </xsl:when>
                         <xsl:otherwise>

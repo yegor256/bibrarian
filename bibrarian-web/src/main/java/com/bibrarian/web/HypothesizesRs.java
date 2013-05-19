@@ -75,29 +75,6 @@ public final class HypothesizesRs extends BaseRs {
     }
 
     /**
-     * Remove by label.
-     * @param label The label to use
-     * @return The JAX-RS response
-     */
-    @GET
-    @Path("/remove")
-    public Response remove(@QueryParam("label") @NotNull final String label) {
-        final Hypothesis hypothesis = new Hypothesis.Simple(label);
-        if (!this.bibrarian().hypothesizes().remove(hypothesis)) {
-            throw FlashInset.forward(
-                this.indexUri(),
-                "hypothesis was NOT deleted",
-                Level.WARNING
-            );
-        }
-        throw FlashInset.forward(
-            this.indexUri(),
-            "hypothesis was deleted successfully",
-            Level.INFO
-        );
-    }
-
-    /**
      * Add new hypothesis.
      * @param label The label to use
      * @param desc The description to use
@@ -158,18 +135,6 @@ public final class HypothesizesRs extends BaseRs {
                         .path(HypothesisRs.class)
                         .path(HypothesisRs.class, "index")
                         .queryParam(HypothesisRs.QUERY_LABEL, "{x}")
-                        .build(hypothesis.label())
-                )
-            )
-            .link(
-                new Link(
-                    "remove",
-                    HypothesizesRs.this.uriInfo()
-                        .getBaseUriBuilder()
-                        .clone()
-                        .path(HypothesizesRs.class)
-                        .path(HypothesizesRs.class, "remove")
-                        .queryParam("label", "{z}")
                         .build(hypothesis.label())
                 )
             );

@@ -105,7 +105,7 @@ public class BaseRs extends BaseResource {
                 final Response.ResponseBuilder builder) {
                 page.link(new Link("hypothesizes", "/h"));
                 page.link(new Link("artifacts", "/a"));
-                page.link(new Link("books", "/b"));
+                page.link(new Link("bibitems", "/b"));
             }
         };
     }

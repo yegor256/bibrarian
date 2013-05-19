@@ -33,34 +33,46 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
-            <xsl:text>hypothesizes</xsl:text>
+            <xsl:value-of select="/page/artifact/bibitem/label"/>
         </title>
     </xsl:template>
     <xsl:template name="content">
         <form method="post">
             <xsl:attribute name="action">
-                <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
+                <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
             </xsl:attribute>
             <p>
-                <label for="label"><xsl:text>label: </xsl:text></label>
-                <input name="label" size="4"/>
-                <label for="description"><xsl:text>desc: </xsl:text></label>
-                <input name="description" size="50"/>
-                <input type="submit"/>
+                <label for="referat"><xsl:text>referat: </xsl:text></label>
+                <textarea name="referat"></textarea>
+                <input type="submit" value="Save"/>
             </p>
         </form>
-        <xsl:apply-templates select="hypothesizes/hypothesis"/>
+        <xsl:apply-templates select="/page/artifact"/>
     </xsl:template>
-    <xsl:template match="hypothesis">
+    <xsl:template match="artifact">
         <p>
+            <xsl:value-of select="bibitem/label"/>
+            <xsl:text> </xsl:text>
+            <xsl:text>: </xsl:text>
+            <xsl:value-of select="referat"/>
+        </p>
+        <ul>
+            <xsl:apply-templates select="discoveries/discovery"/>
+        </ul>
+    </xsl:template>
+    <xsl:template match="discovery">
+        <li>
+            <xsl:text>&quot;</xsl:text>
+            <xsl:value-of select="quote"/>
+            <xsl:text>&quot;, pp.</xsl:text>
+            <xsl:value-of select="pages"/>
+            <xsl:text> for </xsl:text>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="links/link[@rel='see']/@href"/>
+                    <xsl:value-of select="links/link[@rel='hypothesis']/@href"/>
                 </xsl:attribute>
                 <xsl:value-of select="label"/>
             </a>
-            <xsl:text>: </xsl:text>
-            <xsl:value-of select="description"/>
-        </p>
+        </li>
     </xsl:template>
 </xsl:stylesheet>

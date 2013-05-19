@@ -45,14 +45,14 @@ import lombok.ToString;
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Artifact extends Comparable<Artifact> {
+public interface Artifact {
 
     /**
-     * Book it is related to.
+     * Bibitem it is related to.
      * @return The book
      */
     @NotNull
-    Book book();
+    Bibitem bibitem();
 
     /**
      * Documents attached (read/write set of them).
@@ -80,7 +80,7 @@ public interface Artifact extends Comparable<Artifact> {
      * @return The discoveries
      */
     @NotNull
-    Discoveries discoveries();
+    Queryable<Discovery> discoveries();
 
     /**
      * Simple implementation.
@@ -88,26 +88,26 @@ public interface Artifact extends Comparable<Artifact> {
     @Loggable(Loggable.DEBUG)
     @Immutable
     @ToString
-    @EqualsAndHashCode(of = "bkk")
+    @EqualsAndHashCode(of = "item")
     final class Simple implements Artifact {
         /**
-         * Book.
+         * Bibitem.
          */
-        private final transient Book bkk;
+        private final transient Bibitem item;
         /**
          * Public ctor.
-         * @param book Book to encapsulate
+         * @param bibitem Bibitem to encapsulate
          */
-        public Simple(@NotNull final Book book) {
-            this.bkk = book;
+        public Simple(@NotNull final Bibitem bibitem) {
+            this.item = bibitem;
         }
         /**
          * {@inheritDoc}
          */
         @Override
         @NotNull
-        public Book book() {
-            return this.bkk;
+        public Bibitem bibitem() {
+            return this.item;
         }
         /**
          * {@inheritDoc}
@@ -134,15 +134,8 @@ public interface Artifact extends Comparable<Artifact> {
          * {@inheritDoc}
          */
         @Override
-        public Discoveries discoveries() {
+        public Queryable<Discovery> discoveries() {
             throw new UnsupportedOperationException();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public int compareTo(final Artifact artifact) {
-            return this.book().compareTo(artifact.book());
         }
     }
 

@@ -30,9 +30,10 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * One bibitem.
@@ -41,33 +42,54 @@ import javax.validation.constraints.NotNull;
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Bibitem extends Map<Bibitem.Field, String> {
+public interface Bibitem {
 
     /**
-     * Field.
+     * Label, unique in the whole system.
+     * @return The label
      */
-    enum Field {
-        AUTHOR,
-        ISBN;
-    };
+    @NotNull
+    String label();
+
+    /**
+     * Save new content.
+     * @param text Text to save, after parsing
+     */
+    void save(@NotNull String text);
 
     /**
      * Simple implementation.
      */
-    final class Simple extends
-        ConcurrentHashMap<Bibitem.Field, String>
-        implements Bibitem {
+    @Loggable(Loggable.DEBUG)
+    @ToString
+    @EqualsAndHashCode(of = "tex")
+    final class Simple implements Bibitem {
         /**
-         * Serialization marker.
+         * Text in BibTeX format.
          */
-        private static final long serialVersionUID = 0x8732ab4efeb4662eL;
+        private final transient String tex;
         /**
          * Public ctor.
-         * @param text Text to parse
+         * @param txt Text in BibTeX format
          */
-        public Simple(@NotNull final String text) {
-            super();
-            assert text != null;
+        public Simple(@NotNull final String txt) {
+            this.tex = txt;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull
+        public String label() {
+            return "unknown";
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull
+        public void save(final String txt) {
+            throw new UnsupportedOperationException();
         }
     }
 

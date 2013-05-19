@@ -29,9 +29,10 @@
  */
 package com.bibrarian.dynamo;
 
+import com.bibrarian.om.Bibitem;
 import com.bibrarian.om.Bibrarian;
 import com.bibrarian.om.Bibrarians;
-import com.bibrarian.om.Books;
+import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
 import javax.validation.constraints.NotNull;
@@ -72,7 +73,7 @@ public final class DynamoBibrarians implements Bibrarians {
      * {@inheritDoc}
      */
     @Override
-    public Books books() {
+    public Queryable<Bibitem> bibitems() {
         throw new UnsupportedOperationException();
     }
 

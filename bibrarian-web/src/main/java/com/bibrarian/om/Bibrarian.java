@@ -46,20 +46,20 @@ public interface Bibrarian {
      * @return The artifacts
      */
     @NotNull
-    Artifacts artifacts();
+    Queryable<Artifact> artifacts();
 
     /**
      * Get all hypothesizes.
      * @return The hypothesizes
      */
     @NotNull
-    Hypothesizes hypothesizes();
+    Queryable<Hypothesis> hypothesizes();
 
     /**
      * Get all discoveries.
      * @return The discoveries
      */
     @NotNull
-    Discoveries discoveries();
+    Queryable<Discovery> discoveries();
 
 }

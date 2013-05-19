@@ -35,13 +35,9 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
-import com.rexsl.page.inset.FlashInset;
 import java.util.Collection;
-import java.util.logging.Level;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -70,59 +66,8 @@ public final class ArtifactsRs extends BaseRs {
             .build(EmptyPage.class)
             .init(this)
             .append(this.jaxb(this.bibrarian().artifacts()))
-            .append(new Link("add", "./add"))
             .render()
             .build();
-    }
-
-    /**
-     * Remove by label.
-     * @param label The label to use
-     * @return The JAX-RS response
-     */
-    @GET
-    @Path("/remove")
-    public Response remove(@QueryParam("label") @NotNull final String label) {
-        final Artifact artifact = new Artifact.Simple(
-            this.bibrarians().books().fetch(label)
-        );
-        if (!this.bibrarian().artifacts().remove(artifact)) {
-            throw FlashInset.forward(
-                this.indexUri(),
-                "artifact was NOT deleted",
-                Level.WARNING
-            );
-        }
-        throw FlashInset.forward(
-            this.indexUri(),
-            "artifact was deleted successfully",
-            Level.INFO
-        );
-    }
-
-    /**
-     * Add new artifact.
-     * @param label The label of the book to use
-     * @return The JAX-RS response
-     */
-    @GET
-    @Path("/add")
-    public Response add(@QueryParam("label") @NotNull final String label) {
-        final Artifact artifact = new Artifact.Simple(
-            this.bibrarians().books().fetch(label)
-        );
-        if (!this.bibrarian().artifacts().add(artifact)) {
-            throw FlashInset.forward(
-                this.indexUri(),
-                "artifact was NOT added",
-                Level.WARNING
-            );
-        }
-        throw FlashInset.forward(
-            this.indexUri(),
-            "artifact was added successfully",
-            Level.INFO
-        );
     }
 
     /**
@@ -148,10 +93,10 @@ public final class ArtifactsRs extends BaseRs {
      */
     private JaxbBundle bundle(final Artifact artifact) {
         return new JaxbBundle("artifact")
-            .add("book")
-                .add("label", artifact.book().label())
+            .add("bibitem")
+                .add("label", artifact.bibitem().label())
                 .up()
-                .add("bibitem", artifact.book().bibitem().toString())
+                .add("bibitem", artifact.bibitem().toString())
                 .up()
             .up()
             .add("referat", artifact.referat())
@@ -174,19 +119,7 @@ public final class ArtifactsRs extends BaseRs {
                         .path(ArtifactRs.class)
                         .path(ArtifactRs.class, "index")
                         .queryParam(ArtifactRs.QUERY_LABEL, "{x}")
-                        .build(artifact.book().label())
-                )
-            )
-            .link(
-                new Link(
-                    "remove",
-                    ArtifactsRs.this.uriInfo()
-                        .getBaseUriBuilder()
-                        .clone()
-                        .path(HypothesizesRs.class)
-                        .path(HypothesizesRs.class, "remove")
-                        .queryParam("label", "{z}")
-                        .build(artifact.book().label())
+                        .build(artifact.bibitem().label())
                 )
             );
     }

@@ -30,7 +30,6 @@
 package com.bibrarian.web;
 
 import com.bibrarian.om.Artifact;
-import com.bibrarian.om.Book;
 import com.bibrarian.om.Discovery;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
@@ -78,7 +77,8 @@ public final class ArtifactRs extends BaseRs {
     @QueryParam(ArtifactRs.QUERY_LABEL)
     public void setArtifact(@NotNull final String label) {
         this.artifact = this.bibrarian().artifacts()
-            .fetch(new Book.Simple(label));
+            .query().with("bibitem", label).refine()
+            .iterator().next();
     }
 
     /**
@@ -93,6 +93,7 @@ public final class ArtifactRs extends BaseRs {
             .build(EmptyPage.class)
             .init(this)
             .append(this.jaxb(this.artifact))
+            .append(new Link("save", "./referat"))
             .render()
             .build();
     }
@@ -120,10 +121,10 @@ public final class ArtifactRs extends BaseRs {
      */
     private JaxbBundle jaxb(final Artifact artfct) {
         return new JaxbBundle("artifact")
-            .add("book")
-                .add("label", artfct.book().label())
+            .add("bibitem")
+                .add("label", artfct.bibitem().label())
                 .up()
-                .add("bibitem", artfct.book().bibitem().toString())
+                .add("bibitem", artfct.bibitem().toString())
                 .up()
             .up()
             .add("hardcopies").add(
@@ -153,7 +154,7 @@ public final class ArtifactRs extends BaseRs {
                         .path(ArtifactRs.class)
                         .path(ArtifactRs.class, "referat")
                         .queryParam(ArtifactRs.QUERY_LABEL, "{x1}")
-                        .build(this.artifact.book().label())
+                        .build(this.artifact.bibitem().label())
                 )
             )
             .link(
@@ -163,7 +164,7 @@ public final class ArtifactRs extends BaseRs {
                         .path(ArtifactRs.class)
                         .path(ArtifactRs.class, "add")
                         .queryParam(ArtifactRs.QUERY_LABEL, "{x2}")
-                        .build(this.artifact.book().label())
+                        .build(this.artifact.bibitem().label())
                 )
             );
     }
