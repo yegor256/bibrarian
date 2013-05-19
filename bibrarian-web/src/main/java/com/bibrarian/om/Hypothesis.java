@@ -42,25 +42,27 @@ import lombok.ToString;
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Hypothesis {
+public interface Hypothesis extends Comparable<Hypothesis> {
 
     /**
      * Get its unique name/label.
      * @return The label
      */
+    @NotNull
     String label();
 
     /**
      * Get its text description.
      * @return The description
      */
+    @NotNull
     String description();
 
     /**
      * Set its text description.
      * @param text The description
      */
-    void description(String text);
+    void description(@NotNull String text);
 
     /**
      * Simple implementation.
@@ -114,6 +116,13 @@ public interface Hypothesis {
         @Override
         public void description(final String text) {
             throw new UnsupportedOperationException();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int compareTo(final Hypothesis hypothesis) {
+            return this.label().compareTo(hypothesis.label());
         }
     }
 

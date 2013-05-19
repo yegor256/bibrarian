@@ -31,6 +31,7 @@ package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
+import javax.validation.constraints.NotNull;
 
 /**
  * All known bibrarians.
@@ -44,9 +45,10 @@ public interface Bibrarians {
     /**
      * Get bibrarian by URN (always returns a valid object, even if such a user
      * was not used before).
-     * @param urn The name of it
+     * @param urn The unique system-wide name of it
      * @return The found bibrarian
      */
-    Bibrarian fetch(URN urn);
+    @NotNull
+    Bibrarian fetch(@NotNull URN urn);
 
 }

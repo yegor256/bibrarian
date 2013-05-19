@@ -30,6 +30,7 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
+import javax.validation.constraints.NotNull;
 
 /**
  * One bibrarian (user of the system).
@@ -44,12 +45,14 @@ public interface Bibrarian {
      * Get a read-only list of all his artifacts.
      * @return The artifacts
      */
+    @NotNull
     Artifacts artifacts();
 
     /**
      * Get all hypothesizes.
      * @return The hypothesizes
      */
+    @NotNull
     Hypothesizes hypothesizes();
 
 }

@@ -30,7 +30,8 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
-import java.util.Set;
+import java.util.SortedSet;
+import javax.validation.constraints.NotNull;
 
 /**
  * All books known to the system.
@@ -39,7 +40,7 @@ import java.util.Set;
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Books extends Set<Book> {
+public interface Books extends SortedSet<Book> {
 
     /**
      * Find a book by label (or creates one if it's first time the label
@@ -47,6 +48,7 @@ public interface Books extends Set<Book> {
      * @param label The label
      * @return The book
      */
-    Book fetch(String label);
+    @NotNull
+    Book fetch(@NotNull String label);
 
 }

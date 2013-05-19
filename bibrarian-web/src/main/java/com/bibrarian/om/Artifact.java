@@ -31,7 +31,8 @@ package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
 import java.net.URI;
-import java.util.Set;
+import java.util.SortedSet;
+import javax.validation.constraints.NotNull;
 
 /**
  * One artifact.
@@ -40,36 +41,41 @@ import java.util.Set;
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Artifact {
+public interface Artifact extends Comparable<Artifact> {
 
     /**
      * Book it is related to.
      * @return The book
      */
+    @NotNull
     Book book();
 
     /**
      * Documents attached (read/write set of them).
      * @return Set of documents
      */
-    Set<URI> hardcopies();
+    @NotNull
+    SortedSet<URI> hardcopies();
 
     /**
      * Short description of the book read.
      * @return The text
      */
+    @NotNull
     String referat();
 
     /**
      * Change description.
      * @param text New description
      */
-    void referat(String text);
+    @NotNull
+    void referat(@NotNull String text);
 
     /**
      * Get all discoveries.
      * @return The discoveries
      */
-    Set<Discovery> discoveries();
+    @NotNull
+    SortedSet<Discovery> discoveries();
 
 }

@@ -39,7 +39,7 @@
     <packaging>war</packaging>
     <name>bibrarian-web</name>
     <properties>
-        <rexsl.version>0.4.10</rexsl.version>
+        <rexsl.version>0.4.12</rexsl.version>
         <jersey.version>1.17.1</jersey.version>
     </properties>
     <pluginRepositories>

@@ -42,25 +42,27 @@ import lombok.ToString;
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Book {
+public interface Book extends Comparable<Book> {
 
     /**
      * Label, unique in the whole system.
      * @return The label
      */
+    @NotNull
     String label();
 
     /**
      * Bibitem for BibTeX.
      * @return The text of it
      */
+    @NotNull
     String bibitem();
 
     /**
      * Set its bibitem.
      * @param bibitem The text of it
      */
-    void bibitem(String bibitem);
+    void bibitem(@NotNull String bibitem);
 
     /**
      * Simple implementation.
@@ -98,6 +100,7 @@ public interface Book {
          * {@inheritDoc}
          */
         @Override
+        @NotNull
         public String label() {
             return this.lbl;
         }
@@ -105,6 +108,7 @@ public interface Book {
          * {@inheritDoc}
          */
         @Override
+        @NotNull
         public String bibitem() {
             return this.item;
         }
@@ -112,8 +116,16 @@ public interface Book {
          * {@inheritDoc}
          */
         @Override
+        @NotNull
         public void bibitem(final String text) {
             throw new UnsupportedOperationException();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int compareTo(final Book book) {
+            return this.label().compareTo(book.label());
         }
     }
 

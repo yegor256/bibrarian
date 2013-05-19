@@ -30,7 +30,8 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
-import java.util.Set;
+import java.util.SortedSet;
+import javax.validation.constraints.NotNull;
 
 /**
  * Collection of artifacts.
@@ -39,21 +40,23 @@ import java.util.Set;
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Artifacts extends Set<Artifact> {
+public interface Artifacts extends SortedSet<Artifact> {
 
     /**
      * Search it using the query.
      * @param query Query to use for searching
      * @return The artifacts
      */
-    Artifacts query(Query query);
+    @NotNull
+    Artifacts query(@NotNull Query query);
 
     /**
-     * Get an artifact by the label (creates a new one if it wasn't
+     * Get an artifact by the book (creates a new one if it wasn't
      * used before).
      * @param book The book it is related to
      * @return The artifact
      */
-    Artifact fetch(Book book);
+    @NotNull
+    Artifact fetch(@NotNull Book book);
 
 }

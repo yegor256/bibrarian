@@ -30,7 +30,8 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
-import java.util.Set;
+import java.util.SortedSet;
+import javax.validation.constraints.NotNull;
 
 /**
  * Collection of hypothesizes.
@@ -39,13 +40,14 @@ import java.util.Set;
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Hypothesizes extends Set<Hypothesis> {
+public interface Hypothesizes extends SortedSet<Hypothesis> {
 
     /**
      * Get a hypothesis by label (create a new one if absent).
      * @param label Its label
      * @return The hypothesis
      */
-    Hypothesis fetch(String label);
+    @NotNull
+    Hypothesis fetch(@NotNull String label);
 
 }

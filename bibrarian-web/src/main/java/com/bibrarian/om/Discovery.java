@@ -43,37 +43,40 @@ import lombok.ToString;
  */
 @Immutable
 @SuppressWarnings("PMD.TooManyMethods")
-public interface Discovery {
+public interface Discovery extends Comparable<Discovery> {
 
     /**
      * Hypothesis it is related to.
      * @return The hypothesis
      */
+    @NotNull
     Hypothesis hypothesis();
 
     /**
      * Quote.
      * @return The text
      */
+    @NotNull
     String quote();
 
     /**
      * Set quote.
      * @param text The text
      */
-    void quote(String text);
+    void quote(@NotNull String text);
 
     /**
      * Where found, page numbers.
      * @return The pages
      */
+    @NotNull
     String pages();
 
     /**
      * Set page numbers.
      * @param pages The pages
      */
-    void pages(String pages);
+    void pages(@NotNull String pages);
 
     /**
      * Relevance.
@@ -181,6 +184,13 @@ public interface Discovery {
         @Override
         public void relevance(final float relevance) {
             throw new UnsupportedOperationException();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int compareTo(final Discovery discovery) {
+            return this.qte.compareTo(discovery.quote());
         }
     }
 
