@@ -62,11 +62,11 @@
             <xsl:text>: </xsl:text>
             <xsl:value-of select="description"/>
             <xsl:text> </xsl:text>
-            <a>
+            <a class="button">
                 <xsl:attribute name="href">
                     <xsl:value-of select="links/link[@rel='remove']/@href"/>
                 </xsl:attribute>
-                <xsl:text>remove</xsl:text>
+                <xsl:text>&#x2716;</xsl:text>
             </a>
         </p>
     </xsl:template>

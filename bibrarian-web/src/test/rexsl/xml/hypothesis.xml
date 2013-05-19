@@ -51,23 +51,23 @@
     <hypothesis>
         <label>H1</label>
         <description>some text here</description>
-        <discoveries>
-            <discovery>
-                <pages>500-506</pages>
-                <relevance>0.75</relevance>
-                <quote>Saturday, Donny, is Shabbos, the Jewish day of rest. That means that I don't work, I don't drive a car, I don't fucking ride in a car, I don't handle money, I don't turn on the oven, and I sure as shit *don't fucking roll*!</quote>
-                <links>
-                   <link href="" rel="remove" type="text/xml"/>
-                </links>
-            </discovery>
-            <discovery>
-                <pages>123</pages>
-                <relevance>0.95</relevance>
-                <quote>They did not receive the money, you nitwit! They did not receive the money! Her life was in your hands!</quote>
-                <links>
-                   <link href="" rel="remove" type="text/xml"/>
-                </links>
-            </discovery>
-        </discoveries>
     </hypothesis>
+    <discoveries>
+        <discovery>
+            <pages>500-506</pages>
+            <relevance>0.75</relevance>
+            <quote>Saturday, Donny, is Shabbos, the Jewish day of rest. That means that I don't work, I don't drive a car, I don't fucking ride in a car, I don't handle money, I don't turn on the oven, and I sure as shit *don't fucking roll*!</quote>
+            <links>
+               <link href="" rel="remove" type="text/xml"/>
+            </links>
+        </discovery>
+        <discovery>
+            <pages>123</pages>
+            <relevance>0.95</relevance>
+            <quote>They did not receive the money, you nitwit! They did not receive the money! Her life was in your hands!</quote>
+            <links>
+               <link href="" rel="remove" type="text/xml"/>
+            </links>
+        </discovery>
+    </discoveries>
 </page>

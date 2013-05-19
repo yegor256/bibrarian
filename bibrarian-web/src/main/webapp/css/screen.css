@@ -69,6 +69,12 @@ a {
     a:hover {
         text-decoration: underline;
     }
+    a.button {
+        color: inherit;
+    }
+    a.button:hover {
+        text-decoration: none;
+    }
 
 /* any paragraph */
 p {
@@ -145,6 +151,13 @@ input[type='submit'] {
     padding: 4pt 8pt;
     background-color: #e4e5e3;
     color: gray;
+}
+
+#bottom {
+    border-top: 1px solid #ccc;
+    margin-top: 2em;
+    padding-top: 1em;
+    font-size: 85%;
 }
 
 /* authentication icon */

@@ -51,21 +51,31 @@
     </xsl:template>
     <xsl:template match="artifact">
         <p>
-            <span>
-                <xsl:value-of select="book/label"/>
-            </span>
+            <xsl:value-of select="book/label"/>
+            <xsl:text> </xsl:text>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="links/link[@rel='remove']/@href"/>
+                </xsl:attribute>
+                <xsl:text>&#x2716;</xsl:text>
+            </a>
             <xsl:text>: </xsl:text>
             <xsl:value-of select="referat"/>
         </p>
-        <xsl:apply-templates select="discoveries/discovery"/>
+        <ul>
+            <xsl:apply-templates select="discoveries/discovery"/>
+        </ul>
     </xsl:template>
     <xsl:template match="discovery">
-        <p>
-            <span>
+        <li>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="links/link[@rel='hypothesis']/@href"/>
+                </xsl:attribute>
                 <xsl:value-of select="label"/>
-            </span>
+            </a>
             <xsl:value-of select="quote"/>
             <xsl:value-of select="pages"/>
-        </p>
+        </li>
     </xsl:template>
 </xsl:stylesheet>

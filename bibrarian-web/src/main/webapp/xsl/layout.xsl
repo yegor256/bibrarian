@@ -114,10 +114,14 @@
                             <xsl:call-template name="login"/>
                         </xsl:otherwise>
                     </xsl:choose>
-                    <p style="border-top: 1px solid #ccc; margin-top: 2em; padding-top: 1em;">
-                        <xsl:text>bibraian.com is an open source project, hosted at </xsl:text>
+                    <p id="bottom">
+                        <xsl:text>bibrarian.com is an open source Java project, hosted by </xsl:text>
                         <a href="https://github.com/yegor256/bibrarian">
-                            <xsl:text>github</xsl:text>
+                            <xsl:text>Github</xsl:text>
+                        </a>
+                        <xsl:text> and </xsl:text>
+                        <a href="https://www.cloudbees.com">
+                            <xsl:text>CloudBees</xsl:text>
                         </a>
                         <xsl:text>. The service is absolutely free of charge, since it is sponsored by </xsl:text>
                         <a href="http://www.tpc2.com/">

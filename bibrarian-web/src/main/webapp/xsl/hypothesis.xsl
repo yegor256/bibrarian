@@ -37,17 +37,24 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <xsl:apply-templates select="/page/hypothesis"/>
+        <xsl:apply-templates select="discoveries/discovery"/>
+    </xsl:template>
+    <xsl:template match="hypothesis">
         <p>
-            <xsl:value-of select="/page/hypothesis/label"/>
+            <xsl:value-of select="label"/>
             <xsl:text>: </xsl:text>
-            <xsl:value-of select="/page/hypothesis/description"/>
+            <xsl:value-of select="description"/>
             <xsl:text> </xsl:text>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="links/link[@rel='remove']/@href"/>
-                </xsl:attribute>
-                <xsl:text>remove</xsl:text>
-            </a>
+        </p>
+    </xsl:template>
+    <xsl:template match="discovery">
+        <p>
+            <span>
+                <xsl:value-of select="label"/>
+            </span>
+            <xsl:value-of select="quote"/>
+            <xsl:value-of select="pages"/>
         </p>
     </xsl:template>
 </xsl:stylesheet>
