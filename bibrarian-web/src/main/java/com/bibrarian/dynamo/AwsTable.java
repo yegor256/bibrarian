@@ -98,7 +98,7 @@ final class AwsTable implements Table {
      */
     @Override
     public Frame frame() {
-        return new AwsFrame(this.credentials, this.reg, this.name);
+        return new AwsFrame(this.credentials, this, this.name);
     }
 
 }

@@ -31,9 +31,12 @@ package com.bibrarian.dynamo;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.jcabi.aspects.Immutable;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Frame through AWS SDK.
@@ -50,9 +53,9 @@ final class AwsItem implements Item {
     private final transient Credentials credentials;
 
     /**
-     * Region.
+     * Frame.
      */
-    private final transient Region region;
+    private final transient Frame frm;
 
     /**
      * Table name.
@@ -62,21 +65,21 @@ final class AwsItem implements Item {
     /**
      * Values.
      */
-    private final transient Map<String, AttributeValue> values;
+    private final transient Map<String, ExpectedAttributeValue> expected;
 
     /**
      * Public ctor.
      * @param creds Credentials
-     * @param reg Region
+     * @param frm Frame
      * @param table Table name
-     * @param vals values
+     * @param values values 
      */
-    protected AwsItem(final Credentials creds, final Region reg,
-        final String table, final Map<String, AttributeValue> vals) {
+    protected AwsItem(final Credentials creds, final Frame frame,
+        final String table, final Map<String, ExpectedAttributeValue> values) {
         this.credentials = creds;
-        this.region = reg;
+        this.frm = frame;
         this.name = table;
-        this.values = vals;
+        this.expected = values;
     }
 
     /**
@@ -84,7 +87,7 @@ final class AwsItem implements Item {
      */
     @Override
     public AttributeValue get(final String name) {
-        return this.values.get(name);
+        return this.expected.get(name).getValue();
     }
 
     /**
@@ -95,7 +98,11 @@ final class AwsItem implements Item {
         final AmazonDynamoDB aws = this.credentials.aws();
         final PutItemRequest request = new PutItemRequest();
         request.setTableName(this.name);
-        request.setItem(this.values);
+        request.setExpected(this.expected);
+        final ConcurrentMap<String, AttributeValue> values =
+            new ConcurrentHashMap<String, AttributeValue>(1);
+        values.put(name, value);
+        request.setItem(values);
         aws.putItem(request);
         aws.shutdown();
     }
@@ -105,7 +112,7 @@ final class AwsItem implements Item {
      */
     @Override
     public Frame frame() {
-        return new AwsFrame(this.credentials, this.region, this.name);
+        return this.frm;
     }
 
 }

@@ -32,6 +32,8 @@ package com.bibrarian.dynamo;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
+import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
 import com.amazonaws.services.dynamodbv2.model.QueryRequest;
 import com.amazonaws.services.dynamodbv2.model.QueryResult;
 import com.jcabi.aspects.Immutable;
@@ -39,6 +41,8 @@ import java.util.AbstractCollection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Frame through AWS SDK.
@@ -55,9 +59,9 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
     private final transient Credentials credentials;
 
     /**
-     * Region.
+     * Table.
      */
-    private final transient Region region;
+    private final transient Table tbl;
 
     /**
      * Table name.
@@ -72,26 +76,26 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
     /**
      * Public ctor.
      * @param creds Credentials
-     * @param reg Region
-     * @param table Table name
+     * @param table Table
+     * @param label Table name
      */
-    protected AwsFrame(final Credentials creds, final Region reg,
-        final String table) {
-        this(creds, reg, table, new HashMap<String, Condition>(0));
+    protected AwsFrame(final Credentials creds, final Table table,
+        final String label) {
+        this(creds, table, label, new HashMap<String, Condition>(0));
     }
 
     /**
      * Public ctor.
      * @param creds Credentials
-     * @param reg Region
+     * @param table Table
      * @param table Table name
      * @param conds Conditions
      */
-    protected AwsFrame(final Credentials creds, final Region reg,
-        final String table, final Map<String, Condition> conds) {
+    protected AwsFrame(final Credentials creds, final Table table,
+        final String label, final Map<String, Condition> conds) {
         this.credentials = creds;
-        this.region = reg;
-        this.name = table;
+        this.tbl = table;
+        this.name = label;
         this.conditions = conds;
     }
 
@@ -114,14 +118,19 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
             public Item next() {
                 return new AwsItem(
                     AwsFrame.this.credentials,
-                    AwsFrame.this.region,
+                    AwsFrame.this,
                     AwsFrame.this.name,
-                    items.next()
+                    AwsFrame.expected(items.next())
                 );
             }
             @Override
             public void remove() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                final AmazonDynamoDB aws = AwsFrame.this.credentials.aws();
+                aws.deleteItem(
+                    new DeleteItemRequest()
+                        .withExpected(AwsFrame.expected(items.next()))
+                );
+                aws.shutdown();
             }
         };
     }
@@ -146,7 +155,7 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
         final Map<String, Condition> map = new HashMap<String, Condition>(0);
         map.putAll(this.conditions);
         map.put(name, condition);
-        return new AwsFrame(this.credentials, this.region, this.name, map);
+        return new AwsFrame(this.credentials, this.tbl, this.name, map);
     }
 
     /**
@@ -154,7 +163,7 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      */
     @Override
     public Table table() {
-        return new AwsTable(this.credentials, this.region, this.name);
+        return this.tbl;
     }
 
     /**
@@ -163,6 +172,24 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      */
     private QueryRequest request() {
         return new QueryRequest().withKeyConditions(this.conditions);
+    }
+
+    /**
+     * Convert item to expected values.
+     * @param item Item values
+     * @return Expected values
+     */
+    private static Map<String, ExpectedAttributeValue> expected(
+        final Map<String, AttributeValue> item) {
+        final ConcurrentMap<String, ExpectedAttributeValue> values =
+            new ConcurrentHashMap<String, ExpectedAttributeValue>(item.size());
+        for (Map.Entry<String, AttributeValue> entry : item.entrySet()) {
+            values.put(
+                entry.getKey(),
+                new ExpectedAttributeValue(entry.getValue())
+            );
+        }
+        return values;
     }
 
 }
