@@ -35,6 +35,7 @@ import com.bibrarian.om.Discovery;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import lombok.EqualsAndHashCode;
@@ -79,6 +80,10 @@ final class DynDiscoveries extends AbstractQueryable<Discovery> {
         map.put(
             "hypothesis",
             new AttributeValue(discovery.hypothesis().label())
+        );
+        map.put(
+            "date",
+            new AttributeValue(Long.toString(new Date().getTime()))
         );
         this.frame().table().put(map);
         return true;

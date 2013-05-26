@@ -29,39 +29,76 @@
  */
 package com.bibrarian.dynamo;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 /**
- * DynamoDB item.
+ * Table through AWS SDK.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Item {
+final class AwsTable implements Table {
 
     /**
-     * Get one attribute.
-     * @param name Attribute name
-     * @return Value
+     * AWS credentials.
      */
-    @NotNull
-    AttributeValue get(String name);
+    private final transient Credentials credentials;
 
     /**
-     * Change one attribute.
-     * @param name Attribute name
-     * @param value Value to save
+     * Region.
      */
-    void put(String name, AttributeValue value);
+    private final transient Region reg;
 
     /**
-     * Get back to the frame it is from.
-     * @return Frame
+     * Table name.
      */
-    @NotNull
-    Frame frame();
+    private final transient String name;
+
+    /**
+     * Public ctor.
+     * @param creds Credentials
+     * @param region Region
+     * @param table Table name
+     */
+    protected AwsTable(final Credentials creds, final Region region,
+        final String table) {
+        this.credentials = creds;
+        this.reg = region;
+        this.name = table;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void put(final Map<String, AttributeValue> attributes) {
+        final AmazonDynamoDB aws = this.credentials.aws();
+        final PutItemRequest request = new PutItemRequest();
+        request.setTableName(this.name);
+        request.setItem(attributes);
+        aws.putItem(request);
+        aws.shutdown();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Region region() {
+        return this.reg;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Frame frame() {
+        return new AwsFrame(this.credentials, this.reg, this.name);
+    }
 
 }

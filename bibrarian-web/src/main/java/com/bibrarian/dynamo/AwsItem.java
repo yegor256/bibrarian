@@ -29,39 +29,83 @@
  */
 package com.bibrarian.dynamo;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 /**
- * DynamoDB item.
+ * Frame through AWS SDK.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Item {
+final class AwsItem implements Item {
 
     /**
-     * Get one attribute.
-     * @param name Attribute name
-     * @return Value
+     * AWS credentials.
      */
-    @NotNull
-    AttributeValue get(String name);
+    private final transient Credentials credentials;
 
     /**
-     * Change one attribute.
-     * @param name Attribute name
-     * @param value Value to save
+     * Region.
      */
-    void put(String name, AttributeValue value);
+    private final transient Region region;
 
     /**
-     * Get back to the frame it is from.
-     * @return Frame
+     * Table name.
      */
-    @NotNull
-    Frame frame();
+    private final transient String name;
+
+    /**
+     * Values.
+     */
+    private final transient Map<String, AttributeValue> values;
+
+    /**
+     * Public ctor.
+     * @param creds Credentials
+     * @param reg Region
+     * @param table Table name
+     * @param vals values
+     */
+    protected AwsItem(final Credentials creds, final Region reg,
+        final String table, final Map<String, AttributeValue> vals) {
+        this.credentials = creds;
+        this.region = reg;
+        this.name = table;
+        this.values = vals;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public AttributeValue get(final String name) {
+        return this.values.get(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void put(final String name, final AttributeValue value) {
+        final AmazonDynamoDB aws = this.credentials.aws();
+        final PutItemRequest request = new PutItemRequest();
+        request.setTableName(this.name);
+        request.setItem(this.values);
+        aws.putItem(request);
+        aws.shutdown();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Frame frame() {
+        return new AwsFrame(this.credentials, this.region, this.name);
+    }
 
 }

@@ -66,7 +66,7 @@ public interface Region {
         }
         @Override
         public Table table(final String name) {
-            return new AwsTable(this, name);
+            return new AwsTable(this.credentials, this, name);
         }
     }
 

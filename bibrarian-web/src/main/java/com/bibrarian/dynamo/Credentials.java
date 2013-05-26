@@ -29,8 +29,9 @@
  */
 package com.bibrarian.dynamo;
 
-import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
@@ -51,7 +52,7 @@ public interface Credentials {
      * @return Credentials
      */
     @NotNull
-    AWSCredentials aws();
+    AmazonDynamoDB aws();
 
     /**
      * Simple implementation.
@@ -83,8 +84,10 @@ public interface Credentials {
          */
         @Override
         @NotNull
-        public AWSCredentials aws() {
-            return new BasicAWSCredentials(this.key, this.secret);
+        public AmazonDynamoDB aws() {
+            return new AmazonDynamoDBClient(
+                new BasicAWSCredentials(this.key, this.secret)
+            );
         }
     }
 

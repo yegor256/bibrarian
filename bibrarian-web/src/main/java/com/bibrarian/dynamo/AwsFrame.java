@@ -29,10 +29,16 @@
  */
 package com.bibrarian.dynamo;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.amazonaws.services.dynamodbv2.model.QueryRequest;
+import com.amazonaws.services.dynamodbv2.model.QueryResult;
 import com.jcabi.aspects.Immutable;
 import java.util.AbstractCollection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Frame through AWS SDK.
@@ -42,6 +48,11 @@ import java.util.Iterator;
  */
 @Immutable
 final class AwsFrame extends AbstractCollection<Item> implements Frame {
+
+    /**
+     * AWS credentials.
+     */
+    private final transient Credentials credentials;
 
     /**
      * Region.
@@ -54,13 +65,34 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
     private final transient String name;
 
     /**
+     * Conditions.
+     */
+    private final transient Map<String, Condition> conditions;
+
+    /**
      * Public ctor.
+     * @param creds Credentials
      * @param reg Region
      * @param table Table name
      */
-    protected AwsFrame(final Region reg, final String table) {
+    protected AwsFrame(final Credentials creds, final Region reg,
+        final String table) {
+        this(creds, reg, table, new HashMap<String, Condition>(0));
+    }
+
+    /**
+     * Public ctor.
+     * @param creds Credentials
+     * @param reg Region
+     * @param table Table name
+     * @param conds Conditions
+     */
+    protected AwsFrame(final Credentials creds, final Region reg,
+        final String table, final Map<String, Condition> conds) {
+        this.credentials = creds;
         this.region = reg;
         this.name = table;
+        this.conditions = conds;
     }
 
     /**
@@ -68,7 +100,30 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      */
     @Override
     public Iterator<Item> iterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final AmazonDynamoDB aws = this.credentials.aws();
+        final QueryResult result = aws.query(this.request());
+        final Iterator<Map<String, AttributeValue>> items =
+            result.getItems().iterator();
+        aws.shutdown();
+        return new Iterator<Item>() {
+            @Override
+            public boolean hasNext() {
+                return items.hasNext();
+            }
+            @Override
+            public Item next() {
+                return new AwsItem(
+                    AwsFrame.this.credentials,
+                    AwsFrame.this.region,
+                    AwsFrame.this.name,
+                    items.next()
+                );
+            }
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        };
     }
 
     /**
@@ -76,15 +131,22 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      */
     @Override
     public int size() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final AmazonDynamoDB aws = this.credentials.aws();
+        final QueryResult result = aws.query(this.request());
+        final int size = result.getCount();
+        aws.shutdown();
+        return size;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Frame where(String name, Condition condition) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Frame where(final String name, final Condition condition) {
+        final Map<String, Condition> map = new HashMap<String, Condition>(0);
+        map.putAll(this.conditions);
+        map.put(name, condition);
+        return new AwsFrame(this.credentials, this.region, this.name, map);
     }
 
     /**
@@ -92,7 +154,15 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      */
     @Override
     public Table table() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new AwsTable(this.credentials, this.region, this.name);
+    }
+
+    /**
+     * Query request.
+     * @return The request
+     */
+    private QueryRequest request() {
+        return new QueryRequest().withKeyConditions(this.conditions);
     }
 
 }

@@ -76,7 +76,7 @@ final class DynBibrarian implements Bibrarian {
     @Override
     public Queryable<Artifact> artifacts() {
         return new DynArtifacts(
-            this.item.region().table("artifacts").frame().where(
+            this.item.frame().table().region().table("artifacts").frame().where(
                 "bibrarian",
                 new Condition()
                     .withAttributeValueList(new AttributeValue(this.name()))
@@ -92,14 +92,15 @@ final class DynBibrarian implements Bibrarian {
     @Override
     public Queryable<Hypothesis> hypothesizes() {
         return new DynHypothesizes(
-            this.item.region().table("hypothesizes").frame().where(
-                "bibrarian",
-                new Condition()
-                    .withAttributeValueList(new AttributeValue(this.name()))
-                    .withComparisonOperator(ComparisonOperator.EQ)
-            ),
-            this.name()
-        );
+            this.item.frame().table().region()
+                .table("hypothesizes").frame().where(
+                    "bibrarian",
+                    new Condition()
+                        .withAttributeValueList(new AttributeValue(this.name()))
+                        .withComparisonOperator(ComparisonOperator.EQ)
+                ),
+                this.name()
+            );
     }
 
     /**
@@ -108,14 +109,15 @@ final class DynBibrarian implements Bibrarian {
     @Override
     public Queryable<Discovery> discoveries() {
         return new DynDiscoveries(
-            this.item.region().table("discoveries").frame().where(
-                "bibrarian",
-                new Condition()
-                    .withAttributeValueList(new AttributeValue(this.name()))
-                    .withComparisonOperator(ComparisonOperator.EQ)
-            ),
-            this.name()
-        );
+            this.item.frame().table().region()
+                .table("discoveries").frame().where(
+                    "bibrarian",
+                    new Condition()
+                        .withAttributeValueList(new AttributeValue(this.name()))
+                        .withComparisonOperator(ComparisonOperator.EQ)
+                ),
+                this.name()
+            );
     }
 
     /**
