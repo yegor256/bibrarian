@@ -27,64 +27,61 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dyn;
+package com.bibrarian.dynamo;
 
-import com.bibrarian.dynamo.Attributes;
-import com.bibrarian.dynamo.Frame;
-import com.bibrarian.om.Hypothesis;
-import com.bibrarian.om.Queryable;
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
+import com.amazonaws.services.dynamodbv2.model.Condition;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Artifacts.
- *
- * @param <T> Type of encapsulated elements
+ * Integration case for {@link Region}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
+ * @version $Id: DiscoveriesRsTest.java 2344 2013-01-13 18:28:44Z guard $
  */
-@Immutable
-@Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(callSuper = true, of = "owner")
-final class DynHypothesizes extends AbstractQueryable<Hypothesis> {
+public final class RegionITCase {
 
     /**
-     * Owner of the collection.
+     * AWS key.
      */
-    private final transient String owner;
+    private transient String key;
 
     /**
-     * Public ctor.
-     * @param frame Frame
+     * AWS secret.
      */
-    protected DynHypothesizes(final Frame frame, final String urn) {
-        super(frame);
-        this.owner = urn;
-    }
+    private transient String secret;
 
     /**
-     * {@inheritDoc}
+     * AWS table name.
      */
-    @Override
-    public boolean add(final Hypothesis hypothesis) {
-        this.frame().table().put(
-            new Attributes()
-                .with("bibrarian", this.owner)
-                .with("label", hypothesis.label())
-                .with("description", hypothesis.description())
+    private transient String name;
+
+    /**
+     * Region.Simple can work with AWS.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void worksWithAmazon() throws Exception {
+        final Region region = new Region.Simple(
+            new Credentials.Simple(this.key, this.secret)
         );
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Queryable<Hypothesis> with(final Frame frame) {
-        return new DynHypothesizes(frame, this.owner);
+        final Table table = region.table(this.name);
+        final String attr = "id";
+        final String value = "some test value \u20ac";
+        table.put(new Attributes().with(attr, value));
+        final Frame frame = table.frame().where(
+            attr,
+            new Condition()
+                .withAttributeValueList(new AttributeValue(value))
+                .withComparisonOperator(ComparisonOperator.EQ)
+        );
+        MatcherAssert.assertThat(frame.size(), Matchers.equalTo(1));
+        MatcherAssert.assertThat(
+            frame.iterator().next().get(attr).getS(),
+            Matchers.equalTo(value)
+        );
     }
 
 }

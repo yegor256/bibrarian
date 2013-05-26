@@ -27,64 +27,66 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dyn;
+package com.bibrarian.dynamo;
 
-import com.bibrarian.dynamo.Attributes;
-import com.bibrarian.dynamo.Frame;
-import com.bibrarian.om.Hypothesis;
-import com.bibrarian.om.Queryable;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
- * Artifacts.
+ * DynamoDB item attributes.
  *
- * @param <T> Type of encapsulated elements
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
+ * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-@Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(callSuper = true, of = "owner")
-final class DynHypothesizes extends AbstractQueryable<Hypothesis> {
+public final class Attributes extends
+    ConcurrentHashMap<String, AttributeValue> {
 
     /**
-     * Owner of the collection.
+     * Serialization marker.
      */
-    private final transient String owner;
+    private static final long serialVersionUID = 0x3456998922348767L;
 
     /**
-     * Public ctor.
-     * @param frame Frame
+     * Private ctor.
      */
-    protected DynHypothesizes(final Frame frame, final String urn) {
-        super(frame);
-        this.owner = urn;
+    public Attributes() {
+        super();
     }
 
     /**
-     * {@inheritDoc}
+     * Private ctor.
+     * @param map Map of them
      */
-    @Override
-    public boolean add(final Hypothesis hypothesis) {
-        this.frame().table().put(
-            new Attributes()
-                .with("bibrarian", this.owner)
-                .with("label", hypothesis.label())
-                .with("description", hypothesis.description())
-        );
-        return true;
+    private Attributes(final Map<String, AttributeValue> map) {
+        super();
+        this.putAll(map);
     }
 
     /**
-     * {@inheritDoc}
+     * With this attribute.
+     * @param name Attribute name
+     * @param value The value
+     * @return Attributes
      */
-    @Override
-    protected Queryable<Hypothesis> with(final Frame frame) {
-        return new DynHypothesizes(frame, this.owner);
+    public Attributes with(final String name, final AttributeValue value) {
+        final ConcurrentMap<String, AttributeValue> map =
+            new ConcurrentHashMap<String, AttributeValue>(this.size() + 1);
+        map.put(name, value);
+        return new Attributes(map);
+    }
+
+    /**
+     * With this attribute.
+     * @param name Attribute name
+     * @param value The value
+     * @return Attributes
+     */
+    public Attributes with(final String name, final Object value) {
+        return this.with(name, new AttributeValue(value.toString()));
     }
 
 }

@@ -27,64 +27,23 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dyn;
+package com.bibrarian.dynamo;
 
-import com.bibrarian.dynamo.Attributes;
-import com.bibrarian.dynamo.Frame;
-import com.bibrarian.om.Hypothesis;
-import com.bibrarian.om.Queryable;
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.junit.Test;
 
 /**
- * Artifacts.
- *
- * @param <T> Type of encapsulated elements
+ * Test case for {@link Region}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
+ * @version $Id: DiscoveriesRsTest.java 2344 2013-01-13 18:28:44Z guard $
  */
-@Immutable
-@Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(callSuper = true, of = "owner")
-final class DynHypothesizes extends AbstractQueryable<Hypothesis> {
+public final class RegionTest {
 
     /**
-     * Owner of the collection.
+     * Region.Simple can work with AWS.
+     * @throws Exception If some problem inside
      */
-    private final transient String owner;
-
-    /**
-     * Public ctor.
-     * @param frame Frame
-     */
-    protected DynHypothesizes(final Frame frame, final String urn) {
-        super(frame);
-        this.owner = urn;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean add(final Hypothesis hypothesis) {
-        this.frame().table().put(
-            new Attributes()
-                .with("bibrarian", this.owner)
-                .with("label", hypothesis.label())
-                .with("description", hypothesis.description())
-        );
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Queryable<Hypothesis> with(final Frame frame) {
-        return new DynHypothesizes(frame, this.owner);
+    @Test
+    public void worksWithRegion() throws Exception {
     }
 
 }

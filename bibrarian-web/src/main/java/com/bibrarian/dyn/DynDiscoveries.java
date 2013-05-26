@@ -29,15 +29,13 @@
  */
 package com.bibrarian.dyn;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.bibrarian.dynamo.Attributes;
 import com.bibrarian.dynamo.Frame;
 import com.bibrarian.om.Discovery;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.util.Date;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -73,19 +71,13 @@ final class DynDiscoveries extends AbstractQueryable<Discovery> {
      */
     @Override
     public boolean add(final Discovery discovery) {
-        final ConcurrentMap<String, AttributeValue> map =
-            new ConcurrentHashMap<String, AttributeValue>(0);
-        map.put("bibrarian", new AttributeValue(this.owner));
-        map.put("artifact", new AttributeValue(discovery.artifact().label()));
-        map.put(
-            "hypothesis",
-            new AttributeValue(discovery.hypothesis().label())
+        this.frame().table().put(
+            new Attributes()
+                .with("bibrarian", this.owner)
+                .with("artifact", discovery.artifact().label())
+                .with("hypothesis", discovery.hypothesis().label())
+                .with("date", new Date().getTime())
         );
-        map.put(
-            "date",
-            new AttributeValue(Long.toString(new Date().getTime()))
-        );
-        this.frame().table().put(map);
         return true;
     }
 

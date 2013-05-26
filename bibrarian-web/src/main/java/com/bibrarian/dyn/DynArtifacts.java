@@ -29,14 +29,12 @@
  */
 package com.bibrarian.dyn;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.bibrarian.dynamo.Attributes;
 import com.bibrarian.dynamo.Frame;
 import com.bibrarian.om.Artifact;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -72,12 +70,12 @@ final class DynArtifacts extends AbstractQueryable<Artifact> {
      */
     @Override
     public boolean add(final Artifact artifact) {
-        final ConcurrentMap<String, AttributeValue> map =
-            new ConcurrentHashMap<String, AttributeValue>(0);
-        map.put("bibrarian", new AttributeValue(this.owner));
-        map.put("label", new AttributeValue(artifact.label()));
-        map.put("referat", new AttributeValue(artifact.referat()));
-        this.frame().table().put(map);
+        this.frame().table().put(
+            new Attributes()
+                .with("bibrarian", this.owner)
+                .with("label", artifact.label())
+                .with("referat", artifact.referat())
+        );
         return true;
     }
 

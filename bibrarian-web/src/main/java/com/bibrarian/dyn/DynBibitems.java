@@ -29,14 +29,12 @@
  */
 package com.bibrarian.dyn;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.bibrarian.dynamo.Attributes;
 import com.bibrarian.dynamo.Frame;
 import com.bibrarian.om.Bibitem;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -66,11 +64,11 @@ final class DynBibitems extends AbstractQueryable<Bibitem> {
      */
     @Override
     public boolean add(final Bibitem bibitem) {
-        final ConcurrentMap<String, AttributeValue> map =
-            new ConcurrentHashMap<String, AttributeValue>(0);
-        map.put("label", new AttributeValue(bibitem.load().label()));
-        map.put("tex", new AttributeValue(bibitem.load().toString()));
-        this.frame().table().put(map);
+        this.frame().table().put(
+            new Attributes()
+                .with("label", bibitem.load().label())
+                .with("tex", bibitem.load())
+        );
         return true;
     }
 
