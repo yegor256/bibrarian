@@ -29,8 +29,8 @@
  */
 package com.bibrarian.web;
 
-import com.bibrarian.dynamo.DynBibrarians;
-import com.bibrarian.dynamo.DynamoCredentials;
+import com.bibrarian.dyn.DynBibrarians;
+import com.bibrarian.dynamo.Credentials;
 import com.bibrarian.om.Bibrarians;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
@@ -60,7 +60,7 @@ public final class BibrariansLifespan implements ServletContextListener {
             throw new IllegalStateException(ex);
         }
         final Bibrarians bibrarians = new DynBibrarians(
-            new DynamoCredentials.Simple(
+            new Credentials.Simple(
                 Manifests.read("Bibrarian-DynamoKey"),
                 Manifests.read("Bibrarian-DynamoSecret")
             ),

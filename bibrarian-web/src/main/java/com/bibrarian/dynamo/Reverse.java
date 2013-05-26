@@ -29,59 +29,26 @@
  */
 package com.bibrarian.dynamo;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 /**
- * DynamoDB credentials.
+ * Reverse mapping.
  *
+ * @param <T> Type of result expected
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface DynamoTables {
+public interface Reverse<T> {
 
     /**
-     * Get table by name.
-     * @param name Its name
-     * @return Table
+     * Reverse attributes back to item.
+     * @param cursor Where we are at the moment
+     * @param attributes Where to save data
+     * @return The item restored
      */
-    @NotNull
-    DynamoTable get(String name);
-
-    /**
-     * Simple implementation.
-     */
-    final class Prefixed implements DynamoTables {
-        /**
-         * AWS credentials.
-         */
-        private final transient DynamoCredentials credentials;
-        /**
-         * Prefix.
-         */
-        private final transient String prefix;
-        /**
-         * Public ctor.
-         * @param creds Credentials
-         * @param pfx Prefix
-         */
-        public Prefixed(@NotNull final DynamoCredentials creds,
-            @NotNull final String pfx) {
-            this.credentials = creds;
-            this.prefix = pfx;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull
-        public DynamoTable get(@NotNull final String name) {
-            return new DynamoTableImpl(
-                this.credentials,
-                String.format("%s-%s", this.prefix, name)
-            );
-        }
-    }
+    T revert(Cursor<T> cursor, Map<String, AttributeValue> attributes);
 
 }

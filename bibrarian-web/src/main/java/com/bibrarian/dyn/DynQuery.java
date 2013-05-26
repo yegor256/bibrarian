@@ -27,70 +27,97 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dynamo;
+package com.bibrarian.dyn;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
-import com.amazonaws.services.dynamodbv2.model.ScanRequest;
-import com.google.common.base.Function;
+import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
+import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.bibrarian.dynamo.Cursor;
+import com.bibrarian.om.Query;
+import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
-import java.util.Collection;
+import com.jcabi.aspects.Loggable;
+import java.util.HashMap;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Implementation of {@link DynamoTable}.
+ * Query.
  *
+ * @param <T> Type of encapsulated elements
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-final class DynamoTableImpl implements DynamoTable {
+@Loggable(Loggable.DEBUG)
+@ToString
+@EqualsAndHashCode(of = { "cursor", "conditions" })
+final class DynQuery<T> implements Query<T> {
 
     /**
-     * AWS credentials.
+     * Cursor at work.
      */
-    private final transient DynamoCredentials credentials;
+    private final transient Cursor<T> cursor;
 
     /**
-     * Table name.
+     * Conditions.
      */
-    private final transient String table;
+    private final transient Map<String, Condition> conditions;
 
     /**
      * Public ctor.
-     * @param creds Credentials
-     * @param name Table name
+     * @param cur Cursor
      */
-    protected DynamoTableImpl(@NotNull final DynamoCredentials creds,
-        @NotNull final String name) {
-        this.credentials = creds;
-        this.table = name;
+    protected DynQuery(@NotNull final Cursor<T> cur) {
+        this(cur, new HashMap<String, Condition>(0));
+    }
+
+    /**
+     * Public ctor.
+     * @param cur Cursor we're at
+     * @param query Query
+     */
+    @SuppressWarnings("unchecked")
+    protected DynQuery(@NotNull final Cursor<T> cur,
+        @NotNull final Query<T> query) {
+        this(cur, DynQuery.class.cast(query).conditions);
+    }
+
+    /**
+     * Public ctor.
+     * @param cur Cursor we're at
+     * @param cnd Conditions
+     */
+    private DynQuery(@NotNull final Cursor<T> cur,
+        @NotNull final Map<String, Condition> cnd) {
+        this.cursor = cur;
+        this.conditions = cnd;
     }
 
     /**
      * {@inheritDoc}
      */
-    @NotNull
     @Override
-    public <T> Collection<T> scan(@NotNull final ScanRequest request,
-        @NotNull final Function<Map<String, AttributeValue>, T> mapping) {
-        return null;
+    public Query<T> with(String key, String value) {
+        final Map<String, Condition> cnd = new HashMap<String, Condition>(0);
+        cnd.putAll(this.conditions);
+        cnd.put(
+            key,
+            new Condition()
+                .withAttributeValueList(new AttributeValue(value))
+                .withComparisonOperator(ComparisonOperator.EQ)
+        );
+        return new DynQuery<T>(this.cursor, cnd);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public <T> void put(@NotNull final T item,
-        @NotNull final Function<T, Map<String, AttributeValue>> reverse) {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void delete(@NotNull final DeleteItemRequest request) {
+    public Queryable<T> refine() {
+        return new DynQueryable<T>(this.cursor, this);
     }
 
 }

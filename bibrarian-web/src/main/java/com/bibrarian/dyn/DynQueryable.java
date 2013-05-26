@@ -27,69 +27,104 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dynamo;
+package com.bibrarian.dyn;
 
-import com.bibrarian.om.Artifact;
-import com.bibrarian.om.Bibrarian;
-import com.bibrarian.om.Discovery;
-import com.bibrarian.om.Hypothesis;
+import com.bibrarian.dynamo.Cursor;
+import com.bibrarian.om.Query;
 import com.bibrarian.om.Queryable;
+import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
+import com.jcabi.aspects.Loggable;
+import java.util.AbstractCollection;
+import java.util.Iterator;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Bibrarians in Dynamo DB.
+ * Queryable.
  *
+ * @param <T> Type of encapsulated elements
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id$
  */
 @Immutable
-final class DynBibrarian implements Bibrarian {
+@Loggable(Loggable.DEBUG)
+@ToString
+@EqualsAndHashCode(callSuper = false, of = { "cursor", "qry" })
+public final class DynQueryable<T> extends
+    AbstractCollection<T> implements Queryable<T> {
 
     /**
-     * Tables.
+     * Cursor.
      */
-    private final transient DynamoTables tables;
+    private final transient Cursor<T> cursor;
 
     /**
-     * Name of the bibrarian.
+     * Query encapsulated.
      */
-    private final transient URN name;
+    private final transient Query<T> qry;
 
     /**
      * Public ctor.
-     * @param tbls Tables
-     * @param urn Name of him
+     * @param cur Cursor
      */
-    protected DynBibrarian(@NotNull final DynamoTables tbls,
-        @NotNull final URN urn) {
-        this.tables = tbls;
-        this.name = urn;
+    public DynQueryable(@NotNull final Cursor<T> cur) {
+        this(cur, new DynQuery<T>(cur));
+    }
+
+    /**
+     * Public ctor.
+     * @param cur Cursor
+     * @param query Query to encapsulate
+     */
+    protected DynQueryable(@NotNull final Cursor<T> cur,
+        @NotNull final Query<T> query) {
+        this.cursor = cur;
+        this.qry = query;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Queryable<Artifact> artifacts() {
-        throw new UnsupportedOperationException();
+    public Iterator<T> iterator() {
+        return new Cursor.Mapped<T>(this.cursor).iterator();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Queryable<Hypothesis> hypothesizes() {
-        throw new UnsupportedOperationException();
+    public int size() {
+        return Iterators.size(this.iterator());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Queryable<Discovery> discoveries() {
-        throw new UnsupportedOperationException();
+    public boolean add(final T item) {
+        this.cursor.add(item);
+        return true;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean remove(final Object object) {
+        this.cursor.iterator().remove();
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Query<T> query() {
+        return new DynQuery<T>(this.cursor, this.qry);
+    }
+
 
 }

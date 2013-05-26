@@ -32,8 +32,8 @@ package com.bibrarian.om;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.net.URI;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -59,7 +59,7 @@ public interface Artifact {
      * @return Set of documents
      */
     @NotNull
-    SortedSet<URI> hardcopies();
+    Collection<URI> hardcopies();
 
     /**
      * Short description of the book read.
@@ -113,8 +113,8 @@ public interface Artifact {
          * {@inheritDoc}
          */
         @Override
-        public SortedSet<URI> hardcopies() {
-            return new TreeSet<URI>();
+        public Collection<URI> hardcopies() {
+            return new ArrayList<URI>(0);
         }
         /**
          * {@inheritDoc}

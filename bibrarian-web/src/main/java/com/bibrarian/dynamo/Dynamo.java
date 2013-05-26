@@ -29,55 +29,41 @@
  */
 package com.bibrarian.dynamo;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.jcabi.aspects.Immutable;
 import javax.validation.constraints.NotNull;
 
 /**
- * DynamoDB tables.
+ * Amazon DynamoDB abstraction.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface DynamoCredentials {
+public interface Dynamo {
 
     /**
-     * Build AWS credentials object.
-     * @return Credentials
+     * Create cursor.
+     * @param <T> Type of data item
+     * @param table Table name to start with
+     * @return Cursor
      */
     @NotNull
-    AWSCredentials aws();
+    <T> Cursor<T> cursor(String table);
 
     /**
      * Simple implementation.
      */
-    final class Simple implements DynamoCredentials {
-        /**
-         * AWS key.
-         */
-        private final transient String key;
-        /**
-         * AWS secret.
-         */
-        private final transient String secret;
+    final class Simple implements Dynamo {
         /**
          * Public ctor.
-         * @param akey AWS key
-         * @param scrt Secret
+         * @param creds Credentials
+         * @param schm Schema
          */
-        public Simple(@NotNull final String akey, @NotNull final String scrt) {
-            this.key = akey;
-            this.secret = scrt;
+        public Simple (final Credentials creds, final Schema schm) {
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
-        @NotNull
-        public AWSCredentials aws() {
-            return new BasicAWSCredentials(this.key, this.secret);
+        public <T> Cursor<T> cursor(final String table) {
+            throw new UnsupportedOperationException();
         }
     }
 

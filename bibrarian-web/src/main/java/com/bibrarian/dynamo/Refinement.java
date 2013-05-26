@@ -27,12 +27,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.bibrarian.dynamo;
+
+import com.amazonaws.services.dynamodbv2.model.ScanRequest;
+import com.jcabi.aspects.Immutable;
 
 /**
- * Data manipulator in Amazon DynamoDB.
+ * Refinement of scan request.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
+ * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
-package com.bibrarian.dynamo;
+@Immutable
+public interface Refinement {
+
+    /**
+     * Refine the request.
+     * @param request Request to extend
+     */
+    void refine(ScanRequest request);
+
+}

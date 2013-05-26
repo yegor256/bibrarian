@@ -27,54 +27,51 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dynamo;
+package com.bibrarian.om;
 
-import com.bibrarian.om.Bibitem;
-import com.bibrarian.om.Bibrarian;
-import com.bibrarian.om.Bibrarians;
-import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
+import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 
 /**
- * All known bibrarians.
+ * BibTeX text.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public final class DynBibrarians implements Bibrarians {
+@Loggable(Loggable.DEBUG)
+@EqualsAndHashCode(of = "tex")
+public final class Bibtex {
 
     /**
-     * Dynamo tables.
+     * Text in BibTeX format.
      */
-    private final transient DynamoTables tables;
+    private final transient String tex;
 
     /**
      * Public ctor.
-     * @param creds Credentials
-     * @param prfx Prefix
+     * @param txt Text in BibTeX format
      */
-    public DynBibrarians(@NotNull final DynamoCredentials creds,
-        @NotNull final String prfx) {
-        this.tables = new DynamoTables.Prefixed(creds, prfx);
+    public Bibtex(@NotNull final String txt) {
+        this.tex = txt;
+    }
+
+    /**
+     * Get label.
+     * @return Label
+     */
+    public String label() {
+        return "bibtex";
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Bibrarian fetch(@NotNull final URN urn) {
-        return new DynBibrarian(this.tables, urn);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Queryable<Bibitem> bibitems() {
-        throw new UnsupportedOperationException();
+    public String toString() {
+        return "bibtex";
     }
 
 }

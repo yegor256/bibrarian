@@ -29,67 +29,22 @@
  */
 package com.bibrarian.dynamo;
 
-import com.bibrarian.om.Query;
-import com.bibrarian.om.Queryable;
+import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.jcabi.aspects.Immutable;
-import java.util.AbstractCollection;
-import java.util.Iterator;
-import javax.validation.constraints.NotNull;
 
 /**
- * Queryable.
+ * Reverse mapping.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public final class DynQueryable<T> extends
-    AbstractCollection<T> implements Queryable<T> {
+public interface Alteration {
 
     /**
-     * Dynamo credentials.
+     * Alter this request before sending to DynamoDB.
+     * @param request Request to extend
      */
-    private final transient DynamoTables credentials;
-
-    /**
-     * Table name.
-     */
-    private final transient String table;
-
-    /**
-     * Public ctor.
-     * @param creds Credentials
-     * @param tbl Table name
-     */
-    public DynQueryable(@NotNull final DynamoTables creds,
-        @NotNull final String tbl) {
-        this.credentials = creds;
-        this.table = tbl;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterator<T> iterator() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int size() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Query<T> query() {
-        throw new UnsupportedOperationException();
-    }
-
+    void alter(PutItemRequest request);
 
 }

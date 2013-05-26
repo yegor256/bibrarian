@@ -122,7 +122,7 @@ public final class ArtifactRs extends BaseRs {
     private JaxbBundle jaxb(final Artifact artfct) {
         return new JaxbBundle("artifact")
             .add("bibitem")
-                .add("label", artfct.bibitem().label())
+                .add("label", artfct.bibitem().load().label())
                 .up()
                 .add("bibitem", artfct.bibitem().toString())
                 .up()
@@ -154,7 +154,7 @@ public final class ArtifactRs extends BaseRs {
                         .path(ArtifactRs.class)
                         .path(ArtifactRs.class, "referat")
                         .queryParam(ArtifactRs.QUERY_LABEL, "{x1}")
-                        .build(this.artifact.bibitem().label())
+                        .build(this.artifact.bibitem().load().label())
                 )
             )
             .link(
@@ -164,7 +164,7 @@ public final class ArtifactRs extends BaseRs {
                         .path(ArtifactRs.class)
                         .path(ArtifactRs.class, "add")
                         .queryParam(ArtifactRs.QUERY_LABEL, "{x2}")
-                        .build(this.artifact.bibitem().label())
+                        .build(this.artifact.bibitem().load().label())
                 )
             );
     }

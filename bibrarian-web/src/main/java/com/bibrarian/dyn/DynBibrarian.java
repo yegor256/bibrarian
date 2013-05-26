@@ -27,69 +27,82 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.dyn;
 
+import com.bibrarian.dynamo.Cursor;
+import com.bibrarian.om.Artifact;
+import com.bibrarian.om.Bibrarian;
+import com.bibrarian.om.Discovery;
+import com.bibrarian.om.Hypothesis;
+import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * One bibitem.
+ * Bibrarians in Dynamo DB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Bibitem {
+@Loggable(Loggable.DEBUG)
+@ToString
+@EqualsAndHashCode(callSuper = false, of = { "cursor", "name" })
+final class DynBibrarian implements Bibrarian {
 
     /**
-     * Get BibTeX content.
-     * @return The content
+     * Cursor.
      */
-    Bibtex load();
+    private final transient Cursor<Bibrarian> cursor;
 
     /**
-     * Save new content.
-     * @param text Text to save, after parsing
+     * Name of the bibrarian.
      */
-    void save(@NotNull Bibtex text);
+    private final transient URN name;
 
     /**
-     * Simple implementation.
+     * Public ctor.
+     * @param cur Cursor
+     * @param urn Name of him
      */
-    @Loggable(Loggable.DEBUG)
-    @ToString
-    @EqualsAndHashCode(of = "tex")
-    final class Simple implements Bibitem {
-        /**
-         * Text in BibTeX format.
-         */
-        private final transient Bibtex tex;
-        /**
-         * Public ctor.
-         * @param txt Text in BibTeX format
-         */
-        public Simple(@NotNull final Bibtex txt) {
-            this.tex = txt;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull
-        public Bibtex load() {
-            throw new UnsupportedOperationException();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull
-        public void save(final Bibtex txt) {
-            throw new UnsupportedOperationException();
-        }
+    protected DynBibrarian(@NotNull final Cursor<Bibrarian> cur,
+        @NotNull final URN urn) {
+        this.cursor = cur;
+        this.name = urn;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Queryable<Artifact> artifacts() {
+        return new DynQueryable<Artifact>(
+            this.cursor.<Artifact>inverse("artifacts", "bibrarian")
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Queryable<Hypothesis> hypothesizes() {
+        return new DynQueryable<Hypothesis>(
+            this.cursor.<Hypothesis>inverse("discoveries", "bibrarian")
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Queryable<Discovery> discoveries() {
+        return new DynQueryable<Discovery>(
+            this.cursor.<Discovery>inverse("discoveries", "bibrarian")
+        );
     }
 
 }

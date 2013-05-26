@@ -29,10 +29,10 @@
  */
 
 /**
- * Data manipulator in Amazon DynamoDB.
+ * Object Model implementation on top of Amazon DynamoDB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-package com.bibrarian.dynamo;
+package com.bibrarian.dyn;

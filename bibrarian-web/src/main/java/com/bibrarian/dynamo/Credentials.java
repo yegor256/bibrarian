@@ -27,12 +27,65 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.bibrarian.dynamo;
+
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Data manipulator in Amazon DynamoDB.
+ * Amazon DynamoDB credentials.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
+ * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
-package com.bibrarian.dynamo;
+@Immutable
+public interface Credentials {
+
+    /**
+     * Build AWS credentials object.
+     * @return Credentials
+     */
+    @NotNull
+    AWSCredentials aws();
+
+    /**
+     * Simple implementation.
+     */
+    @Immutable
+    @Loggable(Loggable.DEBUG)
+    @ToString
+    @EqualsAndHashCode(of = { "key", "secret" })
+    final class Simple implements Credentials {
+        /**
+         * AWS key.
+         */
+        private final transient String key;
+        /**
+         * AWS secret.
+         */
+        private final transient String secret;
+        /**
+         * Public ctor.
+         * @param akey AWS key
+         * @param scrt Secret
+         */
+        public Simple(@NotNull final String akey, @NotNull final String scrt) {
+            this.key = akey;
+            this.secret = scrt;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull
+        public AWSCredentials aws() {
+            return new BasicAWSCredentials(this.key, this.secret);
+        }
+    }
+
+}

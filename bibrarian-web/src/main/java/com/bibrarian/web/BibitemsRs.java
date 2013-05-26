@@ -30,6 +30,7 @@
 package com.bibrarian.web;
 
 import com.bibrarian.om.Bibitem;
+import com.bibrarian.om.Bibtex;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
@@ -79,7 +80,7 @@ public final class BibitemsRs extends BaseRs {
     @GET
     @Path("/add")
     public Response add(@QueryParam("tex") @NotNull final String tex) {
-        final Bibitem item = new Bibitem.Simple(tex);
+        final Bibitem item = new Bibitem.Simple(new Bibtex(tex));
         if (!this.bibrarians().bibitems().add(item)) {
             throw FlashInset.forward(
                 this.indexUri(),
@@ -117,7 +118,7 @@ public final class BibitemsRs extends BaseRs {
      */
     private JaxbBundle bundle(final Bibitem bibitem) {
         return new JaxbBundle("discovery")
-            .add("label", bibitem.label())
+            .add("label", bibitem.load().label())
             .up()
             .add("tex", bibitem.toString())
             .up()
@@ -130,7 +131,7 @@ public final class BibitemsRs extends BaseRs {
                         .path(BibitemsRs.class)
                         .path(BibitemsRs.class, "remove")
                         .queryParam("label", "{l}")
-                        .build(bibitem.label())
+                        .build(bibitem.load().label())
                 )
             );
     }

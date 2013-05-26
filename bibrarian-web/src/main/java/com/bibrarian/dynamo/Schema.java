@@ -29,50 +29,29 @@
  */
 package com.bibrarian.dynamo;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
-import com.amazonaws.services.dynamodbv2.model.ScanRequest;
-import com.google.common.base.Function;
 import com.jcabi.aspects.Immutable;
-import java.util.Collection;
-import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 /**
- * DynamoDB table.
+ * DynamoDB schema.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface DynamoTable {
+public final class Schema {
 
     /**
-     * Scan and return collection of found items.
-     * @param <T> Type of response
-     * @param request Scan request
-     * @param mapping Mapping function
-     * @return Collection of results
-     */
-    @NotNull
-    <T> Collection<T> scan(@NotNull ScanRequest request,
-        @NotNull Function<Map<String, AttributeValue>, T> mapping);
-
-    /**
-     * Put a new item to the table.
-     * @param <T> Type of item
-     * @param item Item to put into the table
+     * With this table and mapping.
+     * @param label Label to use inside the code
+     * @param name Exact table name as it's called in DynamoDB
      * @param reverse Reverse mapping
+     * @return The same object
      */
     @NotNull
-    <T> void put(@NotNull T item,
-        @NotNull Function<T, Map<String, AttributeValue>> reverse);
-
-    /**
-     * Delete an item from the table.
-     * @param request Delete request
-     */
-    @NotNull
-    void delete(@NotNull DeleteItemRequest request);
+    public Schema withTable(@NotNull final String label,
+        @NotNull final String name, @NotNull final Reverse<?> reverse) {
+        return this;
+    }
 
 }
