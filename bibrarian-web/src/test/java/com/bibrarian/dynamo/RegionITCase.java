@@ -29,10 +29,22 @@
  */
 package com.bibrarian.dynamo;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
+import com.amazonaws.services.dynamodbv2.model.DeleteTableRequest;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableRequest;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
+import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
+import com.amazonaws.services.dynamodbv2.model.KeyType;
+import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
+import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -79,24 +91,88 @@ public final class RegionITCase {
      */
     @Test
     public void worksWithAmazon() throws Exception {
-        final Region region = new Region.Simple(
-            new Credentials.Simple(this.key, this.secret)
-        );
-        final Table table = region.table(this.name);
         final String attr = "id";
-        final String value = RandomStringUtils.randomAlphanumeric(Tv.TEN);
-        table.put(new Attributes().with(attr, value));
-        final Frame frame = table.frame().where(
-            attr,
-            new Condition()
-                .withAttributeValueList(new AttributeValue(value))
-                .withComparisonOperator(ComparisonOperator.EQ)
+        final Credentials creds = new Credentials.Simple(this.key, this.secret);
+        final AmazonDynamoDB aws = creds.aws();
+        try {
+            this.create(attr);
+            final Region region = new Region.Simple(creds);
+            final Table table = region.table(this.name);
+            final String value = RandomStringUtils.randomAlphanumeric(Tv.TEN);
+            table.put(new Attributes().with(attr, value));
+            final Frame frame = table.frame().where(
+                attr,
+                new Condition()
+                    .withAttributeValueList(new AttributeValue(value))
+                    .withComparisonOperator(ComparisonOperator.EQ)
+            );
+            MatcherAssert.assertThat(frame.size(), Matchers.equalTo(1));
+            MatcherAssert.assertThat(
+                frame.iterator().next().get(attr).getS(),
+                Matchers.equalTo(value)
+            );
+        } finally {
+            this.drop();
+        }
+    }
+
+    /**
+     * Make AWS client.
+     */
+    private AmazonDynamoDB aws() {
+        final Credentials creds = new Credentials.Simple(this.key, this.secret);
+        final AmazonDynamoDB aws = creds.aws();
+        return aws;
+    }
+
+    /**
+     * Create table.
+     * @param key Key attribute
+     * @throws Exception If fails
+     */
+    private void create(final String key) throws Exception {
+        final AmazonDynamoDB aws = this.aws();
+        aws.createTable(
+            new CreateTableRequest()
+                .withTableName(this.name)
+                .withProvisionedThroughput(
+                    new ProvisionedThroughput()
+                        .withReadCapacityUnits(1L)
+                        .withWriteCapacityUnits(1L)
+                )
+                .withAttributeDefinitions(
+                    new AttributeDefinition()
+                        .withAttributeName(key)
+                        .withAttributeType(ScalarAttributeType.S)
+                )
+                .withKeySchema(
+                    new KeySchemaElement()
+                        .withAttributeName(key)
+                        .withKeyType(KeyType.HASH)
+                )
         );
-        MatcherAssert.assertThat(frame.size(), Matchers.equalTo(1));
-        MatcherAssert.assertThat(
-            frame.iterator().next().get(attr).getS(),
-            Matchers.equalTo(value)
-        );
+        while (true) {
+            final DescribeTableResult result = aws.describeTable(
+                new DescribeTableRequest().withTableName(this.name)
+            );
+            if ("ACTIVE".equals(result.getTable().getTableStatus())) {
+                break;
+            }
+            TimeUnit.SECONDS.sleep(Tv.FIVE);
+            Logger.info(
+                this,
+                "waiting for Dynamo: %s",
+                result.getTable().getTableStatus()
+            );
+        }
+    }
+
+    /**
+     * Drop table.
+     */
+    private void drop() {
+        final AmazonDynamoDB aws = this.aws();
+        aws.deleteTable(new DeleteTableRequest().withTableName(this.name));
     }
 
 }
