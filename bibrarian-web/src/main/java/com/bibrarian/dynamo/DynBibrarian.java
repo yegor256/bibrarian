@@ -27,56 +27,69 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.web;
+package com.bibrarian.dynamo;
 
-import com.bibrarian.dynamo.DynBibrarians;
-import com.bibrarian.dynamo.DynamoCredentials;
-import com.bibrarian.om.Bibrarians;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.manifests.Manifests;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import com.bibrarian.om.Artifact;
+import com.bibrarian.om.Bibrarian;
+import com.bibrarian.om.Discovery;
+import com.bibrarian.om.Hypothesis;
+import com.bibrarian.om.Queryable;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.urn.URN;
+import javax.validation.constraints.NotNull;
 
 /**
- * Lifespan controller of the {@link Bibrarians}.
+ * Bibrarians in Dynamo DB.
  *
- * @author Yegor Bugayenko (yegor@woquo.com)
- * @version $Id: BoardsLifespan.java 2114 2013-04-01 15:16:55Z yegor@tpc2.com $
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
-@Loggable(Loggable.INFO)
-public final class BibrariansLifespan implements ServletContextListener {
+@Immutable
+final class DynBibrarian implements Bibrarian {
 
     /**
-     * {@inheritDoc}
-     *
-     * <p>These attributes is used later in
-     * {@link com.woquo.www.BaseRs#setServletContext(ServletContext)}.
+     * Tables.
      */
-    @Override
-    public void contextInitialized(final ServletContextEvent event) {
-        try {
-            Manifests.append(event.getServletContext());
-        } catch (java.io.IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-        final Bibrarians bibrarians = new DynBibrarians(
-            new DynamoCredentials.Simple(
-                Manifests.read("Bibrarian-DynamoKey"),
-                Manifests.read("Bibrarian-DynamoSecret")
-            ),
-            Manifests.read("Bibrarian-DynamoPrefix")
-        );
-        event.getServletContext().setAttribute(
-            Bibrarians.class.getName(), bibrarians
-        );
+    private final transient DynamoTables tables;
+
+    /**
+     * Name of the bibrarian.
+     */
+    private final transient URN name;
+
+    /**
+     * Public ctor.
+     * @param tbls Tables
+     * @param urn Name of him
+     */
+    protected DynBibrarian(@NotNull final DynamoTables tbls,
+        @NotNull final URN urn) {
+        this.tables = tbls;
+        this.name = urn;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void contextDestroyed(final ServletContextEvent event) {
-        // nothing to do
+    public Queryable<Artifact> artifacts() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Queryable<Hypothesis> hypothesizes() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Queryable<Discovery> discoveries() {
+        throw new UnsupportedOperationException();
     }
 
 }

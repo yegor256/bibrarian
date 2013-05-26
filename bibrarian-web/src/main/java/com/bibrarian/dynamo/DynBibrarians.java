@@ -44,20 +44,21 @@ import javax.validation.constraints.NotNull;
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public final class DynamoBibrarians implements Bibrarians {
+public final class DynBibrarians implements Bibrarians {
+
+    /**
+     * Dynamo tables.
+     */
+    private final transient DynamoTables tables;
 
     /**
      * Public ctor.
-     * @param akey AWS key
-     * @param scrt Secret
+     * @param creds Credentials
      * @param prfx Prefix
      */
-    public DynamoBibrarians(@NotNull final String akey,
-        @NotNull final String scrt, @NotNull final String prfx) {
-        assert akey != null;
-        assert scrt != null;
-        assert prfx != null;
-        throw new UnsupportedOperationException();
+    public DynBibrarians(@NotNull final DynamoCredentials creds,
+        @NotNull final String prfx) {
+        this.tables = new DynamoTables.Prefixed(creds, prfx);
     }
 
     /**
@@ -65,8 +66,7 @@ public final class DynamoBibrarians implements Bibrarians {
      */
     @Override
     public Bibrarian fetch(@NotNull final URN urn) {
-        assert urn != null;
-        throw new UnsupportedOperationException();
+        return new DynBibrarian(this.tables, urn);
     }
 
     /**

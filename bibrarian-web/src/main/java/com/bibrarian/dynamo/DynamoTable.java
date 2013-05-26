@@ -27,56 +27,52 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.web;
+package com.bibrarian.dynamo;
 
-import com.bibrarian.dynamo.DynBibrarians;
-import com.bibrarian.dynamo.DynamoCredentials;
-import com.bibrarian.om.Bibrarians;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.manifests.Manifests;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
+import com.amazonaws.services.dynamodbv2.model.ScanRequest;
+import com.google.common.base.Function;
+import com.jcabi.aspects.Immutable;
+import java.util.Collection;
+import java.util.Map;
+import javax.validation.constraints.NotNull;
 
 /**
- * Lifespan controller of the {@link Bibrarians}.
+ * DynamoDB table.
  *
- * @author Yegor Bugayenko (yegor@woquo.com)
- * @version $Id: BoardsLifespan.java 2114 2013-04-01 15:16:55Z yegor@tpc2.com $
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
-@Loggable(Loggable.INFO)
-public final class BibrariansLifespan implements ServletContextListener {
+@Immutable
+public interface DynamoTable {
 
     /**
-     * {@inheritDoc}
-     *
-     * <p>These attributes is used later in
-     * {@link com.woquo.www.BaseRs#setServletContext(ServletContext)}.
+     * Scan and return collection of found items.
+     * @param <T> Type of response
+     * @param request Scan request
+     * @param mapping Mapping function
+     * @return Collection of results
      */
-    @Override
-    public void contextInitialized(final ServletContextEvent event) {
-        try {
-            Manifests.append(event.getServletContext());
-        } catch (java.io.IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-        final Bibrarians bibrarians = new DynBibrarians(
-            new DynamoCredentials.Simple(
-                Manifests.read("Bibrarian-DynamoKey"),
-                Manifests.read("Bibrarian-DynamoSecret")
-            ),
-            Manifests.read("Bibrarian-DynamoPrefix")
-        );
-        event.getServletContext().setAttribute(
-            Bibrarians.class.getName(), bibrarians
-        );
-    }
+    @NotNull
+    <T> Collection<T> scan(@NotNull ScanRequest request,
+        @NotNull Function<Map<String, AttributeValue>, T> mapping);
 
     /**
-     * {@inheritDoc}
+     * Put a new item to the table.
+     * @param <T> Type of item
+     * @param item Item to put into the table
+     * @param reverse Reverse mapping
      */
-    @Override
-    public void contextDestroyed(final ServletContextEvent event) {
-        // nothing to do
-    }
+    @NotNull
+    <T> void put(@NotNull T item,
+        @NotNull Function<T, Map<String, AttributeValue>> reverse);
+
+    /**
+     * Delete an item from the table.
+     * @param request Delete request
+     */
+    @NotNull
+    void delete(@NotNull DeleteItemRequest request);
 
 }

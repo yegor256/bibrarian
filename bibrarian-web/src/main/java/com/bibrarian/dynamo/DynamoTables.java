@@ -27,56 +27,61 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.web;
+package com.bibrarian.dynamo;
 
-import com.bibrarian.dynamo.DynBibrarians;
-import com.bibrarian.dynamo.DynamoCredentials;
-import com.bibrarian.om.Bibrarians;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.manifests.Manifests;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import com.jcabi.aspects.Immutable;
+import javax.validation.constraints.NotNull;
 
 /**
- * Lifespan controller of the {@link Bibrarians}.
+ * DynamoDB credentials.
  *
- * @author Yegor Bugayenko (yegor@woquo.com)
- * @version $Id: BoardsLifespan.java 2114 2013-04-01 15:16:55Z yegor@tpc2.com $
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
-@Loggable(Loggable.INFO)
-public final class BibrariansLifespan implements ServletContextListener {
+@Immutable
+public interface DynamoTables {
 
     /**
-     * {@inheritDoc}
-     *
-     * <p>These attributes is used later in
-     * {@link com.woquo.www.BaseRs#setServletContext(ServletContext)}.
+     * Get table by name.
+     * @param name Its name
+     * @return Table
      */
-    @Override
-    public void contextInitialized(final ServletContextEvent event) {
-        try {
-            Manifests.append(event.getServletContext());
-        } catch (java.io.IOException ex) {
-            throw new IllegalStateException(ex);
+    @NotNull
+    DynamoTable get(String name);
+
+    /**
+     * Simple implementation.
+     */
+    final class Prefixed implements DynamoTables {
+        /**
+         * AWS credentials.
+         */
+        private final transient DynamoCredentials credentials;
+        /**
+         * Prefix.
+         */
+        private final transient String prefix;
+        /**
+         * Public ctor.
+         * @param creds Credentials
+         * @param pfx Prefix
+         */
+        public Prefixed(@NotNull final DynamoCredentials creds,
+            @NotNull final String pfx) {
+            this.credentials = creds;
+            this.prefix = pfx;
         }
-        final Bibrarians bibrarians = new DynBibrarians(
-            new DynamoCredentials.Simple(
-                Manifests.read("Bibrarian-DynamoKey"),
-                Manifests.read("Bibrarian-DynamoSecret")
-            ),
-            Manifests.read("Bibrarian-DynamoPrefix")
-        );
-        event.getServletContext().setAttribute(
-            Bibrarians.class.getName(), bibrarians
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void contextDestroyed(final ServletContextEvent event) {
-        // nothing to do
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull
+        public DynamoTable get(@NotNull final String name) {
+            return new DynamoTableImpl(
+                this.credentials,
+                String.format("%s-%s", this.prefix, name)
+            );
+        }
     }
 
 }
