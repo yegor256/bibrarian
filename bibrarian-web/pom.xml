@@ -202,6 +202,17 @@
         </pluginManagement>
         <plugins>
             <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.rexsl</groupId>
                 <artifactId>rexsl-maven-plugin</artifactId>
                 <version>${rexsl.version}</version>

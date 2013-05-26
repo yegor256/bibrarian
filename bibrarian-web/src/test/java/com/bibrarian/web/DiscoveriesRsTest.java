@@ -36,6 +36,7 @@ import com.rexsl.test.XhtmlMatchers;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.hamcrest.MatcherAssert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -51,6 +52,7 @@ public final class DiscoveriesRsTest {
      * @throws Exception If some problem inside
      */
     @Test
+    @Ignore
     public void rendersFrontPage() throws Exception {
         final DiscoveriesRs res = new DiscoveriesRs();
         res.setUriInfo(new UriInfoMocker().mock());

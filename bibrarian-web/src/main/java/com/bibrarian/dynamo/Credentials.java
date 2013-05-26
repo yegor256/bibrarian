@@ -30,6 +30,7 @@
 package com.bibrarian.dynamo;
 
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.RegionUtils;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.jcabi.aspects.Immutable;
@@ -71,13 +72,28 @@ public interface Credentials {
          */
         private final transient String secret;
         /**
+         * Region name.
+         */
+        private final transient String region;
+        /**
          * Public ctor.
          * @param akey AWS key
          * @param scrt Secret
          */
         public Simple(@NotNull final String akey, @NotNull final String scrt) {
+            this(akey, scrt, "us-east-1");
+        }
+        /**
+         * Public ctor.
+         * @param akey AWS key
+         * @param scrt Secret
+         * @param reg Region
+         */
+        public Simple(@NotNull final String akey, @NotNull final String scrt,
+            @NotNull final String reg) {
             this.key = akey;
             this.secret = scrt;
+            this.region = reg;
         }
         /**
          * {@inheritDoc}
@@ -85,9 +101,11 @@ public interface Credentials {
         @Override
         @NotNull
         public AmazonDynamoDB aws() {
-            return new AmazonDynamoDBClient(
+            final AmazonDynamoDB aws = new AmazonDynamoDBClient(
                 new BasicAWSCredentials(this.key, this.secret)
             );
+            aws.setRegion(RegionUtils.getRegion(this.region));
+            return aws;
         }
     }
 

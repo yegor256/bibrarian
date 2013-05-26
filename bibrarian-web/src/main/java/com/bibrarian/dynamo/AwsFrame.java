@@ -171,7 +171,9 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      * @return The request
      */
     private QueryRequest request() {
-        return new QueryRequest().withKeyConditions(this.conditions);
+        return new QueryRequest()
+            .withTableName(this.name)
+            .withKeyConditions(this.conditions);
     }
 
     /**

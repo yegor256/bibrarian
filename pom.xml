@@ -105,8 +105,24 @@
         </repository>
     </repositories>
     <properties>
-        <jcabi.version>0.7.19</jcabi.version>
+        <jcabi.version>1.0-SNAPSHOT</jcabi.version>
         <rexsl.version>1.0-SNAPSHOT</rexsl.version>
         <jersey.version>1.17.1</jersey.version>
     </properties>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <failsafe.dynamo.key>${failsafe.dynamo.key}</failsafe.dynamo.key>
+                            <failsafe.dynamo.secret>${failsafe.dynamo.secret}</failsafe.dynamo.secret>
+                            <failsafe.dynamo.table>${failsafe.dynamo.table}</failsafe.dynamo.table>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

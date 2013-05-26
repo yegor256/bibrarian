@@ -34,6 +34,8 @@ import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -57,6 +59,17 @@ public final class RegionITCase {
      * AWS table name.
      */
     private transient String name;
+
+    /**
+     * Before the test.
+     */
+    @Before
+    public void before() {
+        this.key = System.getProperty("failsafe.dynamo.key");
+        this.secret = System.getProperty("failsafe.dynamo.secret");
+        this.name = System.getProperty("failsafe.dynamo.table");
+        Assume.assumeThat(this.key, Matchers.notNullValue());
+    }
 
     /**
      * Region.Simple can work with AWS.
