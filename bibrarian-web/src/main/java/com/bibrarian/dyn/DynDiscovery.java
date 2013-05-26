@@ -81,7 +81,7 @@ final class DynDiscovery implements Discovery {
     @Override
     public Hypothesis hypothesis() {
         return new DynHypothesis(
-            this.item.region().table("hypothesizes").where(
+            this.item.region().table("hypothesizes").frame().where(
                 "label",
                 new Condition()
                     .withComparisonOperator(ComparisonOperator.EQ)
@@ -98,7 +98,7 @@ final class DynDiscovery implements Discovery {
     @Override
     public Artifact artifact() {
         return new DynArtifact(
-            this.item.region().table("artifacts").where(
+            this.item.region().table("artifacts").frame().where(
                 "label",
                 new Condition()
                     .withComparisonOperator(ComparisonOperator.EQ)

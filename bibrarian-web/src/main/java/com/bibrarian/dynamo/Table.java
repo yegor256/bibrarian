@@ -41,7 +41,7 @@ import javax.validation.constraints.NotNull;
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Table extends Frame {
+public interface Table {
 
     /**
      * Put new item there.
@@ -49,6 +49,13 @@ public interface Table extends Frame {
      */
     @NotNull
     void put(Map<String, AttributeValue> attributes);
+
+    /**
+     * Make a new frame.
+     * @return Frame
+     */
+    @NotNull
+    Frame frame();
 
     /**
      * Get back to the entire region.

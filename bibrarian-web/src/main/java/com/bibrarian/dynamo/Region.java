@@ -47,7 +47,7 @@ public interface Region {
      * @return Table
      */
     @NotNull
-    Frame table(String name);
+    Table table(String name);
 
     /**
      * Prefixed.
@@ -65,8 +65,8 @@ public interface Region {
             this.credentials = creds;
         }
         @Override
-        public Frame table(final String name) {
-            return new AwsFrame(this, name);
+        public Table table(final String name) {
+            return new AwsTable(this, name);
         }
     }
 
@@ -92,7 +92,7 @@ public interface Region {
             this.prefix = pfx;
         }
         @Override
-        public Frame table(final String name) {
+        public Table table(final String name) {
             return this.origin.table(String.format("%s-%s", this.prefix, name));
         }
     }

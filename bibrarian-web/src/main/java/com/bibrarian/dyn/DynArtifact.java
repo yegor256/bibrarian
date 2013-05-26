@@ -85,7 +85,7 @@ final class DynArtifact implements Artifact {
     @Override
     public Bibitem bibitem() {
         return new DynBibitem(
-            this.item.region().table("bibitems").where(
+            this.item.region().table("bibitems").frame().where(
                 "label",
                 new Condition()
                     .withAttributeValueList(new AttributeValue(this.label()))
@@ -99,12 +99,13 @@ final class DynArtifact implements Artifact {
      */
     @Override
     public Collection<URI> hardcopies() {
-        final Frame frame = this.item.region().table("hardcopies").where(
-            "artifact",
-            new Condition()
-                .withAttributeValueList(new AttributeValue(this.label()))
-                .withComparisonOperator(ComparisonOperator.EQ)
-        );
+        final Frame frame = this.item.region()
+            .table("hardcopies").frame().where(
+                "artifact",
+                new Condition()
+                    .withAttributeValueList(new AttributeValue(this.label()))
+                    .withComparisonOperator(ComparisonOperator.EQ)
+            );
         final Collection<URI> hardcopies = new LinkedList<URI>();
         for (Item copy : frame) {
             hardcopies.add(URI.create(item.get("uri").getS()));
@@ -134,7 +135,7 @@ final class DynArtifact implements Artifact {
     @Override
     public Queryable<Discovery> discoveries() {
         return new DynDiscoveries(
-            this.item.region().table("discoveries").where(
+            this.item.region().table("discoveries").frame().where(
                 "artifact",
                 new Condition()
                     .withAttributeValueList(new AttributeValue(this.label()))

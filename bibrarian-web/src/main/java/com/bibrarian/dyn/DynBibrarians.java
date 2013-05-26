@@ -78,7 +78,7 @@ public final class DynBibrarians implements Bibrarians {
     @Override
     public Bibrarian fetch(@NotNull final URN urn) {
         return new DynBibrarian(
-            this.region.table("bibrarians").where(
+            this.region.table("bibrarians").frame().where(
                 "urn",
                 new Condition()
                     .withAttributeValueList(new AttributeValue(urn.toString()))
@@ -92,7 +92,7 @@ public final class DynBibrarians implements Bibrarians {
      */
     @Override
     public Queryable<Bibitem> bibitems() {
-        return new DynBibitems(this.region.table("bibitems"));
+        return new DynBibitems(this.region.table("bibitems").frame());
     }
 
 }

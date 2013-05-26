@@ -76,7 +76,7 @@ final class DynBibrarian implements Bibrarian {
     @Override
     public Queryable<Artifact> artifacts() {
         return new DynArtifacts(
-            this.item.region().table("artifacts").where(
+            this.item.region().table("artifacts").frame().where(
                 "bibrarian",
                 new Condition()
                     .withAttributeValueList(new AttributeValue(this.name()))
@@ -92,7 +92,7 @@ final class DynBibrarian implements Bibrarian {
     @Override
     public Queryable<Hypothesis> hypothesizes() {
         return new DynHypothesizes(
-            this.item.region().table("hypothesizes").where(
+            this.item.region().table("hypothesizes").frame().where(
                 "bibrarian",
                 new Condition()
                     .withAttributeValueList(new AttributeValue(this.name()))
@@ -108,7 +108,7 @@ final class DynBibrarian implements Bibrarian {
     @Override
     public Queryable<Discovery> discoveries() {
         return new DynDiscoveries(
-            this.item.region().table("discoveries").where(
+            this.item.region().table("discoveries").frame().where(
                 "bibrarian",
                 new Condition()
                     .withAttributeValueList(new AttributeValue(this.name()))
