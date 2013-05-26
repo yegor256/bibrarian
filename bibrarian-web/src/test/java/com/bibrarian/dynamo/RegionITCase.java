@@ -32,6 +32,8 @@ package com.bibrarian.dynamo;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.jcabi.aspects.Tv;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -82,7 +84,7 @@ public final class RegionITCase {
         );
         final Table table = region.table(this.name);
         final String attr = "id";
-        final String value = "some test value \u20ac";
+        final String value = RandomStringUtils.randomAlphanumeric(Tv.TEN);
         table.put(new Attributes().with(attr, value));
         final Frame frame = table.frame().where(
             attr,

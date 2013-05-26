@@ -34,8 +34,8 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
 import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
-import com.amazonaws.services.dynamodbv2.model.QueryRequest;
-import com.amazonaws.services.dynamodbv2.model.QueryResult;
+import com.amazonaws.services.dynamodbv2.model.ScanRequest;
+import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.jcabi.aspects.Immutable;
 import java.util.AbstractCollection;
 import java.util.HashMap;
@@ -105,7 +105,7 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
     @Override
     public Iterator<Item> iterator() {
         final AmazonDynamoDB aws = this.credentials.aws();
-        final QueryResult result = aws.query(this.request());
+        final ScanResult result = aws.scan(this.request());
         final Iterator<Map<String, AttributeValue>> items =
             result.getItems().iterator();
         aws.shutdown();
@@ -141,7 +141,7 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
     @Override
     public int size() {
         final AmazonDynamoDB aws = this.credentials.aws();
-        final QueryResult result = aws.query(this.request());
+        final ScanResult result = aws.scan(this.request());
         final int size = result.getCount();
         aws.shutdown();
         return size;
@@ -170,10 +170,10 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      * Query request.
      * @return The request
      */
-    private QueryRequest request() {
-        return new QueryRequest()
+    private ScanRequest request() {
+        return new ScanRequest()
             .withTableName(this.name)
-            .withKeyConditions(this.conditions);
+            .withScanFilter(this.conditions);
     }
 
     /**
