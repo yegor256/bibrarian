@@ -30,16 +30,11 @@
 package com.bibrarian.dyn;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
-import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
-import com.bibrarian.dynamo.Alteration;
-import com.bibrarian.dynamo.Cursor;
-import com.bibrarian.dynamo.Reverse;
+import com.bibrarian.dynamo.Item;
 import com.bibrarian.om.Bibitem;
 import com.bibrarian.om.Bibtex;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -52,50 +47,20 @@ import lombok.ToString;
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(of = "cursor")
+@EqualsAndHashCode(of = "item")
 final class DynBibitem implements Bibitem {
 
     /**
-     * Reverse mapping.
+     * Item.
      */
-    protected static final class Mapping implements Reverse<Bibitem> {
-        @Override
-        public Bibitem revert(final Cursor<Bibitem> cursor,
-            final Map<String, AttributeValue> attributes) {
-            return new DynBibitem(
-                cursor,
-                attributes.get("label").getS(),
-                new Bibtex(attributes.get("bibtex").getS())
-            );
-        }
-    }
-
-    /**
-     * Cursor.
-     */
-    private final transient Cursor<Bibitem> cursor;
-
-    /**
-     * Label.
-     */
-    private final transient String label;
-
-    /**
-     * BibTeX.
-     */
-    private final transient Bibtex tex;
+    private final transient Item item;
 
     /**
      * Public ctor.
-     * @param lbl Label
-     * @param cur Cursor
-     * @param bib Bibtex
+     * @param itm Item
      */
-    private DynBibitem(final Cursor<Bibitem> cur, final String lbl,
-        final Bibtex bib) {
-        this.label = lbl;
-        this.cursor = cur;
-        this.tex = bib;
+    protected DynBibitem(final Item itm) {
+        this.item = itm;
     }
 
     /**
@@ -103,31 +68,15 @@ final class DynBibitem implements Bibitem {
      */
     @Override
     public Bibtex load() {
-        return this.tex;
+        return new Bibtex(this.item.get("bibtex").getS());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void save(final Bibtex text) {
-        this.cursor.alter(
-            new Alteration() {
-                @Override
-                public void alter(final PutItemRequest request) {
-                    request.getExpected().put(
-                        "label",
-                        new ExpectedAttributeValue(
-                            new AttributeValue(DynBibitem.this.label)
-                        ).withExists(true)
-                    );
-                    request.getItem().put(
-                        "bibtex",
-                        new AttributeValue(DynBibitem.this.tex.toString())
-                    );
-                }
-            }
-        );
+    public void save(final Bibtex tex) {
+        this.item.put("bibtex", new AttributeValue(tex.toString()));
     }
 
 }

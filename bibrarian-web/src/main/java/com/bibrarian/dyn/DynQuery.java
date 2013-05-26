@@ -32,13 +32,11 @@ package com.bibrarian.dyn;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
-import com.bibrarian.dynamo.Cursor;
+import com.bibrarian.dynamo.Frame;
 import com.bibrarian.om.Query;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import java.util.HashMap;
-import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -53,47 +51,27 @@ import lombok.ToString;
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(of = { "cursor", "conditions" })
+@EqualsAndHashCode(of = "frame")
 final class DynQuery<T> implements Query<T> {
 
     /**
-     * Cursor at work.
+     * Frame at work.
      */
-    private final transient Cursor<T> cursor;
+    private final transient Frame frame;
 
     /**
-     * Conditions.
+     * Queryable.
      */
-    private final transient Map<String, Condition> conditions;
-
-    /**
-     * Public ctor.
-     * @param cur Cursor
-     */
-    protected DynQuery(@NotNull final Cursor<T> cur) {
-        this(cur, new HashMap<String, Condition>(0));
-    }
+    private final transient AbstractQueryable<T> queryable;
 
     /**
      * Public ctor.
-     * @param cur Cursor we're at
-     * @param query Query
+     * @param frm Frame
      */
-    @SuppressWarnings("unchecked")
-    protected DynQuery(@NotNull final Cursor<T> cur,
-        @NotNull final Query<T> query) {
-        this(cur, DynQuery.class.cast(query).conditions);
-    }
-
-    /**
-     * Public ctor.
-     * @param cur Cursor we're at
-     * @param cnd Conditions
-     */
-    private DynQuery(@NotNull final Cursor<T> cur,
-        @NotNull final Map<String, Condition> cnd) {
-        this.cursor = cur;
-        this.conditions = cnd;
+    protected DynQuery(@NotNull final Frame frm,
+        @NotNull final AbstractQueryable<T> qry) {
+        this.frame = frm;
+        this.queryable = qry;
     }
 
     /**
@@ -101,15 +79,15 @@ final class DynQuery<T> implements Query<T> {
      */
     @Override
     public Query<T> with(String key, String value) {
-        final Map<String, Condition> cnd = new HashMap<String, Condition>(0);
-        cnd.putAll(this.conditions);
-        cnd.put(
-            key,
-            new Condition()
-                .withAttributeValueList(new AttributeValue(value))
-                .withComparisonOperator(ComparisonOperator.EQ)
+        return new DynQuery<T>(
+            this.frame.where(
+                key,
+                new Condition()
+                    .withAttributeValueList(new AttributeValue(value))
+                    .withComparisonOperator(ComparisonOperator.EQ)
+            ),
+            this.queryable
         );
-        return new DynQuery<T>(this.cursor, cnd);
     }
 
     /**
@@ -117,7 +95,7 @@ final class DynQuery<T> implements Query<T> {
      */
     @Override
     public Queryable<T> refine() {
-        return new DynQueryable<T>(this.cursor, this);
+        return this.queryable.with(this.frame);
     }
 
 }

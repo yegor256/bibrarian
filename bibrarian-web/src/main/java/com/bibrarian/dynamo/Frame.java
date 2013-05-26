@@ -27,72 +27,36 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dyn;
+package com.bibrarian.dynamo;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
-import com.bibrarian.dynamo.Credentials;
-import com.bibrarian.dynamo.Region;
-import com.bibrarian.om.Bibitem;
-import com.bibrarian.om.Bibrarian;
-import com.bibrarian.om.Bibrarians;
-import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
+import java.util.Collection;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * All known bibrarians.
+ * DynamoDB frame.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-@Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(callSuper = false, of = "region")
-public final class DynBibrarians implements Bibrarians {
+public interface Frame extends Collection<Item> {
 
     /**
-     * Dynamo region.
+     * Refine using this condition.
+     * @param name Attribute name
+     * @param condition The condition
+     * @return New frame
      */
-    private final transient Region region;
+    @NotNull
+    Frame where(String name, Condition condition);
 
     /**
-     * Public ctor.
-     * @param creds Credentials
-     * @param prefix Prefix
+     * Get back to the table it is from.
+     * @return Table
      */
-    public DynBibrarians(@NotNull final Credentials creds,
-        @NotNull final String prefix) {
-        this.region = new Region.Prefixed(new Region.Simple(creds), prefix);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Bibrarian fetch(@NotNull final URN urn) {
-        return new DynBibrarian(
-            this.region.table("bibrarians").where(
-                "urn",
-                new Condition()
-                    .withAttributeValueList(new AttributeValue(urn.toString()))
-                    .withComparisonOperator(ComparisonOperator.EQ)
-            ).iterator().next()
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Queryable<Bibitem> bibitems() {
-        return new DynBibitems(this.region.table("bibitems"));
-    }
+    @NotNull
+    Table table();
 
 }

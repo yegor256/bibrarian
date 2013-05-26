@@ -48,6 +48,13 @@ import lombok.ToString;
 public interface Artifact {
 
     /**
+     * Get its unique name/label.
+     * @return The label
+     */
+    @NotNull
+    String label();
+
+    /**
      * Bibitem it is related to.
      * @return The book
      */
@@ -91,6 +98,10 @@ public interface Artifact {
     @EqualsAndHashCode(of = "item")
     final class Simple implements Artifact {
         /**
+         * Label.
+         */
+        private final transient String lbl;
+        /**
          * Bibitem.
          */
         private final transient Bibitem item;
@@ -98,8 +109,18 @@ public interface Artifact {
          * Public ctor.
          * @param bibitem Bibitem to encapsulate
          */
-        public Simple(@NotNull final Bibitem bibitem) {
+        public Simple(@NotNull final String label,
+            @NotNull final Bibitem bibitem) {
+            this.lbl = label;
             this.item = bibitem;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        @NotNull
+        public String label() {
+            return this.lbl;
         }
         /**
          * {@inheritDoc}

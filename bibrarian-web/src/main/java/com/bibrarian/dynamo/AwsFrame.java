@@ -29,78 +29,57 @@
  */
 package com.bibrarian.dynamo;
 
+import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
+import java.util.AbstractCollection;
 import java.util.Iterator;
-import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * Implementation of {@link Cursor}.
+ * Frame through AWS SDK.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-@Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(of = { "credentials", "table" })
-final class CursorImpl<T> implements Cursor<T> {
+final class AwsFrame extends AbstractCollection<Item> implements Frame {
 
     /**
-     * AWS credentials.
+     * Region.
      */
-    private final transient Credentials credentials;
+    private final transient Region region;
 
     /**
      * Table name.
      */
-    private final transient String table;
+    private final transient String name;
 
     /**
      * Public ctor.
-     * @param creds Credentials
-     * @param name Table name
+     * @param reg Region
+     * @param table Table name
      */
-    protected CursorImpl(@NotNull final Credentials creds,
-        @NotNull final String name) {
-        this.credentials = creds;
-        this.table = name;
+    protected AwsFrame(final Region reg, final String table) {
+        this.region = reg;
+        this.name = table;
     }
 
     @Override
-    public Cursor<T> refine(Refinement ref) {
+    public Iterator<Item> iterator() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <T> T load() {
+    public int size() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <X> Cursor<X> follow(String attribute) {
+    public Frame where(String name, Condition condition) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <X> Cursor<X> inverse(String table, String attribute) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean alter(Alteration alt) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Iterator<Cursor<T>> iterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Cursor<T> add(T item) {
+    public Table table() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

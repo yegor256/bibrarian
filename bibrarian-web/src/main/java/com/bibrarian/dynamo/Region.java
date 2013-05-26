@@ -33,37 +33,67 @@ import com.jcabi.aspects.Immutable;
 import javax.validation.constraints.NotNull;
 
 /**
- * Amazon DynamoDB abstraction.
+ * DynamoDB region.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Dynamo {
+public interface Region {
 
     /**
-     * Create cursor.
-     * @param <T> Type of data item
-     * @param table Table name to start with
-     * @return Cursor
+     * Get one table.
+     * @param name Table name
+     * @return Table
      */
     @NotNull
-    <T> Cursor<T> cursor(String table);
+    Frame table(String name);
 
     /**
-     * Simple implementation.
+     * Prefixed.
      */
-    final class Simple implements Dynamo {
+    final class Simple implements Region {
+        /**
+         * Credentials.
+         */
+        private final transient Credentials credentials;
         /**
          * Public ctor.
          * @param creds Credentials
-         * @param schm Schema
          */
-        public Simple (final Credentials creds, final Schema schm) {
+        public Simple(final Credentials creds) {
+            this.credentials = creds;
         }
         @Override
-        public <T> Cursor<T> cursor(final String table) {
-            throw new UnsupportedOperationException();
+        public Frame table(final String name) {
+            return new AwsFrame(this, name);
+        }
+    }
+
+    /**
+     * Prefixed.
+     */
+    final class Prefixed implements Region {
+        /**
+         * Original region.
+         */
+        private final transient Region origin;
+        /**
+         * Prefix to add.
+         */
+        private final transient String prefix;
+        /**
+         * Public ctor.
+         * @param region Original region
+         * @param pfx Prefix to add to all tables
+         */
+        public Prefixed(final Region region, final String pfx) {
+            this.origin = region;
+            this.prefix = pfx;
+        }
+        @Override
+        public Frame table(final String name) {
+            return this.origin.table(String.format("%s-%s", this.prefix, name));
         }
     }
 

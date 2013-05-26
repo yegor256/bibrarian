@@ -27,24 +27,78 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dynamo;
+package com.bibrarian.dyn;
 
-import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.bibrarian.dynamo.Item;
+import com.bibrarian.om.Hypothesis;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import java.util.Map;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Reverse mapping.
+ * Hypothesis in Dynamo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Alteration {
+@Loggable(Loggable.DEBUG)
+@ToString
+@EqualsAndHashCode(of = "item")
+final class DynHypothesis implements Hypothesis {
 
     /**
-     * Alter this request before sending to DynamoDB.
-     * @param request Request to extend
+     * Item.
      */
-    void alter(PutItemRequest request);
+    private final transient Item item;
+
+    /**
+     * Public ctor.
+     * @param itm Item
+     */
+    protected DynHypothesis(final Item itm) {
+        this.item = itm;
+    }
+
+    /**
+     * Map an object to attributes.
+     * @param hypothesis Hypothesis
+     * @param attributes Where to map to
+     */
+    public static void toItem(final Hypothesis hypothesis,
+        final Map<String, AttributeValue> attributes) {
+        attributes.put("label", new AttributeValue(hypothesis.label()));
+        attributes.put(
+            "description",
+            new AttributeValue(hypothesis.description())
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String label() {
+        return this.item.get("label").getS();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String description() {
+        return this.item.get("description").getS();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void description(final String text) {
+        this.item.put("description", new AttributeValue(text));
+    }
 
 }

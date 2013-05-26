@@ -30,69 +30,66 @@
 package com.bibrarian.dyn;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
-import com.amazonaws.services.dynamodbv2.model.Condition;
-import com.bibrarian.dynamo.Credentials;
-import com.bibrarian.dynamo.Region;
-import com.bibrarian.om.Bibitem;
-import com.bibrarian.om.Bibrarian;
-import com.bibrarian.om.Bibrarians;
+import com.bibrarian.dynamo.Frame;
+import com.bibrarian.om.Discovery;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
-import javax.validation.constraints.NotNull;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * All known bibrarians.
+ * Artifacts.
  *
+ * @param <T> Type of encapsulated elements
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id$
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(callSuper = false, of = "region")
-public final class DynBibrarians implements Bibrarians {
+@EqualsAndHashCode(callSuper = true, of = "owner")
+final class DynDiscoveries extends AbstractQueryable<Discovery> {
 
     /**
-     * Dynamo region.
+     * Owner of the collection.
      */
-    private final transient Region region;
+    private final transient String owner;
 
     /**
      * Public ctor.
-     * @param creds Credentials
-     * @param prefix Prefix
+     * @param frame Frame
      */
-    public DynBibrarians(@NotNull final Credentials creds,
-        @NotNull final String prefix) {
-        this.region = new Region.Prefixed(new Region.Simple(creds), prefix);
+    protected DynDiscoveries(final Frame frame, final String urn) {
+        super(frame);
+        this.owner = urn;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Bibrarian fetch(@NotNull final URN urn) {
-        return new DynBibrarian(
-            this.region.table("bibrarians").where(
-                "urn",
-                new Condition()
-                    .withAttributeValueList(new AttributeValue(urn.toString()))
-                    .withComparisonOperator(ComparisonOperator.EQ)
-            ).iterator().next()
+    public boolean add(final Discovery discovery) {
+        final ConcurrentMap<String, AttributeValue> map =
+            new ConcurrentHashMap<String, AttributeValue>(0);
+        map.put("bibrarian", new AttributeValue(this.owner));
+        map.put("artifact", new AttributeValue(discovery.artifact().label()));
+        map.put(
+            "hypothesis",
+            new AttributeValue(discovery.hypothesis().label())
         );
+        this.frame().table().put(map);
+        return true;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Queryable<Bibitem> bibitems() {
-        return new DynBibitems(this.region.table("bibitems"));
+    protected Queryable<Discovery> with(final Frame frame) {
+        return new DynDiscoveries(frame, this.owner);
     }
 
 }

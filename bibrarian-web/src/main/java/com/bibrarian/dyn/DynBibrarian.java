@@ -29,7 +29,10 @@
  */
 package com.bibrarian.dyn;
 
-import com.bibrarian.dynamo.Cursor;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
+import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.bibrarian.dynamo.Item;
 import com.bibrarian.om.Artifact;
 import com.bibrarian.om.Bibrarian;
 import com.bibrarian.om.Discovery;
@@ -37,13 +40,12 @@ import com.bibrarian.om.Hypothesis;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Bibrarians in Dynamo DB.
+ * Bibrarian in Dynamo DB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
@@ -51,28 +53,21 @@ import lombok.ToString;
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(callSuper = false, of = { "cursor", "name" })
+@EqualsAndHashCode(of = "item")
 final class DynBibrarian implements Bibrarian {
 
     /**
-     * Cursor.
+     * Item.
      */
-    private final transient Cursor<Bibrarian> cursor;
-
-    /**
-     * Name of the bibrarian.
-     */
-    private final transient URN name;
+    private final transient Item item;
 
     /**
      * Public ctor.
      * @param cur Cursor
      * @param urn Name of him
      */
-    protected DynBibrarian(@NotNull final Cursor<Bibrarian> cur,
-        @NotNull final URN urn) {
-        this.cursor = cur;
-        this.name = urn;
+    protected DynBibrarian(@NotNull final Item itm) {
+        this.item = itm;
     }
 
     /**
@@ -80,8 +75,14 @@ final class DynBibrarian implements Bibrarian {
      */
     @Override
     public Queryable<Artifact> artifacts() {
-        return new DynQueryable<Artifact>(
-            this.cursor.<Artifact>inverse("artifacts", "bibrarian")
+        return new DynArtifacts(
+            this.item.region().table("artifacts").where(
+                "bibrarian",
+                new Condition()
+                    .withAttributeValueList(new AttributeValue(this.name()))
+                    .withComparisonOperator(ComparisonOperator.EQ)
+            ),
+            this.name()
         );
     }
 
@@ -90,8 +91,14 @@ final class DynBibrarian implements Bibrarian {
      */
     @Override
     public Queryable<Hypothesis> hypothesizes() {
-        return new DynQueryable<Hypothesis>(
-            this.cursor.<Hypothesis>inverse("discoveries", "bibrarian")
+        return new DynHypothesizes(
+            this.item.region().table("hypothesizes").where(
+                "bibrarian",
+                new Condition()
+                    .withAttributeValueList(new AttributeValue(this.name()))
+                    .withComparisonOperator(ComparisonOperator.EQ)
+            ),
+            this.name()
         );
     }
 
@@ -100,9 +107,22 @@ final class DynBibrarian implements Bibrarian {
      */
     @Override
     public Queryable<Discovery> discoveries() {
-        return new DynQueryable<Discovery>(
-            this.cursor.<Discovery>inverse("discoveries", "bibrarian")
+        return new DynDiscoveries(
+            this.item.region().table("discoveries").where(
+                "bibrarian",
+                new Condition()
+                    .withAttributeValueList(new AttributeValue(this.name()))
+                    .withComparisonOperator(ComparisonOperator.EQ)
+            ),
+            this.name()
         );
     }
 
+    /**
+     * His name.
+     * @return Name
+     */
+    private String name() {
+        return this.item.get("name").getS();
+    }
 }

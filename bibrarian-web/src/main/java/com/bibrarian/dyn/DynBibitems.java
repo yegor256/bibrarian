@@ -30,69 +30,56 @@
 package com.bibrarian.dyn;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
-import com.amazonaws.services.dynamodbv2.model.Condition;
-import com.bibrarian.dynamo.Credentials;
-import com.bibrarian.dynamo.Region;
+import com.bibrarian.dynamo.Frame;
 import com.bibrarian.om.Bibitem;
-import com.bibrarian.om.Bibrarian;
-import com.bibrarian.om.Bibrarians;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.urn.URN;
-import javax.validation.constraints.NotNull;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * All known bibrarians.
+ * Artifacts.
  *
+ * @param <T> Type of encapsulated elements
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id$
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(callSuper = false, of = "region")
-public final class DynBibrarians implements Bibrarians {
-
-    /**
-     * Dynamo region.
-     */
-    private final transient Region region;
+@EqualsAndHashCode(callSuper = true)
+final class DynBibitems extends AbstractQueryable<Bibitem> {
 
     /**
      * Public ctor.
-     * @param creds Credentials
-     * @param prefix Prefix
+     * @param frame Frame
      */
-    public DynBibrarians(@NotNull final Credentials creds,
-        @NotNull final String prefix) {
-        this.region = new Region.Prefixed(new Region.Simple(creds), prefix);
+    protected DynBibitems(final Frame frame) {
+        super(frame);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Bibrarian fetch(@NotNull final URN urn) {
-        return new DynBibrarian(
-            this.region.table("bibrarians").where(
-                "urn",
-                new Condition()
-                    .withAttributeValueList(new AttributeValue(urn.toString()))
-                    .withComparisonOperator(ComparisonOperator.EQ)
-            ).iterator().next()
-        );
+    public boolean add(final Bibitem bibitem) {
+        final ConcurrentMap<String, AttributeValue> map =
+            new ConcurrentHashMap<String, AttributeValue>(0);
+        map.put("label", new AttributeValue(bibitem.load().label()));
+        map.put("tex", new AttributeValue(bibitem.load().toString()));
+        this.frame().table().put(map);
+        return true;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Queryable<Bibitem> bibitems() {
-        return new DynBibitems(this.region.table("bibitems"));
+    protected Queryable<Bibitem> with(final Frame frame) {
+        return new DynBibitems(frame);
     }
 
 }

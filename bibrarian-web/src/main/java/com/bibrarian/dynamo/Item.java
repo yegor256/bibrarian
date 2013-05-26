@@ -29,22 +29,46 @@
  */
 package com.bibrarian.dynamo;
 
-import com.amazonaws.services.dynamodbv2.model.ScanRequest;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Immutable;
+import javax.validation.constraints.NotNull;
 
 /**
- * Refinement of scan request.
+ * DynamoDB item.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Refinement {
+public interface Item {
 
     /**
-     * Refine the request.
-     * @param request Request to extend
+     * Get one attribute.
+     * @param name Attribute name
+     * @return Value
      */
-    void refine(ScanRequest request);
+    @NotNull
+    AttributeValue get(String name);
+
+    /**
+     * Change one attribute.
+     * @param name Attribute name
+     * @param value Value to save
+     */
+    void put(String name, AttributeValue value);
+
+    /**
+     * Get back to the table it is from.
+     * @return Table
+     */
+    @NotNull
+    Table table();
+
+    /**
+     * Get back to the entire region.
+     * @return Region
+     */
+    @NotNull
+    Region region();
 
 }

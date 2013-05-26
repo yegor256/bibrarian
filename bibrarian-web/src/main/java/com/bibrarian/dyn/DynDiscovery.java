@@ -32,22 +32,18 @@ package com.bibrarian.dyn;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
-import com.bibrarian.dynamo.Frame;
 import com.bibrarian.dynamo.Item;
 import com.bibrarian.om.Artifact;
-import com.bibrarian.om.Bibitem;
 import com.bibrarian.om.Discovery;
-import com.bibrarian.om.Queryable;
+import com.bibrarian.om.Hypothesis;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import java.net.URI;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Artifact in Dynamo.
+ * Discovery in Dynamo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
@@ -56,7 +52,7 @@ import lombok.ToString;
 @Loggable(Loggable.DEBUG)
 @ToString
 @EqualsAndHashCode(of = "item")
-final class DynArtifact implements Artifact {
+final class DynDiscovery implements Discovery {
 
     /**
      * Item.
@@ -67,7 +63,7 @@ final class DynArtifact implements Artifact {
      * Public ctor.
      * @param itm Item
      */
-    protected DynArtifact(final Item itm) {
+    protected DynDiscovery(final Item itm) {
         this.item = itm;
     }
 
@@ -75,21 +71,23 @@ final class DynArtifact implements Artifact {
      * {@inheritDoc}
      */
     @Override
-    public String label() {
-        return this.item.get("label").getS();
+    public Date date() {
+        return new Date(this.item.get("date").getS());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Bibitem bibitem() {
-        return new DynBibitem(
-            this.item.region().table("bibitems").where(
+    public Hypothesis hypothesis() {
+        return new DynHypothesis(
+            this.item.region().table("hypothesizes").where(
                 "label",
                 new Condition()
-                    .withAttributeValueList(new AttributeValue(this.label()))
                     .withComparisonOperator(ComparisonOperator.EQ)
+                    .withAttributeValueList(
+                        new AttributeValue(this.item.get("hypothesis").getS())
+                    )
             ).iterator().next()
         );
     }
@@ -98,49 +96,67 @@ final class DynArtifact implements Artifact {
      * {@inheritDoc}
      */
     @Override
-    public Collection<URI> hardcopies() {
-        final Frame frame = this.item.region().table("hardcopies").where(
-            "artifact",
-            new Condition()
-                .withAttributeValueList(new AttributeValue(this.label()))
-                .withComparisonOperator(ComparisonOperator.EQ)
-        );
-        final Collection<URI> hardcopies = new LinkedList<URI>();
-        for (Item copy : frame) {
-            hardcopies.add(URI.create(item.get("uri").getS()));
-        }
-        return hardcopies;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String referat() {
-        return this.item.get("referat").getS();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void referat(final String text) {
-        this.item.put("referat", new AttributeValue(text));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Queryable<Discovery> discoveries() {
-        return new DynDiscoveries(
-            this.item.region().table("discoveries").where(
-                "artifact",
+    public Artifact artifact() {
+        return new DynArtifact(
+            this.item.region().table("artifacts").where(
+                "label",
                 new Condition()
-                    .withAttributeValueList(new AttributeValue(this.label()))
                     .withComparisonOperator(ComparisonOperator.EQ)
-            ),
-            this.item.get("bibrarian").getS()
+                    .withAttributeValueList(
+                        new AttributeValue(this.item.get("artifact").getS())
+                    )
+            ).iterator().next()
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String quote() {
+        return this.item.get("quote").getS();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void quote(final String text) {
+        this.item.put("quote", new AttributeValue(text));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String pages() {
+        return this.item.get("pages").getS();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void pages(final String pages) {
+        this.item.put("pages", new AttributeValue(pages));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double relevance() {
+        return Double.parseDouble(this.item.get("relevance").getS());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void relevance(final double relevance) {
+        this.item.put(
+            "relevance",
+            new AttributeValue(Double.toString(relevance))
         );
     }
 

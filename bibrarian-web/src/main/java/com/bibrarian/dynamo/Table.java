@@ -32,23 +32,29 @@ package com.bibrarian.dynamo;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Immutable;
 import java.util.Map;
+import javax.validation.constraints.NotNull;
 
 /**
- * Reverse mapping.
+ * DynamoDB table.
  *
- * @param <T> Type of result expected
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
-public interface Reverse<T> {
+public interface Table extends Frame {
 
     /**
-     * Reverse attributes back to item.
-     * @param cursor Where we are at the moment
-     * @param attributes Where to save data
-     * @return The item restored
+     * Put new item there.
+     * @param attributes Attributes to save
      */
-    T revert(Cursor<T> cursor, Map<String, AttributeValue> attributes);
+    @NotNull
+    void put(Map<String, AttributeValue> attributes);
+
+    /**
+     * Get back to the entire region.
+     * @return Region
+     */
+    @NotNull
+    Region region();
 
 }

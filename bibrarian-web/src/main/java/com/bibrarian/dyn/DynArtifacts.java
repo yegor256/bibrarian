@@ -27,31 +27,66 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dynamo;
+package com.bibrarian.dyn;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.bibrarian.dynamo.Frame;
+import com.bibrarian.om.Artifact;
+import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
+import com.jcabi.aspects.Loggable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * DynamoDB schema.
+ * Artifacts.
  *
+ * @param <T> Type of encapsulated elements
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id$
  */
 @Immutable
-public final class Schema {
+@Loggable(Loggable.DEBUG)
+@ToString
+@EqualsAndHashCode(callSuper = true, of = "owner")
+final class DynArtifacts extends AbstractQueryable<Artifact> {
 
     /**
-     * With this table and mapping.
-     * @param label Label to use inside the code
-     * @param name Exact table name as it's called in DynamoDB
-     * @param reverse Reverse mapping
-     * @return The same object
+     * Owner of the collection.
      */
-    @NotNull
-    public Schema withTable(@NotNull final String label,
-        @NotNull final String name, @NotNull final Reverse<?> reverse) {
-        return this;
+    private final transient String owner;
+
+    /**
+     * Public ctor.
+     * @param frame Frame
+     */
+    protected DynArtifacts(final Frame frame, final String urn) {
+        super(frame);
+        this.owner = urn;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean add(final Artifact artifact) {
+        final ConcurrentMap<String, AttributeValue> map =
+            new ConcurrentHashMap<String, AttributeValue>(0);
+        map.put("bibrarian", new AttributeValue(this.owner));
+        map.put("label", new AttributeValue(artifact.label()));
+        map.put("referat", new AttributeValue(artifact.referat()));
+        this.frame().table().put(map);
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Queryable<Artifact> with(final Frame frame) {
+        return new DynArtifacts(frame, this.owner);
     }
 
 }

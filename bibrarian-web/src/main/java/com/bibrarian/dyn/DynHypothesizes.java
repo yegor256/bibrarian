@@ -29,20 +29,19 @@
  */
 package com.bibrarian.dyn;
 
-import com.bibrarian.dynamo.Cursor;
-import com.bibrarian.om.Query;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.bibrarian.dynamo.Frame;
+import com.bibrarian.om.Hypothesis;
 import com.bibrarian.om.Queryable;
-import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import java.util.AbstractCollection;
-import java.util.Iterator;
-import javax.validation.constraints.NotNull;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Queryable.
+ * Artifacts.
  *
  * @param <T> Type of encapsulated elements
  * @author Yegor Bugayenko (yegor@tpc2.com)
@@ -51,61 +50,34 @@ import lombok.ToString;
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(callSuper = false, of = { "cursor", "qry" })
-public final class DynQueryable<T> extends
-    AbstractCollection<T> implements Queryable<T> {
+@EqualsAndHashCode(callSuper = true, of = "owner")
+final class DynHypothesizes extends AbstractQueryable<Hypothesis> {
 
     /**
-     * Cursor.
+     * Owner of the collection.
      */
-    private final transient Cursor<T> cursor;
-
-    /**
-     * Query encapsulated.
-     */
-    private final transient Query<T> qry;
+    private final transient String owner;
 
     /**
      * Public ctor.
-     * @param cur Cursor
+     * @param frame Frame
      */
-    public DynQueryable(@NotNull final Cursor<T> cur) {
-        this(cur, new DynQuery<T>(cur));
-    }
-
-    /**
-     * Public ctor.
-     * @param cur Cursor
-     * @param query Query to encapsulate
-     */
-    protected DynQueryable(@NotNull final Cursor<T> cur,
-        @NotNull final Query<T> query) {
-        this.cursor = cur;
-        this.qry = query;
+    protected DynHypothesizes(final Frame frame, final String urn) {
+        super(frame);
+        this.owner = urn;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Iterator<T> iterator() {
-        return new Cursor.Mapped<T>(this.cursor).iterator();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int size() {
-        return Iterators.size(this.iterator());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean add(final T item) {
-        this.cursor.add(item);
+    public boolean add(final Hypothesis hypothesis) {
+        final ConcurrentMap<String, AttributeValue> map =
+            new ConcurrentHashMap<String, AttributeValue>(0);
+        map.put("bibrarian", new AttributeValue(this.owner));
+        map.put("label", new AttributeValue(hypothesis.label()));
+        map.put("description", new AttributeValue(hypothesis.description()));
+        this.frame().table().put(map);
         return true;
     }
 
@@ -113,18 +85,8 @@ public final class DynQueryable<T> extends
      * {@inheritDoc}
      */
     @Override
-    public boolean remove(final Object object) {
-        this.cursor.iterator().remove();
-        return true;
+    protected Queryable<Hypothesis> with(final Frame frame) {
+        return new DynHypothesizes(frame, this.owner);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Query<T> query() {
-        return new DynQuery<T>(this.cursor, this.qry);
-    }
-
 
 }
