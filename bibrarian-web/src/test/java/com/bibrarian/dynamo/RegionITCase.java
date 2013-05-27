@@ -42,7 +42,6 @@ import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
-import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import java.util.concurrent.TimeUnit;
@@ -58,6 +57,7 @@ import org.junit.Test;
  * Integration case for {@link Region}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class RegionITCase {
 
@@ -85,20 +85,12 @@ public final class RegionITCase {
     private static final String HASH = "id";
 
     /**
-     * Assume it's integration test running.
-     * @throws Exception If fails
-     */
-    @BeforeClass
-    public static void assume() throws Exception {
-        Assume.assumeThat(RegionITCase.KEY, Matchers.notNullValue());
-    }
-
-    /**
      * Before the test.
      * @throws Exception If fails
      */
     @BeforeClass
     public static void before() throws Exception {
+        Assume.assumeThat(RegionITCase.KEY, Matchers.notNullValue());
         final AmazonDynamoDB aws = RegionITCase.aws();
         aws.createTable(
             new CreateTableRequest()
@@ -140,8 +132,8 @@ public final class RegionITCase {
      * After the test.
      */
     @AfterClass
-    @RetryOnFailure(delay = Tv.FIVE, unit = TimeUnit.SECONDS)
     public static void after() {
+        Assume.assumeThat(RegionITCase.KEY, Matchers.notNullValue());
         final AmazonDynamoDB aws = RegionITCase.aws();
         aws.deleteTable(
             new DeleteTableRequest()
@@ -189,6 +181,7 @@ public final class RegionITCase {
 
     /**
      * Make AWS client.
+     * @return The client
      */
     private static AmazonDynamoDB aws() {
         final Credentials creds = new Credentials.Simple(

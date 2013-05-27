@@ -57,6 +57,16 @@ import javax.ws.rs.core.Response;
 public final class DiscoveriesRs extends BaseRs {
 
     /**
+     * Query label.
+     */
+    private static final String QUERY_LABEL = "label";
+
+    /**
+     * Query item.
+     */
+    private static final String QUERY_ITEM = "item";
+
+    /**
      * List of them.
      * @return The JAX-RS response
      */
@@ -82,8 +92,9 @@ public final class DiscoveriesRs extends BaseRs {
      */
     @GET
     @Path("/remove")
-    public Response remove(@QueryParam("label") @NotNull final String label,
-        @QueryParam("item") @NotNull final String item,
+    public Response remove(@QueryParam(DiscoveriesRs.QUERY_LABEL)
+        @NotNull final String label,
+        @QueryParam(DiscoveriesRs.QUERY_ITEM) @NotNull final String item,
         @QueryParam("date") @NotNull final String date) {
         final Discovery discovery = new Discovery.Simple(
             new Date(Long.parseLong(date)),
@@ -116,11 +127,13 @@ public final class DiscoveriesRs extends BaseRs {
      * @param quote Quote
      * @param pages Pages
      * @return The JAX-RS response
+     * @checkstyle ParameterNumber (8 lines)
      */
     @GET
     @Path("/add")
-    public Response add(@QueryParam("label") @NotNull final String label,
-        @QueryParam("item") @NotNull final String item,
+    public Response add(@QueryParam(DiscoveriesRs.QUERY_LABEL)
+        @NotNull final String label,
+        @QueryParam(DiscoveriesRs.QUERY_ITEM) @NotNull final String item,
         @QueryParam("quote") @NotNull final String quote,
         @QueryParam("pages") @NotNull final String pages) {
         final Discovery discovery = new Discovery.Simple(
@@ -151,7 +164,7 @@ public final class DiscoveriesRs extends BaseRs {
 
     /**
      * Convert discoveries to a JAXB element.
-     * @param hypothesizes The list of them
+     * @param discoveries The list of them
      * @return JAXB object
      */
     private JaxbBundle jaxb(final Collection<Discovery> discoveries) {
@@ -190,7 +203,7 @@ public final class DiscoveriesRs extends BaseRs {
                         .clone()
                         .path(DiscoveriesRs.class)
                         .path(DiscoveriesRs.class, "remove")
-                        .queryParam("label", "{l}")
+                        .queryParam(DiscoveriesRs.QUERY_LABEL, "{l}")
                         .queryParam("date", "{d}")
                         .build(
                             discovery.hypothesis().label(),

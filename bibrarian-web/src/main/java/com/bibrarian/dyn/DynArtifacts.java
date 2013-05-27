@@ -59,6 +59,7 @@ final class DynArtifacts extends AbstractQueryable<Artifact> {
     /**
      * Public ctor.
      * @param frame Frame
+     * @param urn Owner of them
      */
     protected DynArtifacts(final Frame frame, final String urn) {
         super(frame);

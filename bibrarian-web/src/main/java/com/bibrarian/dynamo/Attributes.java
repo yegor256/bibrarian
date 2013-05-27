@@ -170,7 +170,8 @@ public final class Attributes implements Map<String, AttributeValue> {
         AttributeValue value = null;
         for (Map.Entry<String, AttributeValue> entry : this.entrySet()) {
             if (entry.getKey().equals(key)) {
-                return entry.getValue();
+                value = entry.getValue();
+                break;
             }
         }
         return value;
@@ -231,7 +232,7 @@ public final class Attributes implements Map<String, AttributeValue> {
      * {@inheritDoc}
      */
     @Override
-    public AttributeValue remove(Object key) {
+    public AttributeValue remove(final Object key) {
         throw new UnsupportedOperationException();
     }
 

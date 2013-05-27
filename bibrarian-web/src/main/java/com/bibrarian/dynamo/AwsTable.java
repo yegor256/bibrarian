@@ -101,8 +101,7 @@ final class AwsTable implements Table {
         aws.shutdown();
         Logger.debug(
             this,
-            "#put('%s', '%[text]s'): created item in DynamoDB, %.2f units",
-            name,
+            "#put('%[text]s'): created item in DynamoDB, %.2f units",
             attributes,
             result.getConsumedCapacity().getCapacityUnits()
         );

@@ -61,8 +61,7 @@ final class DynBibrarian implements Bibrarian {
 
     /**
      * Public ctor.
-     * @param cur Cursor
-     * @param urn Name of him
+     * @param itm Item to encapsulate
      */
     protected DynBibrarian(@NotNull final Item itm) {
         this.item = itm;

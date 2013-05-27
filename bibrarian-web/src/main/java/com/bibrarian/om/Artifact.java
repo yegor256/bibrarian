@@ -107,6 +107,7 @@ public interface Artifact {
         private final transient Bibitem item;
         /**
          * Public ctor.
+         * @param label Label of it
          * @param bibitem Bibitem to encapsulate
          */
         public Simple(@NotNull final String label,

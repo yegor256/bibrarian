@@ -59,6 +59,7 @@ final class DynHypothesizes extends AbstractQueryable<Hypothesis> {
     /**
      * Public ctor.
      * @param frame Frame
+     * @param urn Owner of them
      */
     protected DynHypothesizes(final Frame frame, final String urn) {
         super(frame);

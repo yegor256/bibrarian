@@ -121,19 +121,7 @@ public final class BibitemsRs extends BaseRs {
             .add("label", bibitem.load().label())
             .up()
             .add("tex", bibitem.toString())
-            .up()
-            .link(
-                new Link(
-                    "remove",
-                    BibitemsRs.this.uriInfo()
-                        .getBaseUriBuilder()
-                        .clone()
-                        .path(BibitemsRs.class)
-                        .path(BibitemsRs.class, "remove")
-                        .queryParam("label", "{l}")
-                        .build(bibitem.load().label())
-                )
-            );
+            .up();
     }
 
 }

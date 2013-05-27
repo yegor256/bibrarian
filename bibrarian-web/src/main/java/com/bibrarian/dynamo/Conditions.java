@@ -154,7 +154,8 @@ public final class Conditions implements Map<String, Condition> {
         Condition value = null;
         for (Map.Entry<String, Condition> entry : this.entrySet()) {
             if (entry.getKey().equals(key)) {
-                return entry.getValue();
+                value = entry.getValue();
+                break;
             }
         }
         return value;
@@ -215,7 +216,7 @@ public final class Conditions implements Map<String, Condition> {
      * {@inheritDoc}
      */
     @Override
-    public Condition remove(Object key) {
+    public Condition remove(final Object key) {
         throw new UnsupportedOperationException();
     }
 

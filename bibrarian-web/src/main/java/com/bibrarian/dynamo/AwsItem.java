@@ -79,9 +79,10 @@ final class AwsItem implements Item {
     /**
      * Public ctor.
      * @param creds Credentials
-     * @param frm Frame
+     * @param frame Frame
      * @param table Table name
      * @param attrs Attributes of primary keys (with values)
+     * @checkstyle ParameterNumber (5 lines)
      */
     protected AwsItem(final Credentials creds, final AwsFrame frame,
         final String table, final Attributes attrs) {
@@ -95,23 +96,23 @@ final class AwsItem implements Item {
      * {@inheritDoc}
      */
     @Override
-    public AttributeValue get(final String name) {
-        AttributeValue value = this.keys.get(name);
+    public AttributeValue get(final String attr) {
+        AttributeValue value = this.keys.get(attr);
         if (value == null) {
             final AmazonDynamoDB aws = this.credentials.aws();
             final GetItemRequest request = new GetItemRequest();
             request.setTableName(this.name);
-            request.setAttributesToGet(Arrays.asList(name));
+            request.setAttributesToGet(Arrays.asList(attr));
             request.setKey(this.keys);
             request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL);
             request.setConsistentRead(true);
             final GetItemResult result = aws.getItem(request);
             aws.shutdown();
-            value = result.getItem().get(name);
+            value = result.getItem().get(attr);
             Logger.debug(
                 this,
                 "#get('%s'): loaded '%[text]s' from DynamoDB, %.2f units",
-                name,
+                attr,
                 value,
                 result.getConsumedCapacity().getCapacityUnits()
             );
@@ -123,12 +124,12 @@ final class AwsItem implements Item {
      * {@inheritDoc}
      */
     @Override
-    public void put(final String name, final AttributeValue value) {
+    public void put(final String attr, final AttributeValue value) {
         final AmazonDynamoDB aws = this.credentials.aws();
         final PutItemRequest request = new PutItemRequest();
         request.setTableName(this.name);
         request.setExpected(this.keys.asKeys());
-        request.setItem(new Attributes(this.keys).with(name, value));
+        request.setItem(new Attributes(this.keys).with(attr, value));
         request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL);
         request.setReturnValues(ReturnValue.NONE);
         final PutItemResult result = aws.putItem(request);
@@ -136,7 +137,7 @@ final class AwsItem implements Item {
         Logger.debug(
             this,
             "#put('%s', '%[text]s'): saved item to DynamoDB, %.2f units",
-            name,
+            attr,
             value,
             result.getConsumedCapacity().getCapacityUnits()
         );

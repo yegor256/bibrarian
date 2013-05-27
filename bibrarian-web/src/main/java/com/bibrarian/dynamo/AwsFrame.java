@@ -88,8 +88,9 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      * Public ctor.
      * @param creds Credentials
      * @param table Table
-     * @param table Table name
+     * @param label Table name
      * @param conds Conditions
+     * @checkstyle ParameterNumber (5 lines)
      */
     protected AwsFrame(final Credentials creds, final AwsTable table,
         final String label, final Conditions conds) {
@@ -124,12 +125,12 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      * {@inheritDoc}
      */
     @Override
-    public Frame where(final String name, final Condition condition) {
+    public Frame where(final String attr, final Condition condition) {
         return new AwsFrame(
             this.credentials,
             this.tbl,
             this.name,
-            this.conditions.with(name, condition)
+            this.conditions.with(attr, condition)
         );
     }
 

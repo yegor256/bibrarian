@@ -60,6 +60,7 @@ final class DynDiscoveries extends AbstractQueryable<Discovery> {
     /**
      * Public ctor.
      * @param frame Frame
+     * @param urn Owner of them
      */
     protected DynDiscoveries(final Frame frame, final String urn) {
         super(frame);

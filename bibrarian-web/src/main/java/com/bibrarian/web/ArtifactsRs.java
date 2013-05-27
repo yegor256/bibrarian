@@ -72,7 +72,7 @@ public final class ArtifactsRs extends BaseRs {
 
     /**
      * Convert hypothesizes to a JAXB element.
-     * @param hypothesizes The list of them
+     * @param artifacts The list of them
      * @return JAXB object
      */
     private JaxbBundle jaxb(final Collection<Artifact> artifacts) {

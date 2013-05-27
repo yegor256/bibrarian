@@ -88,8 +88,9 @@ final class AwsIterator implements Iterator<Item> {
      * Public ctor.
      * @param creds Credentials
      * @param frm Frame object
-     * @param table Table name
+     * @param label Table name
      * @param conds Conditions
+     * @checkstyle ParameterNumber (5 lines)
      */
     protected AwsIterator(final Credentials creds, final AwsFrame frm,
         final String label, final Conditions conds) {
@@ -181,7 +182,7 @@ final class AwsIterator implements Iterator<Item> {
             this,
             "#reload(): loaded %d items from DynamoDB, %.2f units",
             this.result.getItems().size(),
-            result.getConsumedCapacity().getCapacityUnits()
+            this.result.getConsumedCapacity().getCapacityUnits()
         );
     }
 

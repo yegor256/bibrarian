@@ -65,6 +65,7 @@ final class DynQuery<T> implements Query<T> {
     /**
      * Public ctor.
      * @param frm Frame
+     * @param qry Query to encapsulate
      */
     protected DynQuery(@NotNull final Frame frm,
         @NotNull final AbstractQueryable<T> qry) {
@@ -76,7 +77,7 @@ final class DynQuery<T> implements Query<T> {
      * {@inheritDoc}
      */
     @Override
-    public Query<T> with(String key, String value) {
+    public Query<T> with(final String key, final String value) {
         return new DynQuery<T>(
             this.frame.where(key, Conditions.equalTo(value)),
             this.queryable
