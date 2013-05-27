@@ -36,7 +36,7 @@ import javax.validation.constraints.NotNull;
  * Queryable collection.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id$
  * @param <T> Type of encapsulated elements
  */
 public interface Queryable<T> extends Collection<T> {

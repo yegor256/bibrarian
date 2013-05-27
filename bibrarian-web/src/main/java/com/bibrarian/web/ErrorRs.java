@@ -43,7 +43,7 @@ import javax.ws.rs.core.Response;
  * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: ErrorRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id$
  */
 @Path("/error")
 @Loggable(Loggable.DEBUG)

@@ -46,7 +46,7 @@ import lombok.ToString;
  * Bibrarian in Dynamo DB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id$
  */
 @Immutable
 @Loggable(Loggable.DEBUG)

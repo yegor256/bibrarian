@@ -44,7 +44,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: BasePage.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id$
  */
 @XmlRootElement(name = "page")
 @XmlAccessorType(XmlAccessType.NONE)

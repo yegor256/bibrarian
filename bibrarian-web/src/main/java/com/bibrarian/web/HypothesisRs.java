@@ -47,7 +47,7 @@ import javax.ws.rs.core.Response;
  * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: IndexRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id$
  * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Path("/hp")

@@ -49,7 +49,7 @@ import javax.ws.rs.core.Response;
  * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id: DiscoveriesRs.java 2344 2013-01-13 18:28:44Z guard $
+ * @version $Id$
  */
 @Path("/b")
 @Loggable(Loggable.DEBUG)

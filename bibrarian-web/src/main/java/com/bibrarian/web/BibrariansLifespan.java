@@ -41,7 +41,7 @@ import javax.servlet.ServletContextListener;
  * Lifespan controller of the {@link Bibrarians}.
  *
  * @author Yegor Bugayenko (yegor@woquo.com)
- * @version $Id: BoardsLifespan.java 2114 2013-04-01 15:16:55Z yegor@tpc2.com $
+ * @version $Id$
  */
 @Loggable(Loggable.INFO)
 public final class BibrariansLifespan implements ServletContextListener {
