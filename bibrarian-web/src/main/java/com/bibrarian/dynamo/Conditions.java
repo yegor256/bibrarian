@@ -29,8 +29,7 @@
  */
 package com.bibrarian.dynamo;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
+import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ import lombok.ToString;
 @Loggable(Loggable.DEBUG)
 @ToString
 @EqualsAndHashCode
-public final class Attributes implements Map<String, AttributeValue> {
+public final class Conditions implements Map<String, Condition> {
 
     /**
      * Serialization marker.
@@ -69,18 +68,18 @@ public final class Attributes implements Map<String, AttributeValue> {
     /**
      * Private ctor.
      */
-    public Attributes() {
-        this(new HashMap<String, AttributeValue>(0));
+    public Conditions() {
+        this(new HashMap<String, Condition>(0));
     }
 
     /**
      * Private ctor.
      * @param map Map of them
      */
-    public Attributes(final Map<String, AttributeValue> map) {
+    public Conditions(final Map<String, Condition> map) {
         this.pairs = new Object[map.size()][];
         int pos = 0;
-        for (Map.Entry<String, AttributeValue> entry : map.entrySet()) {
+        for (Map.Entry<String, Condition> entry : map.entrySet()) {
             this.pairs[pos] = new Object[] {entry.getKey(), entry.getValue()};
             ++pos;
         }
@@ -92,42 +91,14 @@ public final class Attributes implements Map<String, AttributeValue> {
      * @param value The value
      * @return Attributes
      */
-    public Attributes with(final String name, final AttributeValue value) {
-        final ConcurrentMap<String, AttributeValue> map =
-            new ConcurrentHashMap<String, AttributeValue>(
+    public Conditions with(final String name, final Condition value) {
+        final ConcurrentMap<String, Condition> map =
+            new ConcurrentHashMap<String, Condition>(
                 this.pairs.length + 1
             );
         map.putAll(this);
         map.put(name, value);
-        return new Attributes(map);
-    }
-
-    /**
-     * Convert them to a map of expected values.
-     * @return Expected values
-     */
-    public Map<String, ExpectedAttributeValue> asKeys() {
-        final ConcurrentMap<String, ExpectedAttributeValue> map =
-            new ConcurrentHashMap<String, ExpectedAttributeValue>(
-                this.pairs.length
-            );
-        for (Object[] pair : this.pairs) {
-            map.put(
-                pair[0].toString(),
-                new ExpectedAttributeValue(AttributeValue.class.cast(pair[1]))
-            );
-        }
-        return map;
-    }
-
-    /**
-     * With this attribute.
-     * @param name Attribute name
-     * @param value The value
-     * @return Attributes
-     */
-    public Attributes with(final String name, final Object value) {
-        return this.with(name, new AttributeValue(value.toString()));
+        return new Conditions(map);
     }
 
     /**
@@ -159,16 +130,16 @@ public final class Attributes implements Map<String, AttributeValue> {
      */
     @Override
     public boolean containsValue(final Object value) {
-        return this.values().contains(AttributeValue.class.cast(value));
+        return this.values().contains(Condition.class.cast(value));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public AttributeValue get(final Object key) {
-        AttributeValue value = null;
-        for (Map.Entry<String, AttributeValue> entry : this.entrySet()) {
+    public Condition get(final Object key) {
+        Condition value = null;
+        for (Map.Entry<String, Condition> entry : this.entrySet()) {
             if (entry.getKey().equals(key)) {
                 return entry.getValue();
             }
@@ -192,11 +163,11 @@ public final class Attributes implements Map<String, AttributeValue> {
      * {@inheritDoc}
      */
     @Override
-    public Collection<AttributeValue> values() {
-        final Collection<AttributeValue> values =
-            new ArrayList<AttributeValue>(this.pairs.length);
+    public Collection<Condition> values() {
+        final Collection<Condition> values =
+            new ArrayList<Condition>(this.pairs.length);
         for (Object[] pair : this.pairs) {
-            values.add(AttributeValue.class.cast(pair[1]));
+            values.add(Condition.class.cast(pair[1]));
         }
         return values;
     }
@@ -205,14 +176,14 @@ public final class Attributes implements Map<String, AttributeValue> {
      * {@inheritDoc}
      */
     @Override
-    public Set<Entry<String, AttributeValue>> entrySet() {
-        final Set<Entry<String, AttributeValue>> entries =
-            new HashSet<Entry<String, AttributeValue>>(this.pairs.length);
+    public Set<Map.Entry<String, Condition>> entrySet() {
+        final Set<Map.Entry<String, Condition>> entries =
+            new HashSet<Map.Entry<String, Condition>>(this.pairs.length);
         for (Object[] pair : this.pairs) {
             entries.add(
-                new HashMap.SimpleImmutableEntry<String, AttributeValue>(
+                new HashMap.SimpleImmutableEntry<String, Condition>(
                     pair[0].toString(),
-                    AttributeValue.class.cast(pair[1])
+                    Condition.class.cast(pair[1])
                 )
             );
         }
@@ -223,7 +194,7 @@ public final class Attributes implements Map<String, AttributeValue> {
      * {@inheritDoc}
      */
     @Override
-    public AttributeValue put(final String key, final AttributeValue value) {
+    public Condition put(final String key, final Condition value) {
         throw new UnsupportedOperationException();
     }
 
@@ -231,7 +202,7 @@ public final class Attributes implements Map<String, AttributeValue> {
      * {@inheritDoc}
      */
     @Override
-    public AttributeValue remove(Object key) {
+    public Condition remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
@@ -240,7 +211,7 @@ public final class Attributes implements Map<String, AttributeValue> {
      */
     @Override
     public void putAll(
-        final Map<? extends String, ? extends AttributeValue> map) {
+        final Map<? extends String, ? extends Condition> map) {
         throw new UnsupportedOperationException();
     }
 

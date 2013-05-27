@@ -31,12 +31,18 @@ package com.bibrarian.dynamo;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
+import com.amazonaws.services.dynamodbv2.model.GetItemRequest;
+import com.amazonaws.services.dynamodbv2.model.GetItemResult;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
+import com.amazonaws.services.dynamodbv2.model.PutItemResult;
+import com.amazonaws.services.dynamodbv2.model.ReturnConsumedCapacity;
+import com.amazonaws.services.dynamodbv2.model.ReturnValue;
 import com.jcabi.aspects.Immutable;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
+import java.util.Arrays;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Frame through AWS SDK.
@@ -45,6 +51,9 @@ import java.util.concurrent.ConcurrentMap;
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
+@Loggable(Loggable.DEBUG)
+@ToString
+@EqualsAndHashCode(of = { "credentials", "frm", "name", "keys" })
 final class AwsItem implements Item {
 
     /**
@@ -55,7 +64,7 @@ final class AwsItem implements Item {
     /**
      * Frame.
      */
-    private final transient Frame frm;
+    private final transient AwsFrame frm;
 
     /**
      * Table name.
@@ -63,23 +72,23 @@ final class AwsItem implements Item {
     private final transient String name;
 
     /**
-     * Values.
+     * Primary keys and their values.
      */
-    private final transient Map<String, ExpectedAttributeValue> expected;
+    private final transient Attributes keys;
 
     /**
      * Public ctor.
      * @param creds Credentials
      * @param frm Frame
      * @param table Table name
-     * @param values values 
+     * @param attrs Attributes of primary keys (with values)
      */
-    protected AwsItem(final Credentials creds, final Frame frame,
-        final String table, final Map<String, ExpectedAttributeValue> values) {
+    protected AwsItem(final Credentials creds, final AwsFrame frame,
+        final String table, final Attributes attrs) {
         this.credentials = creds;
         this.frm = frame;
         this.name = table;
-        this.expected = values;
+        this.keys = attrs;
     }
 
     /**
@@ -87,7 +96,27 @@ final class AwsItem implements Item {
      */
     @Override
     public AttributeValue get(final String name) {
-        return this.expected.get(name).getValue();
+        AttributeValue value = this.keys.get(name);
+        if (value == null) {
+            final AmazonDynamoDB aws = this.credentials.aws();
+            final GetItemRequest request = new GetItemRequest();
+            request.setTableName(this.name);
+            request.setAttributesToGet(Arrays.asList(name));
+            request.setKey(this.keys);
+            request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL);
+            request.setConsistentRead(true);
+            final GetItemResult result = aws.getItem(request);
+            aws.shutdown();
+            value = result.getItem().get(name);
+            Logger.debug(
+                this,
+                "#get('%s'): loaded '%[text]s' from DynamoDB, %.2f units",
+                name,
+                value,
+                result.getConsumedCapacity().getCapacityUnits()
+            );
+        }
+        return value;
     }
 
     /**
@@ -98,13 +127,19 @@ final class AwsItem implements Item {
         final AmazonDynamoDB aws = this.credentials.aws();
         final PutItemRequest request = new PutItemRequest();
         request.setTableName(this.name);
-        request.setExpected(this.expected);
-        final ConcurrentMap<String, AttributeValue> values =
-            new ConcurrentHashMap<String, AttributeValue>(1);
-        values.put(name, value);
-        request.setItem(values);
-        aws.putItem(request);
+        request.setExpected(this.keys.asKeys());
+        request.setItem(new Attributes(this.keys).with(name, value));
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL);
+        request.setReturnValues(ReturnValue.NONE);
+        final PutItemResult result = aws.putItem(request);
         aws.shutdown();
+        Logger.debug(
+            this,
+            "#put('%s', '%[text]s'): saved item to DynamoDB, %.2f units",
+            name,
+            value,
+            result.getConsumedCapacity().getCapacityUnits()
+        );
     }
 
     /**

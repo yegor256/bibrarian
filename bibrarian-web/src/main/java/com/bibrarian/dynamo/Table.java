@@ -29,9 +29,7 @@
  */
 package com.bibrarian.dynamo;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.aspects.Immutable;
-import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -48,7 +46,7 @@ public interface Table {
      * @param attributes Attributes to save
      */
     @NotNull
-    void put(Map<String, AttributeValue> attributes);
+    void put(Attributes attributes);
 
     /**
      * Make a new frame.

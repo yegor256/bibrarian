@@ -42,14 +42,16 @@ import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
+import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.AfterClass;
 import org.junit.Assume;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -62,27 +64,83 @@ public final class RegionITCase {
     /**
      * AWS key.
      */
-    private transient String key;
+    private static final String KEY =
+        System.getProperty("failsafe.dynamo.key");
 
     /**
      * AWS secret.
      */
-    private transient String secret;
+    private static final String SECRET =
+        System.getProperty("failsafe.dynamo.secret");
 
     /**
      * AWS table name.
      */
-    private transient String name;
+    private static final String TABLE =
+        System.getProperty("failsafe.dynamo.table");
+
+    /**
+     * Dynamo table hash key.
+     */
+    private static final String HASH = "id";
 
     /**
      * Before the test.
+     * @throws Exception If fails
      */
-    @Before
-    public void before() {
-        this.key = System.getProperty("failsafe.dynamo.key");
-        this.secret = System.getProperty("failsafe.dynamo.secret");
-        this.name = System.getProperty("failsafe.dynamo.table");
-        Assume.assumeThat(this.key, Matchers.notNullValue());
+    @BeforeClass
+    @RetryOnFailure(delay = Tv.FIVE, unit = TimeUnit.SECONDS)
+    public static void before() throws Exception {
+        Assume.assumeThat(RegionITCase.KEY, Matchers.notNullValue());
+        final AmazonDynamoDB aws = RegionITCase.aws();
+        aws.createTable(
+            new CreateTableRequest()
+                .withTableName(RegionITCase.TABLE)
+                .withProvisionedThroughput(
+                    new ProvisionedThroughput()
+                        .withReadCapacityUnits(1L)
+                        .withWriteCapacityUnits(1L)
+                )
+                .withAttributeDefinitions(
+                    new AttributeDefinition()
+                        .withAttributeName(RegionITCase.HASH)
+                        .withAttributeType(ScalarAttributeType.S)
+                )
+                .withKeySchema(
+                    new KeySchemaElement()
+                        .withAttributeName(RegionITCase.HASH)
+                        .withKeyType(KeyType.HASH)
+                )
+        );
+        while (true) {
+            final DescribeTableResult result = aws.describeTable(
+                new DescribeTableRequest().withTableName(RegionITCase.TABLE)
+            );
+            if ("ACTIVE".equals(result.getTable().getTableStatus())) {
+                Logger.info(RegionITCase.class, "Dynamo table is ready");
+                break;
+            }
+            TimeUnit.SECONDS.sleep(Tv.FIVE);
+            Logger.info(
+                RegionITCase.class,
+                "waiting for Dynamo: %s",
+                result.getTable().getTableStatus()
+            );
+        }
+    }
+
+    /**
+     * After the test.
+     */
+    @AfterClass
+    @RetryOnFailure(delay = Tv.FIVE, unit = TimeUnit.SECONDS)
+    public static void after() {
+        final AmazonDynamoDB aws = RegionITCase.aws();
+        aws.deleteTable(
+            new DeleteTableRequest()
+                .withTableName(RegionITCase.TABLE)
+        );
+        Logger.info(RegionITCase.class, "Dynamo table deleted");
     }
 
     /**
@@ -91,88 +149,46 @@ public final class RegionITCase {
      */
     @Test
     public void worksWithAmazon() throws Exception {
-        final String attr = "id";
-        final Credentials creds = new Credentials.Simple(this.key, this.secret);
-        final AmazonDynamoDB aws = creds.aws();
-        try {
-            this.create(attr);
-            final Region region = new Region.Simple(creds);
-            final Table table = region.table(this.name);
-            final String value = RandomStringUtils.randomAlphanumeric(Tv.TEN);
-            table.put(new Attributes().with(attr, value));
-            final Frame frame = table.frame().where(
-                attr,
-                new Condition()
-                    .withAttributeValueList(new AttributeValue(value))
-                    .withComparisonOperator(ComparisonOperator.EQ)
-            );
-            MatcherAssert.assertThat(frame.size(), Matchers.equalTo(1));
-            MatcherAssert.assertThat(
-                frame.iterator().next().get(attr).getS(),
-                Matchers.equalTo(value)
-            );
-        } finally {
-            this.drop();
-        }
+        final Credentials creds = new Credentials.Simple(
+            RegionITCase.KEY, RegionITCase.SECRET
+        );
+        final Region region = new Region.Simple(creds);
+        final Table table = region.table(RegionITCase.TABLE);
+        final String attr = RandomStringUtils.randomAlphabetic(Tv.EIGHT);
+        final String value = RandomStringUtils.randomAlphanumeric(Tv.TEN);
+        table.put(
+            new Attributes()
+                .with(RegionITCase.HASH, "first-hash")
+                .with(attr, value)
+        );
+        final Frame frame = table.frame().where(
+            attr,
+            new Condition()
+                .withAttributeValueList(new AttributeValue(value))
+                .withComparisonOperator(ComparisonOperator.EQ)
+        );
+        MatcherAssert.assertThat(frame.size(), Matchers.equalTo(1));
+        final Item item = frame.iterator().next();
+        MatcherAssert.assertThat(
+            item.get(attr).getS(),
+            Matchers.equalTo(value)
+        );
+        item.put(attr, new AttributeValue("empty"));
+        MatcherAssert.assertThat(
+            item.get(attr).getS(),
+            Matchers.not(Matchers.equalTo(value))
+        );
     }
 
     /**
      * Make AWS client.
      */
-    private AmazonDynamoDB aws() {
-        final Credentials creds = new Credentials.Simple(this.key, this.secret);
+    private static AmazonDynamoDB aws() {
+        final Credentials creds = new Credentials.Simple(
+            RegionITCase.KEY, RegionITCase.SECRET
+        );
         final AmazonDynamoDB aws = creds.aws();
         return aws;
-    }
-
-    /**
-     * Create table.
-     * @param key Key attribute
-     * @throws Exception If fails
-     */
-    private void create(final String key) throws Exception {
-        final AmazonDynamoDB aws = this.aws();
-        aws.createTable(
-            new CreateTableRequest()
-                .withTableName(this.name)
-                .withProvisionedThroughput(
-                    new ProvisionedThroughput()
-                        .withReadCapacityUnits(1L)
-                        .withWriteCapacityUnits(1L)
-                )
-                .withAttributeDefinitions(
-                    new AttributeDefinition()
-                        .withAttributeName(key)
-                        .withAttributeType(ScalarAttributeType.S)
-                )
-                .withKeySchema(
-                    new KeySchemaElement()
-                        .withAttributeName(key)
-                        .withKeyType(KeyType.HASH)
-                )
-        );
-        while (true) {
-            final DescribeTableResult result = aws.describeTable(
-                new DescribeTableRequest().withTableName(this.name)
-            );
-            if ("ACTIVE".equals(result.getTable().getTableStatus())) {
-                break;
-            }
-            TimeUnit.SECONDS.sleep(Tv.FIVE);
-            Logger.info(
-                this,
-                "waiting for Dynamo: %s",
-                result.getTable().getTableStatus()
-            );
-        }
-    }
-
-    /**
-     * Drop table.
-     */
-    private void drop() {
-        final AmazonDynamoDB aws = this.aws();
-        aws.deleteTable(new DeleteTableRequest().withTableName(this.name));
     }
 
 }

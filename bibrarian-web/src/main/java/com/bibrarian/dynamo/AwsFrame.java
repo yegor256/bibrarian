@@ -29,20 +29,14 @@
  */
 package com.bibrarian.dynamo;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.Condition;
-import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
-import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ScanRequest;
-import com.amazonaws.services.dynamodbv2.model.ScanResult;
+import com.google.common.collect.Iterators;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import java.util.AbstractCollection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Frame through AWS SDK.
@@ -51,6 +45,12 @@ import java.util.concurrent.ConcurrentMap;
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
+@Loggable(Loggable.DEBUG)
+@ToString
+@EqualsAndHashCode(
+    callSuper = false,
+    of = { "credentials", "tbl", "name", "conditions" }
+)
 final class AwsFrame extends AbstractCollection<Item> implements Frame {
 
     /**
@@ -61,7 +61,7 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
     /**
      * Table.
      */
-    private final transient Table tbl;
+    private final transient AwsTable tbl;
 
     /**
      * Table name.
@@ -71,7 +71,7 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
     /**
      * Conditions.
      */
-    private final transient Map<String, Condition> conditions;
+    private final transient Conditions conditions;
 
     /**
      * Public ctor.
@@ -79,9 +79,9 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      * @param table Table
      * @param label Table name
      */
-    protected AwsFrame(final Credentials creds, final Table table,
+    protected AwsFrame(final Credentials creds, final AwsTable table,
         final String label) {
-        this(creds, table, label, new HashMap<String, Condition>(0));
+        this(creds, table, label, new Conditions());
     }
 
     /**
@@ -91,8 +91,8 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      * @param table Table name
      * @param conds Conditions
      */
-    protected AwsFrame(final Credentials creds, final Table table,
-        final String label, final Map<String, Condition> conds) {
+    protected AwsFrame(final Credentials creds, final AwsTable table,
+        final String label, final Conditions conds) {
         this.credentials = creds;
         this.tbl = table;
         this.name = label;
@@ -104,35 +104,12 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      */
     @Override
     public Iterator<Item> iterator() {
-        final AmazonDynamoDB aws = this.credentials.aws();
-        final ScanResult result = aws.scan(this.request());
-        final Iterator<Map<String, AttributeValue>> items =
-            result.getItems().iterator();
-        aws.shutdown();
-        return new Iterator<Item>() {
-            @Override
-            public boolean hasNext() {
-                return items.hasNext();
-            }
-            @Override
-            public Item next() {
-                return new AwsItem(
-                    AwsFrame.this.credentials,
-                    AwsFrame.this,
-                    AwsFrame.this.name,
-                    AwsFrame.expected(items.next())
-                );
-            }
-            @Override
-            public void remove() {
-                final AmazonDynamoDB aws = AwsFrame.this.credentials.aws();
-                aws.deleteItem(
-                    new DeleteItemRequest()
-                        .withExpected(AwsFrame.expected(items.next()))
-                );
-                aws.shutdown();
-            }
-        };
+        return new AwsIterator(
+            this.credentials,
+            this,
+            this.name,
+            this.conditions
+        );
     }
 
     /**
@@ -140,11 +117,7 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      */
     @Override
     public int size() {
-        final AmazonDynamoDB aws = this.credentials.aws();
-        final ScanResult result = aws.scan(this.request());
-        final int size = result.getCount();
-        aws.shutdown();
-        return size;
+        return Iterators.size(this.iterator());
     }
 
     /**
@@ -152,10 +125,12 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      */
     @Override
     public Frame where(final String name, final Condition condition) {
-        final Map<String, Condition> map = new HashMap<String, Condition>(0);
-        map.putAll(this.conditions);
-        map.put(name, condition);
-        return new AwsFrame(this.credentials, this.tbl, this.name, map);
+        return new AwsFrame(
+            this.credentials,
+            this.tbl,
+            this.name,
+            this.conditions.with(name, condition)
+        );
     }
 
     /**
@@ -164,34 +139,6 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
     @Override
     public Table table() {
         return this.tbl;
-    }
-
-    /**
-     * Query request.
-     * @return The request
-     */
-    private ScanRequest request() {
-        return new ScanRequest()
-            .withTableName(this.name)
-            .withScanFilter(this.conditions);
-    }
-
-    /**
-     * Convert item to expected values.
-     * @param item Item values
-     * @return Expected values
-     */
-    private static Map<String, ExpectedAttributeValue> expected(
-        final Map<String, AttributeValue> item) {
-        final ConcurrentMap<String, ExpectedAttributeValue> values =
-            new ConcurrentHashMap<String, ExpectedAttributeValue>(item.size());
-        for (Map.Entry<String, AttributeValue> entry : item.entrySet()) {
-            values.put(
-                entry.getKey(),
-                new ExpectedAttributeValue(entry.getValue())
-            );
-        }
-        return values;
     }
 
 }

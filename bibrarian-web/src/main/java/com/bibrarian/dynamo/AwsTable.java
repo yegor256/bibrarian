@@ -30,10 +30,21 @@
 package com.bibrarian.dynamo;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableRequest;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
+import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
+import com.amazonaws.services.dynamodbv2.model.PutItemResult;
+import com.amazonaws.services.dynamodbv2.model.ReturnConsumedCapacity;
+import com.amazonaws.services.dynamodbv2.model.ReturnValue;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
-import java.util.Map;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
+import java.util.Collection;
+import java.util.LinkedList;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Table through AWS SDK.
@@ -42,6 +53,9 @@ import java.util.Map;
  * @version $Id: BaseRs.java 2344 2013-01-13 18:28:44Z guard $
  */
 @Immutable
+@Loggable(Loggable.DEBUG)
+@ToString
+@EqualsAndHashCode(of = { "credentials", "reg", "name" })
 final class AwsTable implements Table {
 
     /**
@@ -76,13 +90,22 @@ final class AwsTable implements Table {
      * {@inheritDoc}
      */
     @Override
-    public void put(final Map<String, AttributeValue> attributes) {
+    public void put(final Attributes attributes) {
         final AmazonDynamoDB aws = this.credentials.aws();
         final PutItemRequest request = new PutItemRequest();
         request.setTableName(this.name);
         request.setItem(attributes);
-        aws.putItem(request);
+        request.setReturnValues(ReturnValue.NONE);
+        request.setReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL);
+        final PutItemResult result = aws.putItem(request);
         aws.shutdown();
+        Logger.debug(
+            this,
+            "#put('%s', '%[text]s'): created item in DynamoDB, %.2f units",
+            name,
+            attributes,
+            result.getConsumedCapacity().getCapacityUnits()
+        );
     }
 
     /**
@@ -99,6 +122,23 @@ final class AwsTable implements Table {
     @Override
     public Frame frame() {
         return new AwsFrame(this.credentials, this, this.name);
+    }
+
+    /**
+     * Get names of keys.
+     * @return Names of attributes, which are primary keys
+     */
+    @Cacheable
+    public Collection<String> keys() {
+        final AmazonDynamoDB aws = this.credentials.aws();
+        final DescribeTableResult request = aws.describeTable(
+            new DescribeTableRequest().withTableName(this.name)
+        );
+        final Collection<String> keys = new LinkedList<String>();
+        for (KeySchemaElement key : request.getTable().getKeySchema()) {
+            keys.add(key.getAttributeName());
+        }
+        return keys;
     }
 
 }
