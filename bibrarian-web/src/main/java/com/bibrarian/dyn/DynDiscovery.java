@@ -30,8 +30,7 @@
 package com.bibrarian.dyn;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
-import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.bibrarian.dynamo.Conditions;
 import com.bibrarian.dynamo.Item;
 import com.bibrarian.om.Artifact;
 import com.bibrarian.om.Discovery;
@@ -80,18 +79,11 @@ final class DynDiscovery implements Discovery {
      */
     @Override
     public Hypothesis hypothesis() {
+        final String label = this.item.get("hypothesis").getS();
         return new DynHypothesis(
-            this.item.frame().table().region()
-                .table("hypothesizes").frame().where(
-                    "label",
-                    new Condition()
-                        .withComparisonOperator(ComparisonOperator.EQ)
-                        .withAttributeValueList(
-                            new AttributeValue(
-                                this.item.get("hypothesis").getS()
-                            )
-                        )
-                ).iterator().next()
+            this.item.frame().table().region().table("hypothesizes").frame()
+                .where("label", Conditions.equalTo(label))
+                .iterator().next()
         );
     }
 
@@ -100,15 +92,11 @@ final class DynDiscovery implements Discovery {
      */
     @Override
     public Artifact artifact() {
+        final String label = this.item.get("artifact").getS();
         return new DynArtifact(
-            this.item.frame().table().region().table("artifacts").frame().where(
-                "label",
-                new Condition()
-                    .withComparisonOperator(ComparisonOperator.EQ)
-                    .withAttributeValueList(
-                        new AttributeValue(this.item.get("artifact").getS())
-                    )
-            ).iterator().next()
+            this.item.frame().table().region().table("artifacts").frame()
+                .where("label", Conditions.equalTo(label))
+                .iterator().next()
         );
     }
 

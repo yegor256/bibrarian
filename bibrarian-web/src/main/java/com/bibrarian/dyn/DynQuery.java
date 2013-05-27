@@ -29,9 +29,7 @@
  */
 package com.bibrarian.dyn;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
-import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.bibrarian.dynamo.Conditions;
 import com.bibrarian.dynamo.Frame;
 import com.bibrarian.om.Query;
 import com.bibrarian.om.Queryable;
@@ -80,12 +78,7 @@ final class DynQuery<T> implements Query<T> {
     @Override
     public Query<T> with(String key, String value) {
         return new DynQuery<T>(
-            this.frame.where(
-                key,
-                new Condition()
-                    .withAttributeValueList(new AttributeValue(value))
-                    .withComparisonOperator(ComparisonOperator.EQ)
-            ),
+            this.frame.where(key, Conditions.equalTo(value)),
             this.queryable
         );
     }

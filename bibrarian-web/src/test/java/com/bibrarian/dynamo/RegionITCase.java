@@ -85,13 +85,20 @@ public final class RegionITCase {
     private static final String HASH = "id";
 
     /**
+     * Assume it's integration test running.
+     * @throws Exception If fails
+     */
+    @BeforeClass
+    public static void assume() throws Exception {
+        Assume.assumeThat(RegionITCase.KEY, Matchers.notNullValue());
+    }
+
+    /**
      * Before the test.
      * @throws Exception If fails
      */
     @BeforeClass
-    @RetryOnFailure(delay = Tv.FIVE, unit = TimeUnit.SECONDS)
     public static void before() throws Exception {
-        Assume.assumeThat(RegionITCase.KEY, Matchers.notNullValue());
         final AmazonDynamoDB aws = RegionITCase.aws();
         aws.createTable(
             new CreateTableRequest()

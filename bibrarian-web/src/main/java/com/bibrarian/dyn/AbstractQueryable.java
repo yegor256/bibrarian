@@ -67,7 +67,7 @@ abstract class AbstractQueryable<T> extends
 
     /**
      * Public ctor.
-     * @param frm Frame
+     * @param frame Frame to encapsulate
      */
     protected AbstractQueryable(@NotNull final Frame frame) {
         this.frm = frame;
@@ -135,7 +135,7 @@ abstract class AbstractQueryable<T> extends
     private T toObject(final Item item) {
         final Class<?> type = new TypeToken<T>(this.getClass()) {
             private static final long serialVersionUID = 1L;
-        }.getRawType();
+        } .getRawType();
         Object object;
         if (type.equals(Bibrarian.class)) {
             object = new DynBibrarian(item);

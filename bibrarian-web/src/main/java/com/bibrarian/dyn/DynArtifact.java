@@ -30,8 +30,7 @@
 package com.bibrarian.dyn;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
-import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.bibrarian.dynamo.Conditions;
 import com.bibrarian.dynamo.Frame;
 import com.bibrarian.dynamo.Item;
 import com.bibrarian.om.Artifact;
@@ -85,12 +84,9 @@ final class DynArtifact implements Artifact {
     @Override
     public Bibitem bibitem() {
         return new DynBibitem(
-            this.item.frame().table().region().table("bibitems").frame().where(
-                "label",
-                new Condition()
-                    .withAttributeValueList(new AttributeValue(this.label()))
-                    .withComparisonOperator(ComparisonOperator.EQ)
-            ).iterator().next()
+            this.item.frame().table().region().table("bibitems").frame()
+                .where("label", Conditions.equalTo(this.label()))
+                .iterator().next()
         );
     }
 
@@ -100,15 +96,11 @@ final class DynArtifact implements Artifact {
     @Override
     public Collection<URI> hardcopies() {
         final Frame frame = this.item.frame().table().region()
-            .table("hardcopies").frame().where(
-                "artifact",
-                new Condition()
-                    .withAttributeValueList(new AttributeValue(this.label()))
-                    .withComparisonOperator(ComparisonOperator.EQ)
-            );
+            .table("hardcopies").frame()
+            .where("artifact", Conditions.equalTo(this.label()));
         final Collection<URI> hardcopies = new LinkedList<URI>();
         for (Item copy : frame) {
-            hardcopies.add(URI.create(item.get("uri").getS()));
+            hardcopies.add(URI.create(this.item.get("uri").getS()));
         }
         return hardcopies;
     }
@@ -135,15 +127,10 @@ final class DynArtifact implements Artifact {
     @Override
     public Queryable<Discovery> discoveries() {
         return new DynDiscoveries(
-            this.item.frame().table().region()
-                .table("discoveries").frame().where(
-                    "artifact",
-                    new Condition()
-                        .withAttributeValueList(new AttributeValue(this.label()))
-                        .withComparisonOperator(ComparisonOperator.EQ)
-                ),
-                this.item.get("bibrarian").getS()
-            );
+            this.item.frame().table().region().table("discoveries")
+                .frame().where("artifact", Conditions.equalTo(this.label())),
+            this.item.get("bibrarian").getS()
+        );
     }
 
 }

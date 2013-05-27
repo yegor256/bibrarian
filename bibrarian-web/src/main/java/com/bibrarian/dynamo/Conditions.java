@@ -29,6 +29,8 @@
  */
 package com.bibrarian.dynamo;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -83,6 +85,17 @@ public final class Conditions implements Map<String, Condition> {
             this.pairs[pos] = new Object[] {entry.getKey(), entry.getValue()};
             ++pos;
         }
+    }
+
+    /**
+     * Equal to.
+     * @param value The value to equal to
+     * @return The condition just created
+     */
+    public static Condition equalTo(final String value) {
+        return new Condition()
+            .withAttributeValueList(new AttributeValue(value))
+            .withComparisonOperator(ComparisonOperator.EQ);
     }
 
     /**
