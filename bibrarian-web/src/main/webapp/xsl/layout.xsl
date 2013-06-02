@@ -160,7 +160,12 @@
         <div class="navbar navbar-static-top">
             <div class="navbar-inner">
                 <div class="container-fluid">
-                    <a class="brand" href="#">B</a>
+                    <a class="brand" title="Back home">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
+                        </xsl:attribute>
+                        <xsl:text>B</xsl:text>
+                    </a>
                     <ul class="nav">
                         <li>
                             <xsl:if test="$section = 'discoveries'">

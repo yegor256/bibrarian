@@ -75,6 +75,7 @@ public class BaseRs extends BaseResource {
     public final Inset insetVersion() {
         return new VersionInset(
             Manifests.read("Bibrarian-Version"),
+            // @checkstyle MultipleStringLiterals (1 line)
             Manifests.read("Bibrarian-Revision"),
             Manifests.read("Bibrarian-Date")
         );
