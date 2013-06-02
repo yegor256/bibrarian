@@ -59,6 +59,21 @@ import lombok.ToString;
 final class DynArtifact implements Artifact {
 
     /**
+     * Column in Dynamo table.
+     */
+    public static final String LABEL_FIELD = "label";
+
+    /**
+     * Column in Dynamo table.
+     */
+    public static final String REFERAT_FIELD = "referat";
+
+    /**
+     * Column in Dynamo table.
+     */
+    public static final String BIBRARIAN = "bibrarian";
+
+    /**
      * Item.
      */
     private final transient Item item;
@@ -76,7 +91,7 @@ final class DynArtifact implements Artifact {
      */
     @Override
     public String label() {
-        return this.item.get("label").getS();
+        return this.item.get(DynArtifact.LABEL_FIELD).getS();
     }
 
     /**
@@ -85,9 +100,15 @@ final class DynArtifact implements Artifact {
     @Override
     public Bibitem bibitem() {
         return new DynBibitem(
-            this.item.frame().table().region().table("bibitems").frame()
-                .where("label", Conditions.equalTo(this.label()))
-                .iterator().next()
+            this.item.frame().table().region()
+                .table("bibitems")
+                .frame()
+                .where(
+                    DynArtifact.LABEL_FIELD,
+                    Conditions.equalTo(this.label())
+            )
+                .iterator()
+                .next()
         );
     }
 
@@ -111,7 +132,7 @@ final class DynArtifact implements Artifact {
      */
     @Override
     public String referat() {
-        return this.item.get("referat").getS();
+        return this.item.get(DynArtifact.REFERAT_FIELD).getS();
     }
 
     /**
@@ -119,7 +140,7 @@ final class DynArtifact implements Artifact {
      */
     @Override
     public void referat(final String text) {
-        this.item.put("referat", new AttributeValue(text));
+        this.item.put(DynArtifact.REFERAT_FIELD, new AttributeValue(text));
     }
 
     /**
@@ -128,9 +149,14 @@ final class DynArtifact implements Artifact {
     @Override
     public Queryable<Discovery> discoveries() {
         return new DynDiscoveries(
-            this.item.frame().table().region().table("discoveries")
-                .frame().where("artifact", Conditions.equalTo(this.label())),
-            URN.create(this.item.get("bibrarian").getS())
+            this.item.frame().table().region()
+                .table("discoveries")
+                .frame()
+                .where(
+                    DynDiscovery.ARTIFACT_FIELD,
+                    Conditions.equalTo(this.label())
+            ),
+            URN.create(this.item.get(DynArtifact.BIBRARIAN).getS())
         );
     }
 

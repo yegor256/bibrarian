@@ -66,8 +66,8 @@ final class DynBibitems extends AbstractQueryable<Bibitem> {
     public boolean add(final Bibitem bibitem) {
         this.frame().table().put(
             new Attributes()
-                .with("label", bibitem.load().label())
-                .with("tex", bibitem.load())
+                .with(DynBibitem.LABEL, bibitem.load().label())
+                .with(DynBibitem.BIBTEX, bibitem.load())
         );
         return true;
     }

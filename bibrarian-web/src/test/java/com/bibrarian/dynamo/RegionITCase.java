@@ -111,10 +111,10 @@ public final class RegionITCase {
                         .withKeyType(KeyType.HASH)
                 )
         );
+        final DescribeTableRequest request = new DescribeTableRequest()
+            .withTableName(RegionITCase.TABLE);
         while (true) {
-            final DescribeTableResult result = aws.describeTable(
-                new DescribeTableRequest().withTableName(RegionITCase.TABLE)
-            );
+            final DescribeTableResult result = aws.describeTable(request);
             if ("ACTIVE".equals(result.getTable().getTableStatus())) {
                 Logger.info(RegionITCase.class, "Dynamo table is ready");
                 break;
@@ -187,8 +187,7 @@ public final class RegionITCase {
         final Credentials creds = new Credentials.Simple(
             RegionITCase.KEY, RegionITCase.SECRET
         );
-        final AmazonDynamoDB aws = creds.aws();
-        return aws;
+        return creds.aws();
     }
 
 }

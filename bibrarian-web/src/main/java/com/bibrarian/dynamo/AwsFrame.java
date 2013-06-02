@@ -94,6 +94,7 @@ final class AwsFrame extends AbstractCollection<Item> implements Frame {
      */
     protected AwsFrame(final Credentials creds, final AwsTable table,
         final String label, final Conditions conds) {
+        super();
         this.credentials = creds;
         this.tbl = table;
         this.name = label;

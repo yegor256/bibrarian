@@ -51,6 +51,16 @@ import lombok.ToString;
 final class DynBibitem implements Bibitem {
 
     /**
+     * Column in Dynamo table.
+     */
+    public static final String LABEL = "label";
+
+    /**
+     * Column in Dynamo table.
+     */
+    public static final String BIBTEX = "bibtex";
+
+    /**
      * Item.
      */
     private final transient Item item;
@@ -68,7 +78,7 @@ final class DynBibitem implements Bibitem {
      */
     @Override
     public Bibtex load() {
-        return new Bibtex(this.item.get("bibtex").getS());
+        return new Bibtex(this.item.get(DynBibitem.BIBTEX).getS());
     }
 
     /**
@@ -76,7 +86,7 @@ final class DynBibitem implements Bibitem {
      */
     @Override
     public void save(final Bibtex tex) {
-        this.item.put("bibtex", new AttributeValue(tex.toString()));
+        this.item.put(DynBibitem.BIBTEX, new AttributeValue(tex.toString()));
     }
 
 }

@@ -74,9 +74,9 @@ final class DynHypothesizes extends AbstractQueryable<Hypothesis> {
     public boolean add(final Hypothesis hypothesis) {
         this.frame().table().put(
             new Attributes()
-                .with("bibrarian", this.owner)
-                .with("label", hypothesis.label())
-                .with("description", hypothesis.description())
+                .with(DynHypothesis.BIBRARIAN, this.owner)
+                .with(DynHypothesis.LABEL_FIELD, hypothesis.label())
+                .with(DynHypothesis.DESCRIPTION_LABEL, hypothesis.description())
         );
         return true;
     }

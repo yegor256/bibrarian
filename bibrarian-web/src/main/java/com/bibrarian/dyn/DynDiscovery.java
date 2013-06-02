@@ -54,6 +54,41 @@ import lombok.ToString;
 final class DynDiscovery implements Discovery {
 
     /**
+     * Column in Dynamo table.
+     */
+    public static final String BIBRARIAN = "bibrarian";
+
+    /**
+     * Column in Dynamo table.
+     */
+    public static final String ARTIFACT_FIELD = "artifact";
+
+    /**
+     * Column in Dynamo table.
+     */
+    public static final String HYPOTHESIS_FIELD = "hypothesis";
+
+    /**
+     * Column in Dynamo table.
+     */
+    public static final String DATE_FIELD = "date";
+
+    /**
+     * Column in Dynamo table.
+     */
+    public static final String QUOTE_FIELD = "quote";
+
+    /**
+     * Column in Dynamo table.
+     */
+    public static final String PAGES_FIELD = "pages";
+
+    /**
+     * Column in Dynamo table.
+     */
+    public static final String RELEVANCE_FIELD = "relevance";
+
+    /**
      * Item.
      */
     private final transient Item item;
@@ -71,7 +106,9 @@ final class DynDiscovery implements Discovery {
      */
     @Override
     public Date date() {
-        return new Date(Long.parseLong(this.item.get("date").getS()));
+        return new Date(
+            Long.parseLong(this.item.get(DynDiscovery.DATE_FIELD).getS())
+        );
     }
 
     /**
@@ -79,10 +116,11 @@ final class DynDiscovery implements Discovery {
      */
     @Override
     public Hypothesis hypothesis() {
-        final String label = this.item.get("hypothesis").getS();
+        final String label = this.item
+            .get(DynDiscovery.HYPOTHESIS_FIELD).getS();
         return new DynHypothesis(
             this.item.frame().table().region().table("hypothesizes").frame()
-                .where("label", Conditions.equalTo(label))
+                .where(DynHypothesis.LABEL_FIELD, Conditions.equalTo(label))
                 .iterator().next()
         );
     }
@@ -92,10 +130,10 @@ final class DynDiscovery implements Discovery {
      */
     @Override
     public Artifact artifact() {
-        final String label = this.item.get("artifact").getS();
+        final String label = this.item.get(DynDiscovery.ARTIFACT_FIELD).getS();
         return new DynArtifact(
             this.item.frame().table().region().table("artifacts").frame()
-                .where("label", Conditions.equalTo(label))
+                .where(DynArtifact.LABEL_FIELD, Conditions.equalTo(label))
                 .iterator().next()
         );
     }
@@ -105,7 +143,7 @@ final class DynDiscovery implements Discovery {
      */
     @Override
     public String quote() {
-        return this.item.get("quote").getS();
+        return this.item.get(DynDiscovery.QUOTE_FIELD).getS();
     }
 
     /**
@@ -113,7 +151,7 @@ final class DynDiscovery implements Discovery {
      */
     @Override
     public void quote(final String text) {
-        this.item.put("quote", new AttributeValue(text));
+        this.item.put(DynDiscovery.QUOTE_FIELD, new AttributeValue(text));
     }
 
     /**
@@ -121,7 +159,7 @@ final class DynDiscovery implements Discovery {
      */
     @Override
     public String pages() {
-        return this.item.get("pages").getS();
+        return this.item.get(DynDiscovery.PAGES_FIELD).getS();
     }
 
     /**
@@ -129,7 +167,7 @@ final class DynDiscovery implements Discovery {
      */
     @Override
     public void pages(final String pages) {
-        this.item.put("pages", new AttributeValue(pages));
+        this.item.put(DynDiscovery.PAGES_FIELD, new AttributeValue(pages));
     }
 
     /**
@@ -137,7 +175,9 @@ final class DynDiscovery implements Discovery {
      */
     @Override
     public double relevance() {
-        return Double.parseDouble(this.item.get("relevance").getS());
+        return Double.parseDouble(
+            this.item.get(DynDiscovery.RELEVANCE_FIELD).getS()
+        );
     }
 
     /**
@@ -146,7 +186,7 @@ final class DynDiscovery implements Discovery {
     @Override
     public void relevance(final double relevance) {
         this.item.put(
-            "relevance",
+            DynDiscovery.RELEVANCE_FIELD,
             new AttributeValue(Double.toString(relevance))
         );
     }

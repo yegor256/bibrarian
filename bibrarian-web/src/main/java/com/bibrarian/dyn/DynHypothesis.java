@@ -51,6 +51,21 @@ import lombok.ToString;
 final class DynHypothesis implements Hypothesis {
 
     /**
+     * Column in Dynamo table.
+     */
+    public static final String BIBRARIAN = "bibrarian";
+
+    /**
+     * Column in Dynamo table.
+     */
+    public static final String LABEL_FIELD = "label";
+
+    /**
+     * Column in Dynamo table.
+     */
+    public static final String DESCRIPTION_LABEL = "description";
+
+    /**
      * Item.
      */
     private final transient Item item;
@@ -70,9 +85,12 @@ final class DynHypothesis implements Hypothesis {
      */
     public static void toItem(final Hypothesis hypothesis,
         final Map<String, AttributeValue> attributes) {
-        attributes.put("label", new AttributeValue(hypothesis.label()));
         attributes.put(
-            "description",
+            DynHypothesis.LABEL_FIELD,
+            new AttributeValue(hypothesis.label())
+        );
+        attributes.put(
+            DynHypothesis.DESCRIPTION_LABEL,
             new AttributeValue(hypothesis.description())
         );
     }
@@ -82,7 +100,7 @@ final class DynHypothesis implements Hypothesis {
      */
     @Override
     public String label() {
-        return this.item.get("label").getS();
+        return this.item.get(DynHypothesis.LABEL_FIELD).getS();
     }
 
     /**
@@ -90,7 +108,7 @@ final class DynHypothesis implements Hypothesis {
      */
     @Override
     public String description() {
-        return this.item.get("description").getS();
+        return this.item.get(DynHypothesis.DESCRIPTION_LABEL).getS();
     }
 
     /**
@@ -98,7 +116,10 @@ final class DynHypothesis implements Hypothesis {
      */
     @Override
     public void description(final String text) {
-        this.item.put("description", new AttributeValue(text));
+        this.item.put(
+            DynHypothesis.DESCRIPTION_LABEL,
+            new AttributeValue(text)
+        );
     }
 
 }

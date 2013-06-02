@@ -60,7 +60,7 @@ final class DynQuery<T> implements Query<T> {
     /**
      * Queryable.
      */
-    private final transient AbstractQueryable<T> queryable;
+    private final transient Queryable<T> queryable;
 
     /**
      * Public ctor.
@@ -68,7 +68,7 @@ final class DynQuery<T> implements Query<T> {
      * @param qry Query to encapsulate
      */
     protected DynQuery(@NotNull final Frame frm,
-        @NotNull final AbstractQueryable<T> qry) {
+        @NotNull final Queryable<T> qry) {
         this.frame = frm;
         this.queryable = qry;
     }
@@ -90,7 +90,7 @@ final class DynQuery<T> implements Query<T> {
      */
     @Override
     public Queryable<T> refine() {
-        return this.queryable.with(this.frame);
+        return ((AbstractQueryable<T>) this.queryable).with(this.frame);
     }
 
 }

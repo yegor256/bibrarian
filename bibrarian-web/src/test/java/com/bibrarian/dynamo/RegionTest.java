@@ -44,6 +44,7 @@ public final class RegionTest {
      */
     @Test
     public void worksWithRegion() throws Exception {
+        // nothing yet...
     }
 
 }

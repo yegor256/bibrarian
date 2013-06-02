@@ -55,6 +55,9 @@ import lombok.ToString;
 @Loggable(Loggable.DEBUG)
 @ToString
 @EqualsAndHashCode
+@SuppressWarnings({
+    "PMD.TooManyMethods", "PMD.AvoidInstantiatingObjectsInLoops"
+})
 public final class Attributes implements Map<String, AttributeValue> {
 
     /**

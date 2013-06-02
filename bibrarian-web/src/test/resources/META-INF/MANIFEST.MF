@@ -1,4 +1,3 @@
-Bibrarian-Test: yes
 Bibrarian-FbId: 1234567
 Bibrarian-FbSecret: 1234567
 Bibrarian-GoogleId: 1234567

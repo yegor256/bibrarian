@@ -75,10 +75,13 @@ final class DynDiscoveries extends AbstractQueryable<Discovery> {
     public boolean add(final Discovery discovery) {
         this.frame().table().put(
             new Attributes()
-                .with("bibrarian", this.owner)
-                .with("artifact", discovery.artifact().label())
-                .with("hypothesis", discovery.hypothesis().label())
-                .with("date", new Date().getTime())
+                .with(DynDiscovery.BIBRARIAN, this.owner)
+                .with(DynDiscovery.ARTIFACT_FIELD, discovery.artifact().label())
+                .with(
+                    DynDiscovery.HYPOTHESIS_FIELD,
+                    discovery.hypothesis().label()
+                )
+                .with(DynDiscovery.DATE_FIELD, new Date().getTime())
         );
         return true;
     }

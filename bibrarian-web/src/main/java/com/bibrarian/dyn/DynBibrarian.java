@@ -81,7 +81,7 @@ final class DynBibrarian implements Bibrarian {
     public Queryable<Artifact> artifacts() {
         return new DynArtifacts(
             this.region.table("artifacts").frame()
-                .where("bibrarian", Conditions.equalTo(this.urn)),
+                .where(DynArtifact.BIBRARIAN, Conditions.equalTo(this.urn)),
             this.urn
         );
     }
@@ -93,7 +93,7 @@ final class DynBibrarian implements Bibrarian {
     public Queryable<Hypothesis> hypothesizes() {
         return new DynHypothesizes(
             this.region.table("hypothesizes").frame()
-                .where("bibrarian", Conditions.equalTo(this.urn)),
+                .where(DynHypothesis.BIBRARIAN, Conditions.equalTo(this.urn)),
             this.urn
         );
     }
@@ -105,7 +105,7 @@ final class DynBibrarian implements Bibrarian {
     public Queryable<Discovery> discoveries() {
         return new DynDiscoveries(
             this.region.table("discoveries").frame()
-                .where("bibrarian", Conditions.equalTo(this.urn)),
+                .where(DynDiscovery.BIBRARIAN, Conditions.equalTo(this.urn)),
             this.urn
         );
     }

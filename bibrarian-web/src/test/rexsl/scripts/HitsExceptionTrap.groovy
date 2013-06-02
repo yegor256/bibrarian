@@ -35,4 +35,4 @@ import javax.ws.rs.core.UriBuilder
 RestTester.start(UriBuilder.fromUri(rexsl.home).path('/trap'))
     .get('hits exception trap')
     .assertStatus(HttpURLConnection.HTTP_OK)
-    .assertXPath('//xhtml:title[.="Internal application error"]')
+    .assertXPath('//xhtml:title[.="oops..."]')

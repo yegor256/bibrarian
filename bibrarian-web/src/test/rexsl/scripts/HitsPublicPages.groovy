@@ -36,7 +36,7 @@ import javax.ws.rs.core.UriBuilder
     '/',
     '/robots.txt',
     '/xsl/layout.xsl',
-    '/xsl/index.xsl',
+    '/xsl/discoveries.xsl',
     '/css/screen.css',
 ].each {
     RestTester.start(UriBuilder.fromUri(rexsl.home).path(it))

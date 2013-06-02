@@ -69,6 +69,7 @@ abstract class AbstractQueryable<T> extends
      * @param frame Frame to encapsulate
      */
     protected AbstractQueryable(@NotNull final Frame frame) {
+        super();
         this.frm = frame;
     }
 

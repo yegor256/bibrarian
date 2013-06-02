@@ -60,6 +60,7 @@ import javax.ws.rs.core.Response;
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Resource.Forwarded
 @Inset.Default({ FlashInset.class, LinksInset.class })
@@ -122,7 +123,7 @@ public class BaseRs extends BaseResource {
         final AuthInset auth = new AuthInset(this, Manifests.read("Bibrarian-SecurityKey"), Manifests.read("Bibrarian-SecuritySalt"))
             .with(new Facebook(this, Manifests.read("Bibrarian-FbId"), Manifests.read("Bibrarian-FbSecret")))
             .with(new Google(this, Manifests.read("Bibrarian-GoogleId"), Manifests.read("Bibrarian-GoogleSecret")));
-        if (Manifests.exists("Bibrarian-Test")) {
+        if (Manifests.read("Bibrarian-DynamoKey").matches("[A-Z0-9]{20}")) {
             auth.with(
                 new Provider.Always(
                     new Identity.Simple(

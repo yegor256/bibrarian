@@ -74,9 +74,9 @@ final class DynArtifacts extends AbstractQueryable<Artifact> {
     public boolean add(final Artifact artifact) {
         this.frame().table().put(
             new Attributes()
-                .with("bibrarian", this.owner)
-                .with("label", artifact.label())
-                .with("referat", artifact.referat())
+                .with(DynArtifact.BIBRARIAN, this.owner)
+                .with(DynArtifact.LABEL_FIELD, artifact.label())
+                .with(DynArtifact.REFERAT_FIELD, artifact.referat())
         );
         return true;
     }

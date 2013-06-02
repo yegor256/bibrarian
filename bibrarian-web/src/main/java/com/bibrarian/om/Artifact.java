@@ -45,6 +45,7 @@ import lombok.ToString;
  * @version $Id$
  */
 @Immutable
+@SuppressWarnings("PMD.TooManyMethods")
 public interface Artifact {
 
     /**

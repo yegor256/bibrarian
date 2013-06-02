@@ -63,6 +63,7 @@ public final class Bibtex {
      * @return Label
      */
     public String label() {
+        assert this.tex != null;
         return "bibtex";
     }
 
@@ -71,7 +72,7 @@ public final class Bibtex {
      */
     @Override
     public String toString() {
-        return "bibtex";
+        return "{bibtex}";
     }
 
 }

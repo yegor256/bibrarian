@@ -55,9 +55,11 @@ import javax.ws.rs.core.Response;
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Path("/")
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class DiscoveriesRs extends BaseRs {
 
     /**

@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.ToString;
 
 /**
@@ -80,7 +81,8 @@ final class AwsIterator implements Iterator<Item> {
     /**
      * Last scan result (mutable).
      */
-    private transient ScanResult result;
+    private final transient AtomicReference<ScanResult> result =
+        new AtomicReference<ScanResult>();
 
     /**
      * Position inside the scan result, last seen, starts with -1 (mutable).
@@ -108,7 +110,7 @@ final class AwsIterator implements Iterator<Item> {
      */
     @Override
     public boolean hasNext() {
-        synchronized (this) {
+        synchronized (this.result) {
             return this.items().size() - this.position > 1;
         }
     }
@@ -118,7 +120,7 @@ final class AwsIterator implements Iterator<Item> {
      */
     @Override
     public Item next() {
-        synchronized (this) {
+        synchronized (this.result) {
             ++this.position;
             final Item item = new AwsItem(
                 this.credentials,
@@ -135,11 +137,11 @@ final class AwsIterator implements Iterator<Item> {
      */
     @Override
     public void remove() {
-        synchronized (this) {
+        synchronized (this.result) {
             final AmazonDynamoDB aws = this.credentials.aws();
             final List<Map<String, AttributeValue>> items =
                 new ArrayList<Map<String, AttributeValue>>(
-                    this.result.getItems()
+                    this.result.get().getItems()
                 );
             final DeleteItemResult res = aws.deleteItem(
                 new DeleteItemRequest().withExpected(
@@ -147,7 +149,7 @@ final class AwsIterator implements Iterator<Item> {
                 )
             );
             aws.shutdown();
-            this.result.setItems(items);
+            this.result.get().setItems(items);
             Logger.debug(
                 this,
                 "#remove(): item #%d removed from DynamoDB, %.2f units",
@@ -165,10 +167,10 @@ final class AwsIterator implements Iterator<Item> {
         if (this.result == null) {
             this.reload();
         }
-        if (this.position >= this.result.getCount()) {
+        if (this.position >= this.result.get().getCount()) {
             this.reload();
         }
-        return this.result.getItems();
+        return this.result.get().getItems();
     }
 
     /**
@@ -182,19 +184,22 @@ final class AwsIterator implements Iterator<Item> {
             .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
             .withScanFilter(this.conditions)
             .withLimit(Tv.HUNDRED);
-        if (this.result != null && this.result.getLastEvaluatedKey() != null) {
-            request.setExclusiveStartKey(this.result.getLastEvaluatedKey());
+        if (this.result.get() != null
+            && this.result.get().getLastEvaluatedKey() != null) {
+            request.setExclusiveStartKey(
+                this.result.get().getLastEvaluatedKey()
+            );
         }
-        this.result = aws.scan(request);
+        this.result.set(aws.scan(request));
         this.position = -1;
         aws.shutdown();
         Logger.debug(
             this,
             "#reload(): loaded %d item(s) from '%s', %.2f units, %d scanned",
-            this.result.getCount(),
+            this.result.get().getCount(),
             this.name,
-            this.result.getConsumedCapacity().getCapacityUnits(),
-            this.result.getScannedCount()
+            this.result.get().getConsumedCapacity().getCapacityUnits(),
+            this.result.get().getScannedCount()
         );
     }
 
