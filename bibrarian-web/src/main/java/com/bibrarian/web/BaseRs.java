@@ -123,7 +123,8 @@ public class BaseRs extends BaseResource {
         final AuthInset auth = new AuthInset(this, Manifests.read("Bibrarian-SecurityKey"), Manifests.read("Bibrarian-SecuritySalt"))
             .with(new Facebook(this, Manifests.read("Bibrarian-FbId"), Manifests.read("Bibrarian-FbSecret")))
             .with(new Google(this, Manifests.read("Bibrarian-GoogleId"), Manifests.read("Bibrarian-GoogleSecret")));
-        if (Manifests.read("Bibrarian-DynamoKey").matches("[A-Z0-9]{20}")) {
+        if (Manifests.read("Bibrarian-DynamoKey").matches("[A-Z0-9]{20}")
+            && "12345".equals(Manifests.read("Bibrarian-Revision"))) {
             auth.with(
                 new Provider.Always(
                     new Identity.Simple(
