@@ -39,6 +39,7 @@ import com.rexsl.page.inset.FlashInset;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
@@ -77,7 +78,7 @@ public final class BibitemsRs extends BaseRs {
      * @param tex Text in BibTeX format
      * @return The JAX-RS response
      */
-    @GET
+    @POST
     @Path("/add")
     public Response add(@QueryParam("tex") @NotNull final String tex) {
         final Bibitem item = new Bibitem.Simple(new Bibtex(tex));

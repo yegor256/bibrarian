@@ -40,6 +40,8 @@
                 <meta name="description" content="LaTeX bibliography management in cloud"/>
                 <meta name="keywords" content="BibTeX, LaTeX, bibliography, library, references, referants"/>
                 <meta name="author" content="www.bibrarian.com"/>
+                <link href="//img.bibrarian.com/bootstrap-readable.min.css" rel="stylesheet" />
+                <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet" />
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">
                         <xsl:text>/css/screen.css?</xsl:text>
@@ -54,107 +56,33 @@
                 </link>
                 <xsl:call-template name="head"/>
                 <script type="text/javascript"><![CDATA[
-                  var _gaq = _gaq || [];
-                  _gaq.push(['_setAccount', 'UA-1963507-26']);
-                  _gaq.push(['_trackPageview']);
-                  (function() {
-                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-                  })();
+                    var _gaq = _gaq || [];
+                    _gaq.push(['_setAccount', 'UA-1963507-26']);
+                    _gaq.push(['_trackPageview']);
+                    (function() {
+                        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                    })();
                 ]]></script>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             </head>
             <body>
                 <xsl:apply-templates select="version"/>
+                <xsl:call-template name="nav"/>
                 <div id="content">
-                    <p>
-                        <a>
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
-                            </xsl:attribute>
-                            <img alt="bibrarian logo" style="width: 120px: height: 35px;">
-                                <xsl:attribute name="src">
-                                    <xsl:text>http://img.bibrarian.com/logo.png?</xsl:text>
-                                    <xsl:value-of select="/page/version/revision"/>
-                                </xsl:attribute>
-                            </img>
-                        </a>
-                    </p>
-                    <xsl:apply-templates select="flash"/>
-                    <xsl:choose>
-                        <xsl:when test="/page/identity">
-                            <xsl:apply-templates select="identity"/>
-                            <p>
-                                <a title="Your discoveries">
-                                    <xsl:attribute name="href">
-                                        <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
-                                    </xsl:attribute>
-                                    <xsl:text>Discoveries</xsl:text>
-                                </a>
-                                <xsl:text> | </xsl:text>
-                                <a title="All artifacts discovered by you">
-                                    <xsl:attribute name="href">
-                                        <xsl:value-of select="/page/links/link[@rel='artifacts']/@href"/>
-                                    </xsl:attribute>
-                                    <xsl:text>Artifacts</xsl:text>
-                                </a>
-                                <xsl:text> | </xsl:text>
-                                <a title="Your hypothesizes">
-                                    <xsl:attribute name="href">
-                                        <xsl:value-of select="/page/links/link[@rel='hypothesizes']/@href"/>
-                                    </xsl:attribute>
-                                    <xsl:text>Hypothesizes</xsl:text>
-                                </a>
-                                <xsl:text> | </xsl:text>
-                                <a title="All bibitems">
-                                    <xsl:attribute name="href">
-                                        <xsl:value-of select="/page/links/link[@rel='bibitems']/@href"/>
-                                    </xsl:attribute>
-                                    <xsl:text>Bibitems</xsl:text>
-                                </a>
-                            </p>
-                            <form method="get">
-                                <xsl:attribute name="action">
-                                    <xsl:value-of select="/page/links/link[@rel='self']/@href"/>
-                                </xsl:attribute>
-                                <p>
-                                    <input name="query" style="width: 250pt;">
-                                        <xsl:attribute name="value">
-                                            <xsl:value-of select="/page/query"/>
-                                        </xsl:attribute>
-                                    </input>
-                                </p>
-                            </form>
-                            <xsl:call-template name="content"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:call-template name="login"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                    <p id="bottom">
-                        <xsl:text>bibrarian.com is an open source Java project, hosted by </xsl:text>
-                        <a href="https://github.com/yegor256/bibrarian">
-                            <xsl:text>Github</xsl:text>
-                        </a>
-                        <xsl:text> and </xsl:text>
-                        <a href="https://www.cloudbees.com">
-                            <xsl:text>CloudBees</xsl:text>
-                        </a>
-                        <xsl:text>. The service is absolutely free of charge, since it is sponsored by </xsl:text>
-                        <a href="http://www.tpc2.com/">
-                            <xsl:text>tpc2.com</xsl:text>
-                        </a>
-                        <xsl:text>. See also terms of use, privacy policy and license agreement at </xsl:text>
-                        <a href="/misc/LICENSE.txt">
-                            <xsl:text>LICENSE.txt</xsl:text>
-                        </a>
-                        <xsl:text>.</xsl:text>
-                        <xsl:text> This website is using </xsl:text>
-                        <a href="http://www.rexsl.com/">
-                            <xsl:text>ReXSL</xsl:text>
-                        </a>
-                        <xsl:text>, Java RESTful development framework.</xsl:text>
-                    </p>
+                    <div class="container-fluid">
+                        <xsl:apply-templates select="flash"/>
+                        <xsl:choose>
+                            <xsl:when test="/page/identity">
+                                <xsl:call-template name="content"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="login"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                        <xsl:call-template name="bottom"/>
+                    </div>
                 </div>
             </body>
         </html>
@@ -181,7 +109,7 @@
                     <xsl:text>https://github.com/yegor256/bibrarian/commit/</xsl:text>
                     <xsl:value-of select="revision"/>
                 </xsl:attribute>
-                <i class="icon-github"></i>
+                <i class="icon-github"> </i>
             </a>
             <xsl:text> </xsl:text>
             <xsl:value-of select="revision"/>
@@ -199,41 +127,6 @@
             <xsl:value-of select="message"/>
         </div>
     </xsl:template>
-    <xsl:template match="identity">
-        <p>
-            <img class="photo-icon">
-                <xsl:attribute name="src">
-                    <xsl:value-of select="photo"/>
-                </xsl:attribute>
-                <xsl:attribute name="alt">
-                    <xsl:value-of select="name"/>
-                </xsl:attribute>
-            </img>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="name"/>
-            <xsl:text> </xsl:text>
-            <i>
-                <xsl:attribute name="class">
-                    <xsl:text>icon-</xsl:text>
-                    <xsl:choose>
-                        <xsl:when test="starts-with(urn, 'urn:facebook:')">
-                            <xsl:text>facebook-sign</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="starts-with(urn, 'urn:google:')">
-                            <xsl:text>google-plus-sign</xsl:text>
-                        </xsl:when>
-                    </xsl:choose>
-                </xsl:attribute>
-            </i>
-            <xsl:text> </xsl:text>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='auth-logout']/@href"/>
-                </xsl:attribute>
-                <xsl:text>logout</xsl:text>
-            </a>
-        </p>
-    </xsl:template>
     <xsl:template name="login">
         <p>
             <xsl:text>To start, login using one of your accounts at: </xsl:text>
@@ -241,15 +134,148 @@
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
                 </xsl:attribute>
-                <i class="icon-facebook-sign icon-2x"></i>
+                <i class="icon-facebook-sign icon-2x"> </i>
             </a>
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
                 </xsl:attribute>
-                <i class="icon-google-plus-sign icon-2x"></i>
+                <i class="icon-google-plus-sign icon-2x"> </i>
             </a>
+        </p>
+    </xsl:template>
+    <xsl:template name="nav">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="brand" href="#">B</a>
+                    <ul class="nav">
+                        <li>
+                            <xsl:if test="$section = 'discoveries'">
+                                <xsl:attribute name="class">active</xsl:attribute>
+                            </xsl:if>
+                            <a title="Your discoveries">
+                                <xsl:attribute name="href">
+                                    <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
+                                </xsl:attribute>
+                                <xsl:text>Discoveries</xsl:text>
+                            </a>
+                        </li>
+                        <li>
+                            <xsl:if test="$section = 'artifacts'">
+                                <xsl:attribute name="class">active</xsl:attribute>
+                            </xsl:if>
+                            <a title="All artifacts discovered by you">
+                                <xsl:attribute name="href">
+                                    <xsl:value-of select="/page/links/link[@rel='artifacts']/@href"/>
+                                </xsl:attribute>
+                                <xsl:text>Artifacts</xsl:text>
+                            </a>
+                        </li>
+                        <li>
+                            <xsl:if test="$section = 'hypothesizes'">
+                                <xsl:attribute name="class">active</xsl:attribute>
+                            </xsl:if>
+                            <a title="Your hypothesizes">
+                                <xsl:attribute name="href">
+                                    <xsl:value-of select="/page/links/link[@rel='hypothesizes']/@href"/>
+                                </xsl:attribute>
+                                <xsl:text>Hypothesizes</xsl:text>
+                            </a>
+                        </li>
+                        <li>
+                            <xsl:if test="$section = 'bibitems'">
+                                <xsl:attribute name="class">active</xsl:attribute>
+                            </xsl:if>
+                            <a title="All bibitems">
+                                <xsl:attribute name="href">
+                                    <xsl:value-of select="/page/links/link[@rel='bibitems']/@href"/>
+                                </xsl:attribute>
+                                <xsl:text>Bibitems</xsl:text>
+                            </a>
+                        </li>
+                    </ul>
+                    <xsl:apply-templates select="identity"/>
+                </div>
+            </div>
+        </div>
+    </xsl:template>
+    <xsl:template match="identity">
+        <ul class="nav pull-right">
+            <form method="get" class="navbar-search">
+                <xsl:attribute name="action">
+                    <xsl:value-of select="/page/links/link[@rel='self']/@href"/>
+                </xsl:attribute>
+                <li>
+                    <input type="text" class="search-query" name="query" placeholder="Search...">
+                        <xsl:attribute name="value">
+                            <xsl:value-of select="/page/query"/>
+                        </xsl:attribute>
+                    </input>
+                </li>
+            </form>
+            <li class="navbar-text">
+                <img style="width: 1.5em; height: 1.5em; margin: 0 1em;">
+                    <xsl:attribute name="src">
+                        <xsl:value-of select="photo"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="alt">
+                        <xsl:value-of select="name"/>
+                    </xsl:attribute>
+                </img>
+            </li>
+            <li class="navbar-text">
+                <i>
+                    <xsl:attribute name="class">
+                        <xsl:text>icon-</xsl:text>
+                        <xsl:choose>
+                            <xsl:when test="starts-with(urn, 'urn:facebook:')">
+                                <xsl:text>facebook-sign</xsl:text>
+                            </xsl:when>
+                            <xsl:when test="starts-with(urn, 'urn:google:')">
+                                <xsl:text>google-plus-sign</xsl:text>
+                            </xsl:when>
+                        </xsl:choose>
+                    </xsl:attribute>
+                    <xsl:text> </xsl:text>
+                </i>
+                <xsl:value-of select="name"/>
+            </li>
+            <li>
+                <a title="log out">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="/page/links/link[@rel='auth-logout']/@href"/>
+                    </xsl:attribute>
+                    <i class="icon-signout"> </i>
+                </a>
+            </li>
+        </ul>
+    </xsl:template>
+    <xsl:template name="bottom">
+        <p id="bottom">
+            <xsl:text>bibrarian.com is an open source Java project, hosted by </xsl:text>
+            <a href="https://github.com/yegor256/bibrarian">
+                <xsl:text>Github</xsl:text>
+            </a>
+            <xsl:text> and </xsl:text>
+            <a href="https://www.cloudbees.com">
+                <xsl:text>CloudBees</xsl:text>
+            </a>
+            <xsl:text>. The service is absolutely free of charge, since it is sponsored by </xsl:text>
+            <a href="http://www.tpc2.com/">
+                <xsl:text>tpc2.com</xsl:text>
+            </a>
+            <xsl:text>. See also terms of use, privacy policy and license agreement at </xsl:text>
+            <a href="/misc/LICENSE.txt">
+                <xsl:text>LICENSE.txt</xsl:text>
+            </a>
+            <xsl:text>.</xsl:text>
+            <xsl:text> This website is using </xsl:text>
+            <a href="http://www.rexsl.com/">
+                <xsl:text>ReXSL</xsl:text>
+            </a>
+            <xsl:text>, Java RESTful development framework.</xsl:text>
         </p>
     </xsl:template>
 </xsl:stylesheet>

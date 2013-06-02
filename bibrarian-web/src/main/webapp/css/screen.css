@@ -28,120 +28,33 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import url('http://netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css');
-
-@font-face {
-    font-family: 'Quadon-Regular';
-    src: url('http://img.bibrarian.com/fonts/quadon-regular.eot');
-    src: url('http://img.bibrarian.com/fonts/quadon-regular.eot?#iefix') format('embedded-opentype');
-    src: url('http://img.bibrarian.com/fonts/quadon-regular.woff') format('woff');
-    src: url('http://img.bibrarian.com/fonts/quadon-regular.ttf') format('truetype');
-}
-
-/* all elements */
-a,
-img,
-body,
-input,
-h1,
-h2,
-h3,
-textarea {
-    font-family: 'Quadon-Regular', Verdana, Arial, Helvetica, Sans-Serif;
-    font-size: 1em;
-    font-variant: normal;
-    font-stretch: normal;
-    font-weight: normal;
-    color: black;
-    padding: 0;
-    margin: 0;
-    text-decoration: none;
-}
-
-body {
-    padding: 2em;
-}
-
-/* any link */
-a {
-    color: #2276A4;
-}
-
-    /* any link with a mouse over it */
-    a:hover {
-        text-decoration: underline;
-    }
-    a.button {
-        color: inherit;
-    }
-    a.button:hover {
-        text-decoration: none;
-    }
-
-/* any paragraph */
-p {
-    margin-top: .5em;
-    margin-bottom: .5em;
-}
-
-/* headers */
-h1 {
-    color: #2276A4;
-    font-size: 170%;
-    margin: 1.5em 0 1em 0;
-}
-
-/* fixed font */
-.tt,
-.fixed,
-pre {
-    font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
-    background-color: #f3f3f1;
-}
-
-/* inline fixed text */
-.tt {
-    padding-left: .4em;
-    padding-right: .4em;
-}
-
-/* fixed font blocks */
-pre {
-    padding: 1em;
-}
-
-label {
-    margin-top: .2em;
-    margin-bottom: .2em;
-    display: block;
-}
-
-/* any submit button */
-input[type='submit'] {
-    display: block;
-    margin-top: .5em;
-}
-
-#content {
-    padding: 2em;
-}
-
 /* top flash message */
 #flash {
     padding: .4em .8em;
 }
-
     #flash.INFO {
         color: green;
         background-color: #dfd;
         border: 1px solid green;
     }
-
     #flash.WARNING {
         color: red;
         background-color: #fdd;
         border: 1px solid red;
     }
+
+#content {
+    margin-top: 2em;
+}
+
+#bottom {
+    margin-top: 5em;
+    padding-top: .5em;
+    font-size: 90%;
+    width: 500px;
+    line-height: 1.2em;
+    border-top: 1px solid gray;
+}
 
 /* bottom right label about deployed version */
 #version {
@@ -149,20 +62,7 @@ input[type='submit'] {
     position: fixed;
     right: 0;
     bottom: 0;
-    padding: .4em .8em;
+    padding: .2em .8em;
     background-color: #e4e5e3;
     color: gray;
-}
-
-#bottom {
-    border-top: 1px solid #ccc;
-    margin-top: 2em;
-    padding-top: 1em;
-    font-size: 85%;
-}
-
-/* photo of a logged in user */
-img.photo-icon {
-    width: 2em;
-    height: 2em;
 }

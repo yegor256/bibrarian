@@ -30,6 +30,7 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:variable name="section">hypothesizes</xsl:variable>
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
@@ -37,18 +38,22 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h1><xsl:text>New Hypothesis</xsl:text></h1>
         <form method="post">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
             </xsl:attribute>
-            <p>
-                <label for="label"><xsl:text>label: </xsl:text></label>
-                <input name="label" size="4"/>
-                <label for="description"><xsl:text>desc: </xsl:text></label>
-                <input name="description" size="50"/>
-                <input type="submit"/>
-            </p>
+            <fieldset>
+                <legend>New Hypothesis</legend>
+                <label for="label"><xsl:text>Unique name</xsl:text></label>
+                <input type="text" name="label" placeholder="e.g., H1" class="input-small"/>
+                <label for="description"><xsl:text>Short description</xsl:text></label>
+                <input type="text" name="description" class="input-xlarge"/>
+                <label />
+                <button type="submit" class="btn">
+                    <i class="icon-circle-arrow-right icon-large"></i>
+                    <xsl:text> Save</xsl:text>
+                </button>
+            </fieldset>
         </form>
         <h1><xsl:text>Hypothesises</xsl:text></h1>
         <xsl:apply-templates select="hypothesizes/hypothesis"/>

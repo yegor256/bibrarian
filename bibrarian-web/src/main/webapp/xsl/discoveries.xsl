@@ -30,6 +30,7 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:variable name="section">discoveries</xsl:variable>
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
@@ -37,22 +38,26 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h1><xsl:text>New Discovery</xsl:text></h1>
         <form method="post">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
             </xsl:attribute>
-            <p>
-                <label for="label"><xsl:text>hypothesis: </xsl:text></label>
-                <input name="label" size="4"/>
-                <label for="artifact"><xsl:text>artifact: </xsl:text></label>
-                <input name="artifact" size="8"/>
-                <label for="quote"><xsl:text>quote: </xsl:text></label>
-                <textarea name="quote" style="width: 350pt; height: 50pt;"></textarea>
-                <label for="pages"><xsl:text>pages: </xsl:text></label>
-                <input name="pages" size="7"/>
-                <input type="submit"/>
-            </p>
+            <fieldset>
+                <legend>New Discovery</legend>
+                <label for="label"><xsl:text>Hypothesis</xsl:text></label>
+                <input type="text" name="label" class="input-small"/>
+                <label for="artifact"><xsl:text>Artifact</xsl:text></label>
+                <input type="text" name="artifact" class="input-small"/>
+                <label for="quote"><xsl:text>Quote</xsl:text></label>
+                <textarea name="quote" rows="5"></textarea>
+                <label for="pages"><xsl:text>Pages</xsl:text></label>
+                <input type="text" name="pages" class="input-small"/>
+                <label/>
+                <button type="submit" class="btn">
+                    <i class="icon-circle-arrow-right icon-large"></i>
+                    <xsl:text> Save</xsl:text>
+                </button>
+            </fieldset>
         </form>
         <h1><xsl:text>Previous Discoveries</xsl:text></h1>
         <xsl:apply-templates select="discoveries/discovery"/>

@@ -30,6 +30,7 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:variable name="section">artifacts</xsl:variable>
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
@@ -40,16 +41,20 @@
         <xsl:apply-templates select="/page/artifact"/>
     </xsl:template>
     <xsl:template match="artifact">
-        <h1><xsl:value-of select="bibitem/label"/></h1>
         <form method="post">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='save']/@href"/>
             </xsl:attribute>
-            <p>
-                <label for="referat"><xsl:text>referat: </xsl:text></label>
-                <textarea name="referat" style="width: 350pt; height: 50pt;"><xsl:value-of select="referat"/></textarea>
-                <input type="submit" value="Save"/>
-            </p>
+            <fieldset>
+                <legend><xsl:value-of select="bibitem/label"/></legend>
+                <label for="referat"><xsl:text>Referat</xsl:text></label>
+                <textarea name="referat" rows="6"><xsl:value-of select="referat"/></textarea>
+                <label/>
+                <button type="submit" class="btn">
+                    <i class="icon-circle-arrow-right icon-large"></i>
+                    <xsl:text> Save</xsl:text>
+                </button>
+            </fieldset>
         </form>
         <h1><xsl:text>Discoveries</xsl:text></h1>
         <ul>

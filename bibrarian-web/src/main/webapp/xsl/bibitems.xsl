@@ -30,6 +30,7 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:variable name="section">bibitems</xsl:variable>
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
@@ -37,18 +38,22 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
-        <h1><xsl:text>New Bibitem</xsl:text></h1>
         <form method="post">
             <xsl:attribute name="action">
                 <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
             </xsl:attribute>
-            <p>
-                <label for="bibitem"><xsl:text>bibitem: </xsl:text></label>
-                <textarea name="bibitem" style="width: 350pt; height: 100pt;"></textarea>
-                <input type="submit" value="Add New Bibitem"/>
-            </p>
+            <fieldset>
+                <legend>New Bibitem</legend>
+                <label for="bibitem"><xsl:text>BibTeX item</xsl:text></label>
+                <textarea name="bibitem" rows="6"></textarea>
+                <label/>
+                <button type="submit" class="btn">
+                    <i class="icon-circle-arrow-right icon-large"></i>
+                    <xsl:text> Save</xsl:text>
+                </button>
+            </fieldset>
         </form>
-        <h1><xsl:text>All Bibitems</xsl:text></h1>
+        <h1><xsl:text>All BibTeX Items</xsl:text></h1>
         <xsl:apply-templates select="bibitems/bibitem"/>
     </xsl:template>
     <xsl:template match="bibitem">

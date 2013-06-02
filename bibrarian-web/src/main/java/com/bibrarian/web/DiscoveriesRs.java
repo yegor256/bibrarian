@@ -42,6 +42,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
@@ -131,7 +132,7 @@ public final class DiscoveriesRs extends BaseRs {
      * @return The JAX-RS response
      * @checkstyle ParameterNumber (8 lines)
      */
-    @GET
+    @POST
     @Path("/add")
     public Response add(@QueryParam(DiscoveriesRs.QUERY_LABEL)
         @NotNull final String label,
