@@ -50,6 +50,7 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.AfterClass;
 import org.junit.Assume;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -88,9 +89,20 @@ public final class RegionITCase {
      * Before the test.
      * @throws Exception If fails
      */
+    @Before
+    public void skip() throws Exception {
+        Assume.assumeThat(RegionITCase.KEY, Matchers.notNullValue());
+    }
+
+    /**
+     * Before the test.
+     * @throws Exception If fails
+     */
     @BeforeClass
     public static void before() throws Exception {
-        Assume.assumeThat(RegionITCase.KEY, Matchers.notNullValue());
+        if (RegionITCase.KEY == null) {
+            return;
+        }
         final AmazonDynamoDB aws = RegionITCase.aws();
         aws.createTable(
             new CreateTableRequest()
@@ -133,7 +145,9 @@ public final class RegionITCase {
      */
     @AfterClass
     public static void after() {
-        Assume.assumeThat(RegionITCase.KEY, Matchers.notNullValue());
+        if (RegionITCase.KEY == null) {
+            return;
+        }
         final AmazonDynamoDB aws = RegionITCase.aws();
         aws.deleteTable(
             new DeleteTableRequest()
