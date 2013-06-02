@@ -45,7 +45,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Frame through AWS SDK.
+ * Single item/row in a Dynamo table.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$

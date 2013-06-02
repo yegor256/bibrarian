@@ -1,3 +1,4 @@
+Bibrarian-Test: yes
 Bibrarian-FbId: 1234567
 Bibrarian-FbSecret: 1234567
 Bibrarian-GoogleId: 1234567
@@ -7,3 +8,6 @@ Bibrarian-SecuritySalt: key
 Bibrarian-Version: 1.0-SNAPSHOT
 Bibrarian-Revision: 12345
 Bibrarian-Date: 9-Dec-2012
+Bibrarian-DynamoKey: ${failsafe.dynamo.key}
+Bibrarian-DynamoSecret: ${failsafe.dynamo.secret}
+Bibrarian-DynamoPrefix: ${failsafe.dynamo.prefix}

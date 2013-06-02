@@ -28,6 +28,8 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+@import url('http://netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css');
+
 @font-face {
     font-family: 'Quadon-Regular';
     src: url('http://img.bibrarian.com/fonts/quadon-regular.eot');
@@ -46,7 +48,7 @@ h2,
 h3,
 textarea {
     font-family: 'Quadon-Regular', Verdana, Arial, Helvetica, Sans-Serif;
-    font-size: 15px;
+    font-size: 1em;
     font-variant: normal;
     font-stretch: normal;
     font-weight: normal;
@@ -57,7 +59,7 @@ textarea {
 }
 
 body {
-    padding: 20pt;
+    padding: 2em;
 }
 
 /* any link */
@@ -78,15 +80,15 @@ a {
 
 /* any paragraph */
 p {
-    margin-top: 5pt;
-    margin-bottom: 5pt;
+    margin-top: .5em;
+    margin-bottom: .5em;
 }
 
 /* headers */
 h1 {
     color: #2276A4;
     font-size: 170%;
-    margin: 15pt 0 10pt 0;
+    margin: 1.5em 0 1em 0;
 }
 
 /* fixed font */
@@ -99,18 +101,18 @@ pre {
 
 /* inline fixed text */
 .tt {
-    padding-left: 4pt;
-    padding-right: 4pt;
+    padding-left: .4em;
+    padding-right: .4em;
 }
 
 /* fixed font blocks */
 pre {
-    padding: 10pt;
+    padding: 1em;
 }
 
 label {
-    margin-top: 2pt;
-    margin-bottom: 2pt;
+    margin-top: .2em;
+    margin-bottom: .2em;
     display: block;
 }
 
@@ -121,12 +123,12 @@ input[type='submit'] {
 }
 
 #content {
-    padding: 20pt;
+    padding: 2em;
 }
 
 /* top flash message */
 #flash {
-    padding: 4pt 8pt;
+    padding: .4em .8em;
 }
 
     #flash.INFO {
@@ -147,7 +149,7 @@ input[type='submit'] {
     position: fixed;
     right: 0;
     bottom: 0;
-    padding: 4pt 8pt;
+    padding: .4em .8em;
     background-color: #e4e5e3;
     color: gray;
 }
@@ -159,20 +161,8 @@ input[type='submit'] {
     font-size: 85%;
 }
 
-/* authentication icon */
-img.auth-icon {
-    margin-right: 5pt;
-    width: 32pt;
-    height: 32pt;
-}
-/* login icon */
-img.login-icon {
-    margin-left: 0.5em;
-    width: 11pt;
-    height: 11pt;
-}
 /* photo of a logged in user */
 img.photo-icon {
-    width: 20pt;
-    height: 20pt;
+    width: 2em;
+    height: 2em;
 }

@@ -30,7 +30,7 @@
 package com.bibrarian.dyn;
 
 import com.bibrarian.dynamo.Conditions;
-import com.bibrarian.dynamo.Item;
+import com.bibrarian.dynamo.Region;
 import com.bibrarian.om.Artifact;
 import com.bibrarian.om.Bibrarian;
 import com.bibrarian.om.Discovery;
@@ -38,7 +38,7 @@ import com.bibrarian.om.Hypothesis;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import javax.validation.constraints.NotNull;
+import com.jcabi.urn.URN;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -51,20 +51,27 @@ import lombok.ToString;
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(of = "item")
+@EqualsAndHashCode(of = { "region", "urn" })
 final class DynBibrarian implements Bibrarian {
 
     /**
-     * Item.
+     * Region.
      */
-    private final transient Item item;
+    private final transient Region region;
+
+    /**
+     * URN of it.
+     */
+    private final transient URN urn;
 
     /**
      * Public ctor.
-     * @param itm Item to encapsulate
+     * @param reg Region
+     * @param name URN of him
      */
-    protected DynBibrarian(@NotNull final Item itm) {
-        this.item = itm;
+    protected DynBibrarian(final Region reg, final URN name) {
+        this.region = reg;
+        this.urn = name;
     }
 
     /**
@@ -73,9 +80,9 @@ final class DynBibrarian implements Bibrarian {
     @Override
     public Queryable<Artifact> artifacts() {
         return new DynArtifacts(
-            this.item.frame().table().region().table("artifacts")
-                .frame().where("bibrarian", Conditions.equalTo(this.name())),
-            this.name()
+            this.region.table("artifacts").frame()
+                .where("bibrarian", Conditions.equalTo(this.urn)),
+            this.urn
         );
     }
 
@@ -85,9 +92,9 @@ final class DynBibrarian implements Bibrarian {
     @Override
     public Queryable<Hypothesis> hypothesizes() {
         return new DynHypothesizes(
-            this.item.frame().table().region().table("hypothesizes")
-                .frame().where("bibrarian", Conditions.equalTo(this.name())),
-            this.name()
+            this.region.table("hypothesizes").frame()
+                .where("bibrarian", Conditions.equalTo(this.urn)),
+            this.urn
         );
     }
 
@@ -97,17 +104,10 @@ final class DynBibrarian implements Bibrarian {
     @Override
     public Queryable<Discovery> discoveries() {
         return new DynDiscoveries(
-            this.item.frame().table().region().table("discoveries")
-                .frame().where("bibrarian", Conditions.equalTo(this.name())),
-            this.name()
+            this.region.table("discoveries").frame()
+                .where("bibrarian", Conditions.equalTo(this.urn)),
+            this.urn
         );
     }
 
-    /**
-     * His name.
-     * @return Name
-     */
-    private String name() {
-        return this.item.get("name").getS();
-    }
 }

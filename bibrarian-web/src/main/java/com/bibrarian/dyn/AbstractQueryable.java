@@ -32,7 +32,6 @@ package com.bibrarian.dyn;
 import com.bibrarian.dynamo.Frame;
 import com.bibrarian.dynamo.Item;
 import com.bibrarian.om.Artifact;
-import com.bibrarian.om.Bibrarian;
 import com.bibrarian.om.Discovery;
 import com.bibrarian.om.Hypothesis;
 import com.bibrarian.om.Query;
@@ -137,9 +136,7 @@ abstract class AbstractQueryable<T> extends
             private static final long serialVersionUID = 1L;
         } .getRawType();
         Object object;
-        if (type.equals(Bibrarian.class)) {
-            object = new DynBibrarian(item);
-        } else if (type.equals(Artifact.class)) {
+        if (type.equals(Artifact.class)) {
             object = new DynArtifact(item);
         } else if (type.equals(Discovery.class)) {
             object = new DynDiscovery(item);

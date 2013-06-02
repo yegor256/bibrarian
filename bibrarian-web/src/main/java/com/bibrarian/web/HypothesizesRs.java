@@ -69,7 +69,7 @@ public final class HypothesizesRs extends BaseRs {
             .build(EmptyPage.class)
             .init(this)
             .append(this.jaxb(this.bibrarian().hypothesizes()))
-            .append(new Link("add", "./add"))
+            .link(new Link("add", "./add"))
             .render()
             .build();
     }

@@ -39,6 +39,7 @@ import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,8 @@ import lombok.ToString;
 
 /**
  * Iterator of items in AWS SDK.
+ *
+ * <p>The class is mutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -62,7 +65,7 @@ final class AwsIterator implements Iterator<Item> {
     /**
      * Conditions.
      */
-    private transient Conditions conditions;
+    private final transient Conditions conditions;
 
     /**
      * Frame.
@@ -75,12 +78,12 @@ final class AwsIterator implements Iterator<Item> {
     private final transient String name;
 
     /**
-     * Last scan result.
+     * Last scan result (mutable).
      */
     private transient ScanResult result;
 
     /**
-     * Position inside the scan result.
+     * Position inside the scan result, last seen, starts with -1 (mutable).
      */
     private transient int position;
 
@@ -105,7 +108,9 @@ final class AwsIterator implements Iterator<Item> {
      */
     @Override
     public boolean hasNext() {
-        return this.position < this.items().size();
+        synchronized (this) {
+            return this.items().size() - this.position > 1;
+        }
     }
 
     /**
@@ -113,14 +118,16 @@ final class AwsIterator implements Iterator<Item> {
      */
     @Override
     public Item next() {
-        final Item item = new AwsItem(
-            this.credentials,
-            this.frame,
-            this.name,
-            new Attributes(this.items().get(this.position))
-        );
-        ++this.position;
-        return item;
+        synchronized (this) {
+            ++this.position;
+            final Item item = new AwsItem(
+                this.credentials,
+                this.frame,
+                this.name,
+                new Attributes(this.items().get(this.position))
+            );
+            return item;
+        }
     }
 
     /**
@@ -128,21 +135,26 @@ final class AwsIterator implements Iterator<Item> {
      */
     @Override
     public void remove() {
-        final AmazonDynamoDB aws = this.credentials.aws();
-        final DeleteItemResult res = aws.deleteItem(
-            new DeleteItemRequest().withExpected(
-                new Attributes(
-                    this.result.getItems().get(this.position - 1)
-                ).asKeys()
-            )
-        );
-        aws.shutdown();
-        Logger.debug(
-            this,
-            "#remove(): item #%d removed from DynamoDB, %.2f units",
-            this.position,
-            res.getConsumedCapacity().getCapacityUnits()
-        );
+        synchronized (this) {
+            final AmazonDynamoDB aws = this.credentials.aws();
+            final List<Map<String, AttributeValue>> items =
+                new ArrayList<Map<String, AttributeValue>>(
+                    this.result.getItems()
+                );
+            final DeleteItemResult res = aws.deleteItem(
+                new DeleteItemRequest().withExpected(
+                    new Attributes(items.remove(this.position)).asKeys()
+                )
+            );
+            aws.shutdown();
+            this.result.setItems(items);
+            Logger.debug(
+                this,
+                "#remove(): item #%d removed from DynamoDB, %.2f units",
+                this.position,
+                res.getConsumedCapacity().getCapacityUnits()
+            );
+        }
     }
 
     /**
@@ -170,19 +182,19 @@ final class AwsIterator implements Iterator<Item> {
             .withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
             .withScanFilter(this.conditions)
             .withLimit(Tv.HUNDRED);
-        if (this.result != null) {
-            request.setExclusiveStartKey(
-                this.result.getItems().get(this.result.getItems().size() - 1)
-            );
+        if (this.result != null && this.result.getLastEvaluatedKey() != null) {
+            request.setExclusiveStartKey(this.result.getLastEvaluatedKey());
         }
         this.result = aws.scan(request);
-        this.position = 0;
+        this.position = -1;
         aws.shutdown();
         Logger.debug(
             this,
-            "#reload(): loaded %d items from DynamoDB, %.2f units",
-            this.result.getItems().size(),
-            this.result.getConsumedCapacity().getCapacityUnits()
+            "#reload(): loaded %d item(s) from '%s', %.2f units, %d scanned",
+            this.result.getCount(),
+            this.name,
+            this.result.getConsumedCapacity().getCapacityUnits(),
+            this.result.getScannedCount()
         );
     }
 

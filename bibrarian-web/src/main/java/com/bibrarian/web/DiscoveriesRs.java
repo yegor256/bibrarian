@@ -34,7 +34,9 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rexsl.page.auth.Identity;
 import com.rexsl.page.inset.FlashInset;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Level;
@@ -77,8 +79,8 @@ public final class DiscoveriesRs extends BaseRs {
             .stylesheet("/xsl/discoveries.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(this.jaxb(this.bibrarian().discoveries()))
-            .append(new Link("add", "./add"))
+            .append(this.jaxb(this.discoveries()))
+            .link(new Link("add", "./add"))
             .render()
             .build();
     }
@@ -160,6 +162,20 @@ public final class DiscoveriesRs extends BaseRs {
             "discovery was added successfully",
             Level.INFO
         );
+    }
+
+    /**
+     * Fetch all discoveries.
+     * @return List of them
+     */
+    private Collection<Discovery> discoveries() {
+        Collection<Discovery> discoveries;
+        if (this.auth().identity().equals(Identity.ANONYMOUS)) {
+            discoveries = new ArrayList<Discovery>(0);
+        } else {
+            discoveries = this.bibrarian().discoveries();
+        }
+        return discoveries;
     }
 
     /**

@@ -33,6 +33,7 @@ import com.bibrarian.om.Bibrarian;
 import com.bibrarian.om.Bibrarians;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
+import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
@@ -42,6 +43,7 @@ import com.rexsl.page.auth.AuthInset;
 import com.rexsl.page.auth.Facebook;
 import com.rexsl.page.auth.Google;
 import com.rexsl.page.auth.Identity;
+import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
 import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
@@ -117,9 +119,21 @@ public class BaseRs extends BaseResource {
     @Inset.Runtime
     public final AuthInset auth() {
         // @checkstyle LineLength (3 lines)
-        return new AuthInset(this, Manifests.read("Bibrarian-SecurityKey"), Manifests.read("Bibrarian-SecuritySalt"))
+        final AuthInset auth = new AuthInset(this, Manifests.read("Bibrarian-SecurityKey"), Manifests.read("Bibrarian-SecuritySalt"))
             .with(new Facebook(this, Manifests.read("Bibrarian-FbId"), Manifests.read("Bibrarian-FbSecret")))
             .with(new Google(this, Manifests.read("Bibrarian-GoogleId"), Manifests.read("Bibrarian-GoogleSecret")));
+        if (Manifests.exists("Bibrarian-Test")) {
+            auth.with(
+                new Provider.Always(
+                    new Identity.Simple(
+                        URN.create("urn:facebook:1"),
+                        "localhost",
+                        URI.create("http://img.bibrarian.com/localhost.png")
+                    )
+                )
+            );
+        }
+        return auth;
     }
 
     /**

@@ -67,7 +67,7 @@ public final class BibitemsRs extends BaseRs {
             .build(EmptyPage.class)
             .init(this)
             .append(this.jaxb(this.bibrarians().bibitems()))
-            .append(new Link("add", "./add"))
+            .link(new Link("add", "./add"))
             .render()
             .build();
     }

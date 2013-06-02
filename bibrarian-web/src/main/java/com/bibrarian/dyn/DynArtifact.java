@@ -39,6 +39,7 @@ import com.bibrarian.om.Discovery;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
 import java.net.URI;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -129,7 +130,7 @@ final class DynArtifact implements Artifact {
         return new DynDiscoveries(
             this.item.frame().table().region().table("discoveries")
                 .frame().where("artifact", Conditions.equalTo(this.label())),
-            this.item.get("bibrarian").getS()
+            URN.create(this.item.get("bibrarian").getS())
         );
     }
 

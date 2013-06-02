@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -77,7 +78,7 @@ public final class Attributes implements Map<String, AttributeValue> {
      * Private ctor.
      * @param map Map of them
      */
-    public Attributes(final Map<String, AttributeValue> map) {
+    public Attributes(@NotNull final Map<String, AttributeValue> map) {
         this.pairs = new Object[map.size()][];
         int pos = 0;
         for (Map.Entry<String, AttributeValue> entry : map.entrySet()) {
@@ -92,7 +93,8 @@ public final class Attributes implements Map<String, AttributeValue> {
      * @param value The value
      * @return Attributes
      */
-    public Attributes with(final String name, final AttributeValue value) {
+    public Attributes with(@NotNull final String name,
+        @NotNull final AttributeValue value) {
         final ConcurrentMap<String, AttributeValue> map =
             new ConcurrentHashMap<String, AttributeValue>(
                 this.pairs.length + 1
@@ -126,8 +128,25 @@ public final class Attributes implements Map<String, AttributeValue> {
      * @param value The value
      * @return Attributes
      */
-    public Attributes with(final String name, final Object value) {
+    public Attributes with(@NotNull final String name,
+        @NotNull final Object value) {
         return this.with(name, new AttributeValue(value.toString()));
+    }
+
+    /**
+     * Filter out all keys except provided ones.
+     * @param keys Keys to leave in the map
+     * @return Attributes
+     */
+    public Attributes only(@NotNull final Collection<String> keys) {
+        final ConcurrentMap<String, AttributeValue> map =
+            new ConcurrentHashMap<String, AttributeValue>(this.pairs.length);
+        for (Map.Entry<String, AttributeValue> entry : this.entrySet()) {
+            if (keys.contains(entry.getKey())) {
+                map.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return new Attributes(map);
     }
 
     /**

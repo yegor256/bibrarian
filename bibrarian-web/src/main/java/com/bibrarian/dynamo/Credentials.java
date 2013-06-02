@@ -61,7 +61,7 @@ public interface Credentials {
     @Immutable
     @Loggable(Loggable.DEBUG)
     @ToString
-    @EqualsAndHashCode(of = { "key", "secret" })
+    @EqualsAndHashCode(of = { "key", "secret", "region" })
     final class Simple implements Credentials {
         /**
          * AWS key.

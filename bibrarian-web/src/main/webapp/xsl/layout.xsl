@@ -176,6 +176,14 @@
         <div id="version">
             <xsl:value-of select="name"/>
             <xsl:text> </xsl:text>
+            <a title="see commit in Github">
+                <xsl:attribute name="href">
+                    <xsl:text>https://github.com/yegor256/bibrarian/commit/</xsl:text>
+                    <xsl:value-of select="revision"/>
+                </xsl:attribute>
+                <i class="icon-github"></i>
+            </a>
+            <xsl:text> </xsl:text>
             <xsl:value-of select="revision"/>
             <xsl:text> </xsl:text>
             <xsl:call-template name="millis">
@@ -203,20 +211,20 @@
             </img>
             <xsl:text> </xsl:text>
             <xsl:value-of select="name"/>
-            <img class="login-icon" alt="account type">
-                <xsl:attribute name="src">
-                    <xsl:text>http://img.bibrarian.com/icons/</xsl:text>
+            <xsl:text> </xsl:text>
+            <i>
+                <xsl:attribute name="class">
+                    <xsl:text>icon-</xsl:text>
                     <xsl:choose>
                         <xsl:when test="starts-with(urn, 'urn:facebook:')">
-                            <xsl:text>facebook</xsl:text>
+                            <xsl:text>facebook-sign</xsl:text>
                         </xsl:when>
                         <xsl:when test="starts-with(urn, 'urn:google:')">
-                            <xsl:text>google</xsl:text>
+                            <xsl:text>google-plus-sign</xsl:text>
                         </xsl:when>
                     </xsl:choose>
-                    <xsl:text>-small.png</xsl:text>
                 </xsl:attribute>
-            </img>
+            </i>
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
@@ -228,20 +236,19 @@
     </xsl:template>
     <xsl:template name="login">
         <p>
-            <xsl:text>To start, login using one of your accounts at:</xsl:text>
-        </p>
-        <p>
+            <xsl:text>To start, login using one of your accounts at: </xsl:text>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
                 </xsl:attribute>
-                <img class="auth-icon" src="http://img.bibrarian.com/icons/facebook.png" alt="facebook icon"/>
+                <i class="icon-facebook-sign icon-2x"></i>
             </a>
+            <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
                 </xsl:attribute>
-                <img class="auth-icon" src="http://img.bibrarian.com/icons/google.png" alt="google icon"/>
+                <i class="icon-google-plus-sign icon-2x"></i>
             </a>
         </p>
     </xsl:template>

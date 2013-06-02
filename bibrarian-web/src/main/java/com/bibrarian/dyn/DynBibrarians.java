@@ -29,7 +29,6 @@
  */
 package com.bibrarian.dyn;
 
-import com.bibrarian.dynamo.Conditions;
 import com.bibrarian.dynamo.Credentials;
 import com.bibrarian.dynamo.Region;
 import com.bibrarian.om.Bibitem;
@@ -75,11 +74,7 @@ public final class DynBibrarians implements Bibrarians {
      */
     @Override
     public Bibrarian fetch(@NotNull final URN urn) {
-        return new DynBibrarian(
-            this.region.table("bibrarians").frame()
-                .where("urn", Conditions.equalTo(urn.toString()))
-                .iterator().next()
-        );
+        return new DynBibrarian(this.region, urn);
     }
 
     /**

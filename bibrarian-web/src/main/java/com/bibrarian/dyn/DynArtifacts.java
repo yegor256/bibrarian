@@ -35,6 +35,7 @@ import com.bibrarian.om.Artifact;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -54,14 +55,14 @@ final class DynArtifacts extends AbstractQueryable<Artifact> {
     /**
      * Owner of the collection.
      */
-    private final transient String owner;
+    private final transient URN owner;
 
     /**
      * Public ctor.
      * @param frame Frame
      * @param urn Owner of them
      */
-    protected DynArtifacts(final Frame frame, final String urn) {
+    protected DynArtifacts(final Frame frame, final URN urn) {
         super(frame);
         this.owner = urn;
     }

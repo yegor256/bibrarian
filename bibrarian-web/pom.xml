@@ -190,9 +190,9 @@
                                 <Bibrarian-GoogleSecret>${google.secret}</Bibrarian-GoogleSecret>
                                 <Bibrarian-SecurityKey>${security.key}</Bibrarian-SecurityKey>
                                 <Bibrarian-SecuritySalt>${security.salt}</Bibrarian-SecuritySalt>
-                                <Bibrarian-AwsDynamoKey>${dynamo.key}</Bibrarian-AwsDynamoKey>
-                                <Bibrarian-AwsDynamoSecret>${dynamo.secret}</Bibrarian-AwsDynamoSecret>
-                                <Bibrarian-AwsDynamoPrefix>${dynamo.prefix}</Bibrarian-AwsDynamoPrefix>
+                                <Bibrarian-DynamoKey>${dynamo.key}</Bibrarian-DynamoKey>
+                                <Bibrarian-DynamoSecret>${dynamo.secret}</Bibrarian-DynamoSecret>
+                                <Bibrarian-DynamoPrefix>${dynamo.prefix}</Bibrarian-DynamoPrefix>
                             </manifestEntries>
                         </archive>
                     </configuration>

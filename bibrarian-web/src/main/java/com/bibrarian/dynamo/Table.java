@@ -44,9 +44,10 @@ public interface Table {
     /**
      * Put new item there.
      * @param attributes Attributes to save
+     * @return Item just created
      */
     @NotNull
-    void put(Attributes attributes);
+    Item put(Attributes attributes);
 
     /**
      * Make a new frame.

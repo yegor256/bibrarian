@@ -42,11 +42,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * DynamoDB item attributes.
+ * DynamoDB query conditions.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -78,7 +79,7 @@ public final class Conditions implements Map<String, Condition> {
      * Private ctor.
      * @param map Map of them
      */
-    public Conditions(final Map<String, Condition> map) {
+    public Conditions(@NotNull final Map<String, Condition> map) {
         this.pairs = new Object[map.size()][];
         int pos = 0;
         for (Map.Entry<String, Condition> entry : map.entrySet()) {
@@ -88,13 +89,13 @@ public final class Conditions implements Map<String, Condition> {
     }
 
     /**
-     * Equal to.
+     * Equal to static condition builder (factory method).
      * @param value The value to equal to
      * @return The condition just created
      */
-    public static Condition equalTo(final String value) {
+    public static Condition equalTo(@NotNull final Object value) {
         return new Condition()
-            .withAttributeValueList(new AttributeValue(value))
+            .withAttributeValueList(new AttributeValue(value.toString()))
             .withComparisonOperator(ComparisonOperator.EQ);
     }
 
@@ -104,7 +105,8 @@ public final class Conditions implements Map<String, Condition> {
      * @param value The value
      * @return Attributes
      */
-    public Conditions with(final String name, final Condition value) {
+    public Conditions with(@NotNull final String name,
+        @NotNull final Condition value) {
         final ConcurrentMap<String, Condition> map =
             new ConcurrentHashMap<String, Condition>(
                 this.pairs.length + 1

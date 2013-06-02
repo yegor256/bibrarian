@@ -30,7 +30,10 @@
 package com.bibrarian.dynamo;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * DynamoDB region.
@@ -52,6 +55,10 @@ public interface Region {
     /**
      * Prefixed.
      */
+    @Immutable
+    @Loggable(Loggable.DEBUG)
+    @ToString
+    @EqualsAndHashCode(of = "credentials")
     final class Simple implements Region {
         /**
          * Credentials.
@@ -73,6 +80,10 @@ public interface Region {
     /**
      * Prefixed.
      */
+    @Immutable
+    @Loggable(Loggable.DEBUG)
+    @ToString
+    @EqualsAndHashCode(of = { "origin", "prefix" })
     final class Prefixed implements Region {
         /**
          * Original region.
@@ -93,7 +104,9 @@ public interface Region {
         }
         @Override
         public Table table(final String name) {
-            return this.origin.table(String.format("%s-%s", this.prefix, name));
+            return this.origin.table(
+                new StringBuilder(this.prefix).append(name).toString()
+            );
         }
     }
 

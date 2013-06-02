@@ -35,6 +35,7 @@ import com.bibrarian.om.Discovery;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.urn.URN;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -55,14 +56,14 @@ final class DynDiscoveries extends AbstractQueryable<Discovery> {
     /**
      * Owner of the collection.
      */
-    private final transient String owner;
+    private final transient URN owner;
 
     /**
      * Public ctor.
      * @param frame Frame
      * @param urn Owner of them
      */
-    protected DynDiscoveries(final Frame frame, final String urn) {
+    protected DynDiscoveries(final Frame frame, final URN urn) {
         super(frame);
         this.owner = urn;
     }

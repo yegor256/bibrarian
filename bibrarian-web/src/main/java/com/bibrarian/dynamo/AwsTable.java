@@ -47,7 +47,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Table through AWS SDK.
+ * Single table in Dynamo, through AWS SDK.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -90,7 +90,7 @@ final class AwsTable implements Table {
      * {@inheritDoc}
      */
     @Override
-    public void put(final Attributes attributes) {
+    public Item put(final Attributes attributes) {
         final AmazonDynamoDB aws = this.credentials.aws();
         final PutItemRequest request = new PutItemRequest();
         request.setTableName(this.name);
@@ -101,9 +101,16 @@ final class AwsTable implements Table {
         aws.shutdown();
         Logger.debug(
             this,
-            "#put('%[text]s'): created item in DynamoDB, %.2f units",
+            "#put('%[text]s'): created item in '%s', %.2f units",
             attributes,
+            this.name,
             result.getConsumedCapacity().getCapacityUnits()
+        );
+        return new AwsItem(
+            this.credentials,
+            this.frame(),
+            this.name,
+            attributes.only(this.keys())
         );
     }
 
@@ -119,7 +126,7 @@ final class AwsTable implements Table {
      * {@inheritDoc}
      */
     @Override
-    public Frame frame() {
+    public AwsFrame frame() {
         return new AwsFrame(this.credentials, this, this.name);
     }
 
