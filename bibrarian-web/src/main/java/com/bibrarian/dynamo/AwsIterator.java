@@ -164,7 +164,7 @@ final class AwsIterator implements Iterator<Item> {
      * @return List of items
      */
     private List<Map<String, AttributeValue>> items() {
-        if (this.result == null) {
+        if (this.result.get() == null) {
             this.reload();
         }
         if (this.position >= this.result.get().getCount()) {
