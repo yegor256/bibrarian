@@ -41,7 +41,7 @@
         <date>22-Aug-2012</date>
     </version>
     <links>
-        <link href="" rel="self" type="text/xml"/>
+        <link href="/xml/artifacts.xml" rel="self" type="text/xml"/>
         <link href="/xml/discoveries.xml" rel="home" type="text/xml"/>
         <link href="/xml/artifacts.xml" rel="artifacts" type="text/xml"/>
         <link href="/xml/hypothesizes.xml" rel="hypothesizes" type="text/xml"/>
@@ -51,19 +51,7 @@
     <artifacts>
         <artifact>
             <referat>It's a very interesting article... Highly recommend</referat>
-            <bibitem>
-                <label>bugayenko2009</label>
-                <tex>
-                    @incollection{bugayenko2009,
-                      title={Method for Software Cost Estimating Using Scope Champions},
-                      author={Bugayenko, Yegor},
-                      booktitle={Product-Focused Software Process Improvement},
-                      pages={59--70},
-                      year={2009},
-                      publisher={Springer}
-                    }
-                </tex>
-            </bibitem>
+            <bibitem>bugayenko2009</bibitem>
             <discoveries>
                 <discovery>
                     <label>H13</label>
@@ -71,7 +59,6 @@
                     <relevance>0.75</relevance>
                     <quote>Saturday, Donny, is Shabbos, the Jewish day of rest. That means that I don't work, I don't drive a car, I don't fucking ride in a car, I don't handle money, I don't turn on the oven, and I sure as shit *don't fucking roll*!</quote>
                     <links>
-                       <link href="" rel="remove" type="text/xml"/>
                        <link href="/xml/hypothesis.xml" rel="hypothesis" type="text/xml"/>
                     </links>
                 </discovery>
@@ -81,7 +68,6 @@
                     <relevance>0.95</relevance>
                     <quote>They did not receive the money, you nitwit! They did not receive the money! Her life was in your hands!</quote>
                     <links>
-                       <link href="" rel="remove" type="text/xml"/>
                        <link href="/xml/hypothesis.xml" rel="hypothesis" type="text/xml"/>
                     </links>
                 </discovery>
@@ -92,19 +78,7 @@
         </artifact>
         <artifact>
             <referat>It's a very interesting article... Highly recommend</referat>
-            <book>
-                <label>bugayenko2</label>
-                <bibitem>
-                    @incollection{bugayenko2,
-                      title={Competitive Risk Identification Method for Distributed Teams},
-                      author={Bugayenko, Yegor},
-                      booktitle={Software Engineering Approaches for Offshore and Outsourced Development},
-                      pages={96--101},
-                      year={2009},
-                      publisher={Springer}
-                    }
-                </bibitem>
-            </book>
+            <bibitem>bugayenko2</bibitem>
             <discoveries/>
             <links>
                <link href="/xml/artifact.xml" rel="see" type="text/xml"/>

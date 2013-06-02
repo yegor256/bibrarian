@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2013, bibrarian.com
  * All rights reserved.
  *
@@ -27,22 +26,41 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:variable name="section">-</xsl:variable>
-    <xsl:include href="/xsl/layout.xsl"/>
-    <xsl:template name="head">
-        <title>
-            <xsl:text>page not found</xsl:text>
-        </title>
-    </xsl:template>
-    <xsl:template name="content">
-        <h1>
-            <xsl:text>Page not found</xsl:text>
-        </h1>
-        <p>
-            <xsl:text>Invalid request or page not found.</xsl:text>
-        </p>
-    </xsl:template>
-</xsl:stylesheet>
+ */
+package com.bibrarian.web;
+
+import com.jcabi.aspects.Loggable;
+import com.rexsl.page.BaseResource;
+import com.rexsl.page.inset.FlashInset;
+import java.util.logging.Level;
+import javax.validation.ConstraintViolationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+
+/**
+ * Maps constraint violations to JAX-RS responses.
+ *
+ * <p>The class is mutable and NOT thread-safe.
+ *
+ * @author Yegor Bugayenko (yegor@woquo.com)
+ * @version $Id$
+ */
+@Provider
+@Loggable(Loggable.DEBUG)
+public final class ConstraintsMapper extends BaseResource
+    implements ExceptionMapper<ConstraintViolationException> {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Response toResponse(final ConstraintViolationException violation) {
+        return FlashInset.forward(
+            this.uriInfo().getRequestUri(),
+            violation.getMessage(),
+            Level.WARNING
+        ).getResponse();
+    }
+
+}

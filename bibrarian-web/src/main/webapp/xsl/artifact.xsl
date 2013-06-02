@@ -48,10 +48,10 @@
             <fieldset>
                 <legend><xsl:value-of select="bibitem/label"/></legend>
                 <label for="referat"><xsl:text>Referat</xsl:text></label>
-                <textarea name="referat" rows="6"><xsl:value-of select="referat"/></textarea>
-                <label/>
+                <textarea name="referat" id="referat" rows="6"><xsl:value-of select="referat"/></textarea>
+                <label><xsl:comment>for the submit button below</xsl:comment></label>
                 <button type="submit" class="btn">
-                    <i class="icon-circle-arrow-right icon-large"></i>
+                    <i class="icon-circle-arrow-right icon-large"><xsl:comment>button</xsl:comment></i>
                     <xsl:text> Save</xsl:text>
                 </button>
             </fieldset>

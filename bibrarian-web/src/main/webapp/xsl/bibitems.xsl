@@ -45,10 +45,10 @@
             <fieldset>
                 <legend>New Bibitem</legend>
                 <label for="bibitem"><xsl:text>BibTeX item</xsl:text></label>
-                <textarea name="bibitem" rows="6"></textarea>
-                <label/>
+                <textarea name="bibitem" id="bibitem" rows="6"><xsl:comment>enter here</xsl:comment></textarea>
+                <label><xsl:comment>for the submit button below</xsl:comment></label>
                 <button type="submit" class="btn">
-                    <i class="icon-circle-arrow-right icon-large"></i>
+                    <i class="icon-circle-arrow-right icon-large"><xsl:comment>button</xsl:comment></i>
                     <xsl:text> Save</xsl:text>
                 </button>
             </fieldset>

@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2013, bibrarian.com
  * All rights reserved.
  *
@@ -27,18 +26,18 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<?xml-stylesheet type='text/xsl' href='/xsl/index.xsl'?>
-<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
-    <message>Hello, everybody!</message>
-    <version>
-        <name>1.0-SNAPSHOT</name>
-        <revision>123</revision>
-        <date>22-Aug-2012</date>
-    </version>
-    <links>
-        <link href="http://localhost:9099/" rel="self" type="text/xml"/>
-        <link href="http://localhost:9099/" rel="home" type="text/xml"/>
-    </links>
-    <millis>16</millis>
-</page>
+ */
+package com.bibrarian.web.rexsl.xhtml
+
+import com.rexsl.test.XhtmlMatchers
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
+
+MatcherAssert.assertThat(
+    rexsl.document,
+    XhtmlMatchers.hasXPaths(
+        '//xhtml:div[@id="version"]',
+        '//xhtml:div[@id="version" and contains(.,"123")]',
+        '//xhtml:div[@id="version" and contains(.,"16ms")]'
+    )
+)

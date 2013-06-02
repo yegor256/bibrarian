@@ -38,10 +38,10 @@ import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -80,7 +80,7 @@ public final class BibitemsRs extends BaseRs {
      */
     @POST
     @Path("/add")
-    public Response add(@QueryParam("tex") @NotNull final String tex) {
+    public Response add(@FormParam("tex") @NotNull final String tex) {
         final Bibitem item = new Bibitem.Simple(new Bibtex(tex));
         if (!this.bibrarians().bibitems().add(item)) {
             throw FlashInset.forward(

@@ -35,10 +35,14 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import java.net.HttpURLConnection;
 import java.util.Collection;
+import java.util.Iterator;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 /**
@@ -70,10 +74,17 @@ public final class HypothesisRs extends BaseRs {
      * @param label Name of it
      */
     @QueryParam(HypothesisRs.QUERY_LABEL)
-    public void setHypothesis(final String label) {
-        this.hypothesis = this.bibrarian().hypothesizes()
+    public void setHypothesis(@NotNull final String label) {
+        final Iterator<Hypothesis> found = this.bibrarian().hypothesizes()
             .query().with("label", label).refine()
-            .iterator().next();
+            .iterator();
+        if (!found.hasNext()) {
+            throw new WebApplicationException(
+                Response.status(HttpURLConnection.HTTP_NOT_FOUND)
+                    .build()
+            );
+        }
+        this.hypothesis = found.next();
     }
 
     /**

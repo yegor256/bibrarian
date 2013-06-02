@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Internal application error</title>
-        <link href="/css/screen.css?${buildNumber}"
-            rel="stylesheet" type="text/css"></link>
-        <link rel="icon" type="image/gif"
-            href="http://img.bibrarian.com/favicon.ico?${buildNumber}"/>
+        <title>oops...</title>
+        <link rel="icon" type="image/gif" href="http://img.bibrarian.com/favicon.ico?${buildNumber}"/>
+        <link href="//img.bibrarian.com/bootstrap-readable.min.css" rel="stylesheet" />
+        <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
     <body>
-        <div id="content">
+        <div class="container-fluid">
+            <h1>
+                Internal Application Error
+            </h1>
             <p>
-                <a href="http://www.bibrarian.com/">
-                    <img src="http://img.bibrarian.com/logo.png?${buildNumber}"/>
-                </a>
+                Release: <code>${buildNumber}</code>
             </p>
             <p>
-                <b style="color: red;">
-                    Internal application error (${buildNumber}).
-                </b>
+                Sorry, something went terribly wrong. We are already informed
+                about the problem. We'll try to fix it ASAP. In the meantime,
+                go back to the site and try again:
+                <a href="http://www.bibrarian.com">www.bibrarian.com</a>.
             </p>
             <pre style="display:none;">${text}</pre>
         </div>

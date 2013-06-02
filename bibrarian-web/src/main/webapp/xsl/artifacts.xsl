@@ -47,15 +47,16 @@
                 <xsl:attribute name="href">
                     <xsl:value-of select="links/link[@rel='see']/@href"/>
                 </xsl:attribute>
-                <xsl:value-of select="bibitem/label"/>
+                <xsl:value-of select="bibitem"/>
             </a>
-            <xsl:text> </xsl:text>
             <xsl:text>: </xsl:text>
             <xsl:value-of select="referat"/>
         </p>
-        <ul>
-            <xsl:apply-templates select="discoveries/discovery"/>
-        </ul>
+        <xsl:if test="discoveries/discovery">
+            <ul>
+                <xsl:apply-templates select="discoveries/discovery"/>
+            </ul>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="discovery">
         <li>
@@ -71,13 +72,6 @@
                 <xsl:value-of select="quote"/>
                 <xsl:text>&quot;</xsl:text>
             </i>
-            <xsl:text>, </xsl:text>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="links/link[@rel='artifact']/@href"/>
-                </xsl:attribute>
-                <xsl:value-of select="artifact"/>
-            </a>
             <xsl:text>, pp.</xsl:text>
             <xsl:value-of select="pages"/>
         </li>

@@ -45,17 +45,17 @@
             <fieldset>
                 <legend>New Hypothesis</legend>
                 <label for="label"><xsl:text>Unique name</xsl:text></label>
-                <input type="text" name="label" placeholder="e.g., H1" class="input-small"/>
+                <input type="text" id="label" name="label" placeholder="e.g., H1" class="input-small"/>
                 <label for="description"><xsl:text>Short description</xsl:text></label>
-                <input type="text" name="description" class="input-xlarge"/>
-                <label />
+                <input type="text" id="description" name="description" class="input-xlarge"/>
+                <label><xsl:comment>for the submit button below</xsl:comment></label>
                 <button type="submit" class="btn">
-                    <i class="icon-circle-arrow-right icon-large"></i>
+                    <i class="icon-circle-arrow-right icon-large"><xsl:comment>button</xsl:comment></i>
                     <xsl:text> Save</xsl:text>
                 </button>
             </fieldset>
         </form>
-        <h1><xsl:text>Hypothesises</xsl:text></h1>
+        <h1><xsl:text>Hypothesizes</xsl:text></h1>
         <xsl:apply-templates select="hypothesizes/hypothesis"/>
     </xsl:template>
     <xsl:template match="hypothesis">

@@ -28,21 +28,6 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* top flash message */
-#flash {
-    padding: .4em .8em;
-}
-    #flash.INFO {
-        color: green;
-        background-color: #dfd;
-        border: 1px solid green;
-    }
-    #flash.WARNING {
-        color: red;
-        background-color: #fdd;
-        border: 1px solid red;
-    }
-
 #content {
     margin-top: 2em;
 }

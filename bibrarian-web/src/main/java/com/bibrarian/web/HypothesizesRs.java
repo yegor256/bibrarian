@@ -38,10 +38,10 @@ import com.rexsl.page.inset.FlashInset;
 import java.util.Collection;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -83,8 +83,8 @@ public final class HypothesizesRs extends BaseRs {
      */
     @POST
     @Path("/add")
-    public Response add(@QueryParam("label") @NotNull final String label,
-        @QueryParam("description") @NotNull final String desc) {
+    public Response add(@FormParam("label") @NotNull final String label,
+        @FormParam("description") @NotNull final String desc) {
         final Hypothesis hypothesis = new Hypothesis.Simple(label, desc);
         if (!this.bibrarian().hypothesizes().add(hypothesis)) {
             throw FlashInset.forward(

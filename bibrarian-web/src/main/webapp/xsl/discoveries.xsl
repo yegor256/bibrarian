@@ -45,22 +45,26 @@
             <fieldset>
                 <legend>New Discovery</legend>
                 <label for="label"><xsl:text>Hypothesis</xsl:text></label>
-                <input type="text" name="label" class="input-small"/>
+                <input type="text" id="label" name="label" class="input-small"/>
                 <label for="artifact"><xsl:text>Artifact</xsl:text></label>
-                <input type="text" name="artifact" class="input-small"/>
+                <input type="text" id="artifact" name="artifact" class="input-small"/>
                 <label for="quote"><xsl:text>Quote</xsl:text></label>
-                <textarea name="quote" rows="5"></textarea>
+                <textarea name="quote" id="quote" rows="5"><xsl:comment>enter here</xsl:comment></textarea>
                 <label for="pages"><xsl:text>Pages</xsl:text></label>
-                <input type="text" name="pages" class="input-small"/>
-                <label/>
+                <input type="text" id="pages" name="pages" class="input-small"/>
+                <label><xsl:comment>for the submit button below</xsl:comment></label>
                 <button type="submit" class="btn">
-                    <i class="icon-circle-arrow-right icon-large"></i>
+                    <i class="icon-circle-arrow-right icon-large"><xsl:comment>button</xsl:comment></i>
                     <xsl:text> Save</xsl:text>
                 </button>
             </fieldset>
         </form>
-        <h1><xsl:text>Previous Discoveries</xsl:text></h1>
-        <xsl:apply-templates select="discoveries/discovery"/>
+        <xsl:if test="discoveries/discovery">
+            <h1><xsl:text>Previous Discoveries</xsl:text></h1>
+            <ul>
+                <xsl:apply-templates select="discoveries/discovery"/>
+            </ul>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="discovery">
         <li>

@@ -41,7 +41,8 @@
         <date>22-Aug-2012</date>
     </version>
     <links>
-        <link href="" rel="self" type="text/xml"/>
+        <link href="/xml/bibitems.xml" rel="add" type="text/xml"/>
+        <link href="/xml/bibitems.xml" rel="self" type="text/xml"/>
         <link href="/xml/discoveries.xml" rel="home" type="text/xml"/>
         <link href="/xml/artifacts.xml" rel="artifacts" type="text/xml"/>
         <link href="/xml/hypothesizes.xml" rel="hypothesizes" type="text/xml"/>

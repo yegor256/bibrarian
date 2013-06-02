@@ -93,11 +93,7 @@ public final class ArtifactsRs extends BaseRs {
      */
     private JaxbBundle bundle(final Artifact artifact) {
         return new JaxbBundle("artifact")
-            .add("bibitem")
-                .add("label", artifact.bibitem().load().label())
-                .up()
-                .add("bibitem", artifact.bibitem().toString())
-                .up()
+            .add("bibitem", artifact.bibitem().load().label())
             .up()
             .add("referat", artifact.referat())
             .up()
@@ -141,11 +137,11 @@ public final class ArtifactsRs extends BaseRs {
             .up()
             .link(
                 new Link(
-                    "remove",
+                    "hypothesis",
                     this.uriInfo().getBaseUriBuilder().clone()
-                        .path(ArtifactRs.class)
-                        .path(ArtifactRs.class, "remove")
-                        .queryParam("label", "{label}")
+                        .path(HypothesisRs.class)
+                        .path(HypothesisRs.class, "index")
+                        .queryParam(HypothesisRs.QUERY_LABEL, "{xx}")
                         .build(discovery.hypothesis().label())
                 )
             );

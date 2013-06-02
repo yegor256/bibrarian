@@ -35,13 +35,18 @@
         <name>Local Host</name>
         <photo>http://1.bp.blogspot.com/_FB8KgRxKX2A/SEN_7ZY-SZI/AAAAAAAAAX4/840iz5CCOoY/s320/The_Big_Lebowski___Jeff_Bridges.jpg</photo>
     </identity>
+    <flash>
+        <message>Hypothesis was successfully saved</message>
+        <level>INFO</level>
+    </flash>
     <version>
         <name>1.0-SNAPSHOT</name>
         <revision>123</revision>
         <date>22-Aug-2012</date>
     </version>
     <links>
-        <link href="" rel="self" type="text/xml"/>
+        <link href="/xml/hypothesizes.xml" rel="add" type="text/xml"/>
+        <link href="/xml/hypothesizes.xml" rel="self" type="text/xml"/>
         <link href="/xml/discoveries.xml" rel="home" type="text/xml"/>
         <link href="/xml/artifacts.xml" rel="artifacts" type="text/xml"/>
         <link href="/xml/hypothesizes.xml" rel="hypothesizes" type="text/xml"/>

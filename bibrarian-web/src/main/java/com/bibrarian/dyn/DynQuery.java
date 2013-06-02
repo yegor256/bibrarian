@@ -77,7 +77,8 @@ final class DynQuery<T> implements Query<T> {
      * {@inheritDoc}
      */
     @Override
-    public Query<T> with(final String key, final String value) {
+    public Query<T> with(@NotNull final String key,
+        @NotNull final String value) {
         return new DynQuery<T>(
             this.frame.where(key, Conditions.equalTo(value)),
             this.queryable

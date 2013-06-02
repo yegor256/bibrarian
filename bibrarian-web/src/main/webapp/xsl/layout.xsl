@@ -109,7 +109,7 @@
                     <xsl:text>https://github.com/yegor256/bibrarian/commit/</xsl:text>
                     <xsl:value-of select="revision"/>
                 </xsl:attribute>
-                <i class="icon-github"> </i>
+                <i class="icon-github"><xsl:comment>github icon</xsl:comment></i>
             </a>
             <xsl:text> </xsl:text>
             <xsl:value-of select="revision"/>
@@ -120,9 +120,20 @@
         </div>
     </xsl:template>
     <xsl:template match="flash">
-        <div id="flash">
+        <div>
             <xsl:attribute name="class">
-                <xsl:value-of select="level"/>
+                <xsl:text>alert </xsl:text>
+                <xsl:choose>
+                    <xsl:when test="level = 'INFO'">
+                        <xsl:text>alert-success</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="level = 'WARNING'">
+                        <xsl:text>alert-info</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="level = 'ERROR'">
+                        <xsl:text>alert-error</xsl:text>
+                    </xsl:when>
+                </xsl:choose>
             </xsl:attribute>
             <xsl:value-of select="message"/>
         </div>
@@ -134,14 +145,14 @@
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
                 </xsl:attribute>
-                <i class="icon-facebook-sign icon-2x"> </i>
+                <i class="icon-facebook-sign icon-2x"><xsl:comment>facebook sign</xsl:comment></i>
             </a>
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
                 </xsl:attribute>
-                <i class="icon-google-plus-sign icon-2x"> </i>
+                <i class="icon-google-plus-sign icon-2x"><xsl:comment>google plus sign</xsl:comment></i>
             </a>
         </p>
     </xsl:template>
@@ -202,11 +213,11 @@
         </div>
     </xsl:template>
     <xsl:template match="identity">
-        <ul class="nav pull-right">
-            <form method="get" class="navbar-search">
-                <xsl:attribute name="action">
-                    <xsl:value-of select="/page/links/link[@rel='self']/@href"/>
-                </xsl:attribute>
+        <form method="get" class="navbar-search">
+            <xsl:attribute name="action">
+                <xsl:value-of select="/page/links/link[@rel='self']/@href"/>
+            </xsl:attribute>
+            <ul class="nav pull-right">
                 <li>
                     <input type="text" class="search-query" name="query" placeholder="Search...">
                         <xsl:attribute name="value">
@@ -214,43 +225,44 @@
                         </xsl:attribute>
                     </input>
                 </li>
-            </form>
-            <li class="navbar-text">
-                <img style="width: 1.5em; height: 1.5em; margin: 0 1em;">
-                    <xsl:attribute name="src">
-                        <xsl:value-of select="photo"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="alt">
-                        <xsl:value-of select="name"/>
-                    </xsl:attribute>
-                </img>
-            </li>
-            <li class="navbar-text">
-                <i>
-                    <xsl:attribute name="class">
-                        <xsl:text>icon-</xsl:text>
-                        <xsl:choose>
-                            <xsl:when test="starts-with(urn, 'urn:facebook:')">
-                                <xsl:text>facebook-sign</xsl:text>
-                            </xsl:when>
-                            <xsl:when test="starts-with(urn, 'urn:google:')">
-                                <xsl:text>google-plus-sign</xsl:text>
-                            </xsl:when>
-                        </xsl:choose>
-                    </xsl:attribute>
+                <li class="navbar-text">
+                    <img style="width: 1.5em; height: 1.5em; margin: 0 1em;">
+                        <xsl:attribute name="src">
+                            <xsl:value-of select="photo"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="alt">
+                            <xsl:value-of select="name"/>
+                        </xsl:attribute>
+                    </img>
+                </li>
+                <li class="navbar-text">
+                    <i>
+                        <xsl:attribute name="class">
+                            <xsl:text>icon-</xsl:text>
+                            <xsl:choose>
+                                <xsl:when test="starts-with(urn, 'urn:facebook:')">
+                                    <xsl:text>facebook-sign</xsl:text>
+                                </xsl:when>
+                                <xsl:when test="starts-with(urn, 'urn:google:')">
+                                    <xsl:text>google-plus-sign</xsl:text>
+                                </xsl:when>
+                            </xsl:choose>
+                        </xsl:attribute>
+                        <xsl:comment>authenticated</xsl:comment>
+                    </i>
                     <xsl:text> </xsl:text>
-                </i>
-                <xsl:value-of select="name"/>
-            </li>
-            <li>
-                <a title="log out">
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="/page/links/link[@rel='auth-logout']/@href"/>
-                    </xsl:attribute>
-                    <i class="icon-signout"> </i>
-                </a>
-            </li>
-        </ul>
+                    <xsl:value-of select="name"/>
+                </li>
+                <li>
+                    <a title="log out">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="/page/links/link[@rel='auth-logout']/@href"/>
+                        </xsl:attribute>
+                        <i class="icon-signout"><xsl:comment>signout icon</xsl:comment></i>
+                    </a>
+                </li>
+            </ul>
+        </form>
     </xsl:template>
     <xsl:template name="bottom">
         <p id="bottom">

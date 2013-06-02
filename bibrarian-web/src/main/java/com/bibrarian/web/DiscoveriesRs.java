@@ -41,6 +41,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Level;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -134,11 +135,11 @@ public final class DiscoveriesRs extends BaseRs {
      */
     @POST
     @Path("/add")
-    public Response add(@QueryParam(DiscoveriesRs.QUERY_LABEL)
+    public Response add(@FormParam(DiscoveriesRs.QUERY_LABEL)
         @NotNull final String label,
-        @QueryParam(DiscoveriesRs.QUERY_ITEM) @NotNull final String item,
-        @QueryParam("quote") @NotNull final String quote,
-        @QueryParam("pages") @NotNull final String pages) {
+        @FormParam(DiscoveriesRs.QUERY_ITEM) @NotNull final String item,
+        @FormParam("quote") @NotNull final String quote,
+        @FormParam("pages") @NotNull final String pages) {
         final Discovery discovery = new Discovery.Simple(
             new Date(),
             this.bibrarian().hypothesizes()
