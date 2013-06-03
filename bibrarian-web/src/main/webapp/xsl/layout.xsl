@@ -168,17 +168,6 @@
                     </a>
                     <ul class="nav">
                         <li>
-                            <xsl:if test="$section = 'discoveries'">
-                                <xsl:attribute name="class">active</xsl:attribute>
-                            </xsl:if>
-                            <a title="Your discoveries">
-                                <xsl:attribute name="href">
-                                    <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
-                                </xsl:attribute>
-                                <xsl:text>Discoveries</xsl:text>
-                            </a>
-                        </li>
-                        <li>
                             <xsl:if test="$section = 'artifacts'">
                                 <xsl:attribute name="class">active</xsl:attribute>
                             </xsl:if>
