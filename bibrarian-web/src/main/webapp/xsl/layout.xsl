@@ -218,18 +218,22 @@
         </div>
     </xsl:template>
     <xsl:template match="identity">
-        <form method="get" class="navbar-search">
-            <xsl:attribute name="action">
-                <xsl:value-of select="/page/links/link[@rel='self']/@href"/>
-            </xsl:attribute>
-            <ul class="nav pull-right">
-                <li>
-                    <input type="text" class="search-query" name="query" placeholder="Search...">
-                        <xsl:attribute name="value">
-                            <xsl:value-of select="/page/query"/>
-                        </xsl:attribute>
-                    </input>
-                </li>
+        <div class="pull-right">
+            <form method="get" class="navbar-search">
+                <xsl:attribute name="action">
+                    <xsl:value-of select="/page/links/link[@rel='self']/@href"/>
+                </xsl:attribute>
+                <ul class="nav">
+                    <li>
+                        <input type="text" class="search-query" name="query" placeholder="Search...">
+                            <xsl:attribute name="value">
+                                <xsl:value-of select="/page/query"/>
+                            </xsl:attribute>
+                        </input>
+                    </li>
+                </ul>
+            </form>
+            <ul class="nav">
                 <li class="navbar-text">
                     <img style="width: 1.5em; height: 1.5em; margin: 0 1em;">
                         <xsl:attribute name="src">
@@ -267,7 +271,7 @@
                     </a>
                 </li>
             </ul>
-        </form>
+        </div>
     </xsl:template>
     <xsl:template name="bottom">
         <p id="bottom">
