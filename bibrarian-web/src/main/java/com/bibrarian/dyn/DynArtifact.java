@@ -30,15 +30,15 @@
 package com.bibrarian.dyn;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.bibrarian.dynamo.Conditions;
-import com.bibrarian.dynamo.Frame;
-import com.bibrarian.dynamo.Item;
 import com.bibrarian.om.Artifact;
 import com.bibrarian.om.Bibitem;
 import com.bibrarian.om.Discovery;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Conditions;
+import com.jcabi.dynamo.Frame;
+import com.jcabi.dynamo.Item;
 import com.jcabi.urn.URN;
 import java.net.URI;
 import java.util.Collection;

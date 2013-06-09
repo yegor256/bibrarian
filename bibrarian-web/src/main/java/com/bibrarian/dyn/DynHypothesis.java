@@ -30,10 +30,10 @@
 package com.bibrarian.dyn;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.bibrarian.dynamo.Item;
 import com.bibrarian.om.Hypothesis;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Item;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

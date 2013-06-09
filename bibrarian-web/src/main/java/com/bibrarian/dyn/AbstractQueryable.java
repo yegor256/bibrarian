@@ -29,8 +29,6 @@
  */
 package com.bibrarian.dyn;
 
-import com.bibrarian.dynamo.Frame;
-import com.bibrarian.dynamo.Item;
 import com.bibrarian.om.Artifact;
 import com.bibrarian.om.Discovery;
 import com.bibrarian.om.Hypothesis;
@@ -39,6 +37,8 @@ import com.bibrarian.om.Queryable;
 import com.google.common.reflect.TypeToken;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Frame;
+import com.jcabi.dynamo.Item;
 import java.util.AbstractCollection;
 import java.util.Iterator;
 import javax.validation.constraints.NotNull;

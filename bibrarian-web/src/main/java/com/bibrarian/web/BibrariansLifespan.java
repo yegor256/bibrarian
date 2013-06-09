@@ -30,9 +30,9 @@
 package com.bibrarian.web;
 
 import com.bibrarian.dyn.DynBibrarians;
-import com.bibrarian.dynamo.Credentials;
 import com.bibrarian.om.Bibrarians;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Credentials;
 import com.jcabi.manifests.Manifests;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

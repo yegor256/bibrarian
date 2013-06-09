@@ -30,11 +30,11 @@
 package com.bibrarian.dyn;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.bibrarian.dynamo.Item;
 import com.bibrarian.om.Bibitem;
 import com.bibrarian.om.Bibtex;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Item;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

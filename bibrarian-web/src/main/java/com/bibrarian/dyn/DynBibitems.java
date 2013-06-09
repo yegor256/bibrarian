@@ -29,12 +29,12 @@
  */
 package com.bibrarian.dyn;
 
-import com.bibrarian.dynamo.Attributes;
-import com.bibrarian.dynamo.Frame;
 import com.bibrarian.om.Bibitem;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Attributes;
+import com.jcabi.dynamo.Frame;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

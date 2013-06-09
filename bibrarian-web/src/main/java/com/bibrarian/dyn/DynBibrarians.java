@@ -29,14 +29,14 @@
  */
 package com.bibrarian.dyn;
 
-import com.bibrarian.dynamo.Credentials;
-import com.bibrarian.dynamo.Region;
 import com.bibrarian.om.Bibitem;
 import com.bibrarian.om.Bibrarian;
 import com.bibrarian.om.Bibrarians;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;

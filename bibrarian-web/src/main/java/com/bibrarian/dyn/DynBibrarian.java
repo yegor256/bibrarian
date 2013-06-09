@@ -29,8 +29,6 @@
  */
 package com.bibrarian.dyn;
 
-import com.bibrarian.dynamo.Conditions;
-import com.bibrarian.dynamo.Region;
 import com.bibrarian.om.Artifact;
 import com.bibrarian.om.Bibrarian;
 import com.bibrarian.om.Discovery;
@@ -38,6 +36,8 @@ import com.bibrarian.om.Hypothesis;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Conditions;
+import com.jcabi.dynamo.Region;
 import com.jcabi.urn.URN;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

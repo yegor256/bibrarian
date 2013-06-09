@@ -29,12 +29,12 @@
  */
 package com.bibrarian.dyn;
 
-import com.bibrarian.dynamo.Conditions;
-import com.bibrarian.dynamo.Frame;
 import com.bibrarian.om.Query;
 import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Conditions;
+import com.jcabi.dynamo.Frame;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

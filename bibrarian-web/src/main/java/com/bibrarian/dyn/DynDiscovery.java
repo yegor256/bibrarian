@@ -30,13 +30,13 @@
 package com.bibrarian.dyn;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.bibrarian.dynamo.Conditions;
-import com.bibrarian.dynamo.Item;
 import com.bibrarian.om.Artifact;
 import com.bibrarian.om.Discovery;
 import com.bibrarian.om.Hypothesis;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Conditions;
+import com.jcabi.dynamo.Item;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
