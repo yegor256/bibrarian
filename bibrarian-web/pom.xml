@@ -195,7 +195,6 @@
                                 <Bibrarian-GoogleId>${google.id}</Bibrarian-GoogleId>
                                 <Bibrarian-GoogleSecret>${google.secret}</Bibrarian-GoogleSecret>
                                 <Bibrarian-SecurityKey>${security.key}</Bibrarian-SecurityKey>
-                                <Bibrarian-SecuritySalt>${security.salt}</Bibrarian-SecuritySalt>
                                 <Bibrarian-DynamoKey>${dynamo.key}</Bibrarian-DynamoKey>
                                 <Bibrarian-DynamoSecret>${dynamo.secret}</Bibrarian-DynamoSecret>
                                 <Bibrarian-DynamoPrefix>${dynamo.prefix}</Bibrarian-DynamoPrefix>

@@ -121,7 +121,7 @@ public class BaseRs extends BaseResource {
     @Inset.Runtime
     public final AuthInset auth() {
         // @checkstyle LineLength (3 lines)
-        final AuthInset auth = new AuthInset(this, Manifests.read("Bibrarian-SecurityKey"), Manifests.read("Bibrarian-SecuritySalt"))
+        final AuthInset auth = new AuthInset(this, Manifests.read("Bibrarian-SecurityKey"))
             .with(new Facebook(this, Manifests.read("Bibrarian-FbId"), Manifests.read("Bibrarian-FbSecret")))
             .with(new Google(this, Manifests.read("Bibrarian-GoogleId"), Manifests.read("Bibrarian-GoogleSecret")));
         if (Manifests.read("Bibrarian-DynamoKey").matches("[A-Z0-9]{20}")
