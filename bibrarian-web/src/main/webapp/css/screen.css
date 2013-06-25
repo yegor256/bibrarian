@@ -28,6 +28,17 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+@font-face {
+    font-family: 'Bibrarian';
+    src: url('http://img.bibrarian.com/bibrarian.eot');
+    src: url('http://img.bibrarian.com/bibrarian.eot') format('embedded-opentype'),
+        url('http://img.bibrarian.com/bibrarian.woff') format('woff'),
+        url('http://img.bibrarian.com/bibrarian.eot') format('truetype'),
+        url('http://img.bibrarian.com/bibrarian.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
 #content {
     margin-top: 2em;
 }

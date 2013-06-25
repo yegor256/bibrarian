@@ -160,7 +160,7 @@
         <div class="navbar navbar-static-top">
             <div class="navbar-inner">
                 <div class="container-fluid">
-                    <a class="brand" title="Back home">
+                    <a class="brand" title="Back home" style="font-family: Bibrarian;">
                         <xsl:attribute name="href">
                             <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                         </xsl:attribute>
