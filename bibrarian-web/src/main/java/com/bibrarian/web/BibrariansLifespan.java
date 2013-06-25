@@ -30,10 +30,14 @@
 package com.bibrarian.web;
 
 import com.bibrarian.dyn.DynBibrarians;
+import com.bibrarian.om.Bibitem;
+import com.bibrarian.om.Bibrarian;
 import com.bibrarian.om.Bibrarians;
+import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.manifests.Manifests;
+import com.jcabi.urn.URN;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -59,13 +63,28 @@ public final class BibrariansLifespan implements ServletContextListener {
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
-        final Bibrarians bibrarians = new DynBibrarians(
-            new Credentials.Simple(
-                Manifests.read("Bibrarian-DynamoKey"),
-                Manifests.read("Bibrarian-DynamoSecret")
-            ),
-            Manifests.read("Bibrarian-DynamoPrefix")
-        );
+        final String key = Manifests.read("Bibrarian-DynamoKey");
+        final Bibrarians bibrarians;
+        if (key.matches("[A-Z0-9]{20}")) {
+            bibrarians = new DynBibrarians(
+                new Credentials.Simple(
+                    key,
+                    Manifests.read("Bibrarian-DynamoSecret")
+                ),
+                Manifests.read("Bibrarian-DynamoPrefix")
+            );
+        } else {
+            bibrarians = new Bibrarians() {
+                @Override
+                public Bibrarian fetch(final URN urn) {
+                    throw new UnsupportedOperationException();
+                }
+                @Override
+                public Queryable<Bibitem> bibitems() {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        }
         event.getServletContext().setAttribute(
             Bibrarians.class.getName(), bibrarians
         );
