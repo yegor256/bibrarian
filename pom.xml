@@ -642,7 +642,8 @@
                                     <key>${failsafe.dynamo.key}</key>
                                     <secret>${failsafe.dynamo.secret}</secret>
                                     <tables>
-                                        <table>${basedir}/src/test/dynamodb/talks.json</table>
+                                        <table>${basedir}/src/test/dynamodb/books.json</table>
+                                        <table>${basedir}/src/test/dynamodb/quotes.json</table>
                                     </tables>
                                 </configuration>
                             </execution>

@@ -1,0 +1,27 @@
+{
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "book",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "id",
+            "AttributeType": "N"
+        }
+    ],
+    "KeySchema": [
+        {
+            "AttributeName": "book",
+            "KeyType": "HASH"
+        },
+        {
+            "AttributeName": "id",
+            "KeyType": "RANGE"
+        }
+    ],
+    "ProvisionedThroughput": {
+        "ReadCapacityUnits": "1",
+        "WriteCapacityUnits": "1"
+    },
+    "TableName": "bib-quotes"
+}
