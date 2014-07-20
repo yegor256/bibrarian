@@ -28,99 +28,26 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "fonts";
+@import url(//fonts.googleapis.com/css?family=Source+Code+Pro:400,500);
 
-$em: 16px;
-$gray: #555;
-$light-gray: #ccc;
-$white: white;
-
-body {
-  color: #333;
-  font-family: "Cambria", "Times New Roman", serif;
+@font-face {
+  font-family: 'Cambria-Bold';
+  src: url('//img.yegor256.com/fonts/2AACA7_1_0.eot');
+  src: url('//img.yegor256.com/fonts/2AACA7_1_0.eot?#iefix');
+  src: url('//img.yegor256.com/fonts/2AACA7_1_0.woff');
+  src: url('//img.yegor256.com/fonts/2AACA7_1_0.ttf');
 }
-
-code, pre {
-  font-family: "Source+Code+Pro";
-  font-weight: 400;
+@font-face {
+  font-family: 'Cambria';
+  src: url('//img.yegor256.com/fonts/2AACA7_2_0.eot');
+  src: url('//img.yegor256.com/fonts/2AACA7_2_0.eot?#iefix');
+  src: url('//img.yegor256.com/fonts/2AACA7_2_0.woff');
+  src: url('//img.yegor256.com/fonts/2AACA7_2_0.ttf');
 }
-
-a, a:visited {
-  color: inherit;
-  &:hover {
-
-  }
-}
-
-.wrapper {
-  margin: 2 * $em auto;
-  width: 700px;
-}
-
-.inline-list {
-  list-style: none;
-  padding-left: 0;
-  li {
-    display: inline;
-  }
-}
-
-.head {
-  text-align: center;
-  ul {
-    @extend .inline-list;
-    li {
-      margin: 0 .2 * $em;
-    }
-  }
-}
-
-.quote {
-  margin: $em 0;
-  .text {
-    font-size: 1.2 * $em;
-    &:before {
-      content: "\201C";
-    }
-    &:after {
-      content: "\201D";
-    }
-  }
-  .book {
-    margin-left: 2 * $em;
-    .cite {
-      font-variant: small-caps;
-      &:before {
-        content: "[";
-      }
-      &:after {
-        content: "]";
-      }
-    }
-  }
-  .tags {
-    @extend .inline-list;
-    margin-left: 2 * $em;
-    li {
-      padding: .2 * $em .5 * $em;
-      margin-right: .4 * $em;
-      background-color: $light-gray;
-      border-radius: .2 * $em;
-      &:hover {
-        background-color: $gray;
-        color: $white;
-      }
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      .quotes {
-        background: $white;
-        color: $gray;
-        font-size: .8 * $em;
-        margin-left: .5 * $em;
-        padding: 0 .3 * $em;
-      }
-    }
-  }
+@font-face {
+  font-family: 'Cambria-Italic';
+  src: url('//img.yegor256.com/fonts/2AACA7_3_0.eot');
+  src: url('//img.yegor256.com/fonts/2AACA7_3_0.eot?#iefix');
+  src: url('//img.yegor256.com/fonts/2AACA7_3_0.woff');
+  src: url('//img.yegor256.com/fonts/2AACA7_3_0.ttf');
 }

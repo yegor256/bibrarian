@@ -1,0 +1,12 @@
+Bibrarian-FbId: ${fb.id}
+Bibrarian-FbSecret: ${fb.secret}
+Bibrarian-GoogleId: ${google.id}
+Bibrarian-GoogleSecret: ${google.secret}
+Bibrarian-GithubId: ${github.id}
+Bibrarian-GithubSecret: ${github.secret}
+Bibrarian-SecurityKey: ${security.key}
+Bibrarian-Version: ${project.version}
+Bibrarian-Revision: ${buildNumber}
+Bibrarian-Date: ${buildDate}
+Bibrarian-DynamoKey: ${dynamo.key}
+Bibrarian-DynamoSecret: ${dynamo.secret}

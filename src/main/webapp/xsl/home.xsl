@@ -28,7 +28,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns="http://www.w3.org/1999/xhtml" version="2.0">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template match="page" mode="head">
@@ -37,6 +38,45 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <xsl:text>hello</xsl:text>
+        <xsl:if test="links/link[@rel='add']">
+            <div>
+                <a href="{links/link[@rel='add']/@href}">
+                    <xsl:text>Add New Quote</xsl:text>
+                </a>
+            </div>
+        </xsl:if>
+        <xsl:apply-templates select="quotes/quote"/>
+    </xsl:template>
+    <xsl:template match="quote">
+        <div class="quote">
+            <div class="text">
+                <xsl:value-of select="text"/>
+            </div>
+            <div class="book">
+                <span class="cite">
+                    <xsl:value-of select="book/@name"/>
+                </span>
+                <xsl:value-of select="book"/>
+                <xsl:text>, </xsl:text>
+                <xsl:value-of select="pages"/>
+            </div>
+            <xsl:if test="tags[tag]">
+                <ul class="tags">
+                    <xsl:apply-templates select="tags/tag"/>
+                </ul>
+            </xsl:if>
+        </div>
+    </xsl:template>
+    <xsl:template match="tags/tag">
+        <li>
+            <a href="{links/link[@rel='open']/@href}">
+                <xsl:value-of select="user"/>
+                <xsl:text>:</xsl:text>
+                <xsl:value-of select="name"/>
+            </a>
+            <span class="quotes">
+            <xsl:value-of select="quotes"/>
+            </span>
+        </li>
     </xsl:template>
 </xsl:stylesheet>

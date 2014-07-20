@@ -28,18 +28,21 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.w3.org/1999/xhtml" version="2.0"
+    exclude-result-prefixes="xs">
     <xsl:template match="page">
         <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;</xsl:text>
         <html lang="en">
             <head>
                 <meta charset="UTF-8"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <meta name="description" content="LaTeX bibliography management in cloud"/>
-                <meta name="keywords" content="BibTeX, LaTeX, bibliography, library, references, referants"/>
+                <meta name="description" content="Scientific Quotes Done Right"/>
+                <meta name="keywords" content="bibliography, quotes"/>
                 <meta name="author" content="www.bibrarian.com"/>
                 <link rel="stylesheet" type="text/css" media="all" href="/css/style.css?{version/revision}"/>
-                <link rel="icon" type="image/gif" href="//img.bibrarian.com/favicon.ico?{version/revision}"/>
+                <link rel="icon" type="image/gif" href="//img.bibrarian.com/logo-512x512.png?{version/revision}"/>
                 <xsl:apply-templates select="." mode="head"/>
                 <script type="text/javascript">//<![CDATA[
                     var _gaq = _gaq || [];
@@ -53,22 +56,34 @@
                 //]]></script>
             </head>
             <body>
-                <xsl:apply-templates select="version"/>
-                <xsl:call-template name="nav"/>
-                <div id="content">
-                    <div class="container-fluid">
+                <div class="wrapper">
+                    <header class="head">
+                        <div>
+                            <img src="//img.bibrarian.com/logo.svg"
+                            style="width:64px;height:64px;" alt="bibrarian logo"/>
+                        </div>
+                        <ul>
+                            <xsl:apply-templates select="version"/>
+                            <xsl:choose>
+                                <xsl:when test="identity">
+                                    <xsl:apply-templates select="identity"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:call-template name="login"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                            <li>
+                                <xsl:call-template name="millis">
+                                    <xsl:with-param name="millis" select="millis"/>
+                                </xsl:call-template>
+                            </li>
+                        </ul>
+                    </header>
+                    <div>
                         <xsl:apply-templates select="flash"/>
-                        <xsl:choose>
-                            <xsl:when test="/page/identity">
-                                <xsl:call-template name="content"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:call-template name="login"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
+                        <xsl:apply-templates select="." mode="body"/>
                     </div>
                 </div>
-                <xsl:apply-templates select="." mode="body"/>
             </body>
         </html>
     </xsl:template>
@@ -86,37 +101,32 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="version">
-        <div id="version">
+        <li>
             <xsl:value-of select="name"/>
-            <xsl:text> </xsl:text>
+        </li>
+        <li>
             <a title="see commit in Github">
                 <xsl:attribute name="href">
                     <xsl:text>https://github.com/yegor256/bibrarian/commit/</xsl:text>
                     <xsl:value-of select="revision"/>
                 </xsl:attribute>
-                <i class="icon-github"><xsl:comment>github icon</xsl:comment></i>
+                <xsl:value-of select="substring(revision,1,3)"/>
             </a>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="revision"/>
-            <xsl:text> </xsl:text>
-            <xsl:call-template name="millis">
-                <xsl:with-param name="millis" select="/page/millis"/>
-            </xsl:call-template>
-        </div>
+        </li>
     </xsl:template>
     <xsl:template match="flash">
         <div>
             <xsl:attribute name="class">
-                <xsl:text>alert </xsl:text>
+                <xsl:text>flash </xsl:text>
                 <xsl:choose>
                     <xsl:when test="level = 'INFO'">
-                        <xsl:text>alert-success</xsl:text>
+                        <xsl:text>success</xsl:text>
                     </xsl:when>
                     <xsl:when test="level = 'WARNING'">
-                        <xsl:text>alert-info</xsl:text>
+                        <xsl:text>info</xsl:text>
                     </xsl:when>
                     <xsl:when test="level = 'ERROR'">
-                        <xsl:text>alert-error</xsl:text>
+                        <xsl:text>error</xsl:text>
                     </xsl:when>
                 </xsl:choose>
             </xsl:attribute>
@@ -124,76 +134,71 @@
         </div>
     </xsl:template>
     <xsl:template name="login">
-        <p>
+        <li>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='rexsl:github']/@href"/>
                 </xsl:attribute>
-                <i class="icon-facebook-sign icon-2x"><xsl:comment>facebook sign</xsl:comment></i>
+                <xsl:text>github</xsl:text>
             </a>
-            <xsl:text> </xsl:text>
+        </li>
+        <li>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='rexsl:facebook']/@href"/>
                 </xsl:attribute>
-                <i class="icon-google-plus-sign icon-2x"><xsl:comment>google plus sign</xsl:comment></i>
+                <xsl:text>facebook</xsl:text>
             </a>
-        </p>
+        </li>
+        <li>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='rexsl:google']/@href"/>
+                </xsl:attribute>
+                <xsl:text>google+</xsl:text>
+            </a>
+        </li>
     </xsl:template>
     <xsl:template match="identity">
-        <div class="pull-right">
-            <form method="get" class="navbar-search">
-                <xsl:attribute name="action">
-                    <xsl:value-of select="/page/links/link[@rel='self']/@href"/>
+        <li>
+            <img style="width: 1.5em; height: 1.5em;">
+                <xsl:attribute name="src">
+                    <xsl:value-of select="photo"/>
                 </xsl:attribute>
-                <ul class="nav">
-                    <li>
-                        <input type="text" class="search-query" name="query" placeholder="Search...">
-                            <xsl:attribute name="value">
-                                <xsl:value-of select="/page/query"/>
-                            </xsl:attribute>
-                        </input>
-                    </li>
-                </ul>
-            </form>
-            <ul class="nav">
-                <li class="navbar-text">
-                    <img style="width: 1.5em; height: 1.5em; margin: 0 1em;">
-                        <xsl:attribute name="src">
-                            <xsl:value-of select="photo"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="alt">
-                            <xsl:value-of select="name"/>
-                        </xsl:attribute>
-                    </img>
-                </li>
-                <li class="navbar-text">
-                    <i>
-                        <xsl:attribute name="class">
-                            <xsl:text>icon-</xsl:text>
-                            <xsl:choose>
-                                <xsl:when test="starts-with(urn, 'urn:facebook:')">
-                                    <xsl:text>facebook-sign</xsl:text>
-                                </xsl:when>
-                                <xsl:when test="starts-with(urn, 'urn:google:')">
-                                    <xsl:text>google-plus-sign</xsl:text>
-                                </xsl:when>
-                            </xsl:choose>
-                        </xsl:attribute>
-                        <xsl:comment>authenticated</xsl:comment>
-                    </i>
-                    <xsl:text> </xsl:text>
+                <xsl:attribute name="alt">
                     <xsl:value-of select="name"/>
-                </li>
-                <li>
-                    <a title="log out">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="/page/links/link[@rel='auth-logout']/@href"/>
-                        </xsl:attribute>
-                        <i class="icon-signout"><xsl:comment>signout icon</xsl:comment></i>
-                    </a>
-                </li>
-            </ul>
-        </div>
+                </xsl:attribute>
+            </img>
+        </li>
+        <li class="navbar-text">
+            <i>
+                <xsl:attribute name="class">
+                    <xsl:text>icon-</xsl:text>
+                    <xsl:choose>
+                        <xsl:when test="starts-with(urn, 'urn:facebook:')">
+                            <xsl:text>facebook-sign</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="starts-with(urn, 'urn:github:')">
+                            <xsl:text>github-sign</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="starts-with(urn, 'urn:google:')">
+                            <xsl:text>google-sign</xsl:text>
+                        </xsl:when>
+                    </xsl:choose>
+                </xsl:attribute>
+                <xsl:comment>authenticated</xsl:comment>
+            </i>
+        </li>
+        <li>
+            <xsl:value-of select="name"/>
+        </li>
+        <li>
+            <a title="log out">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='rexsl:logout']/@href"/>
+                </xsl:attribute>
+                <xsl:text>logout</xsl:text>
+            </a>
+        </li>
     </xsl:template>
 </xsl:stylesheet>

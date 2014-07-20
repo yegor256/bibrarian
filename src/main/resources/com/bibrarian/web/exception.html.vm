@@ -3,7 +3,6 @@
     <head>
         <title>oops...</title>
         <link rel="icon" type="image/gif" href="//img.bibrarian.com/favicon.ico?${buildNumber}"/>
-        <link href="//img.bibrarian.com/bootstrap-readable.min.css" rel="stylesheet" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
     <body>
@@ -20,7 +19,7 @@
                 go back to the site and try again:
                 <a href="http://www.bibrarian.com">www.bibrarian.com</a>.
             </p>
-            <pre style="display:none;">${text}</pre>
+            <pre>${text}</pre>
         </div>
     </body>
 </html>
