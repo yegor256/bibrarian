@@ -27,66 +27,83 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dyn;
+package com.bibrarian.web;
 
-import com.bibrarian.om.Artifact;
-import com.bibrarian.om.Queryable;
-import com.jcabi.aspects.Immutable;
+import com.bibrarian.om.Quote;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Attributes;
-import com.jcabi.dynamo.Frame;
-import com.jcabi.urn.URN;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Link;
+import com.rexsl.page.PageBuilder;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 
 /**
- * Artifacts.
+ * Home.
  *
- * @param <T> Type of encapsulated elements
+ * <p>The class is mutable and NOT thread-safe.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle MultipleStringLiterals (500 lines)
+ * @since 1.0
  */
-@Immutable
+@Path("/")
 @Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(callSuper = true, of = "owner")
-final class DynArtifacts extends AbstractQueryable<Artifact> {
+public final class HomeRs extends BaseRs {
 
     /**
-     * Owner of the collection.
+     * Show it.
+     * @return The JAX-RS response
      */
-    private final transient URN owner;
-
-    /**
-     * Public ctor.
-     * @param frame Frame
-     * @param urn Owner of them
-     */
-    protected DynArtifacts(final Frame frame, final URN urn) {
-        super(frame);
-        this.owner = urn;
+    @GET
+    @Path("/")
+    public Response index() {
+        return new PageBuilder()
+            .stylesheet("/xsl/home.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .link(
+                new Link(
+                    "add",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(AddRs.class)
+                        .build()
+                )
+            )
+            .append(this.jaxb(this.base().quotes()))
+            .render()
+            .build();
     }
 
     /**
-     * {@inheritDoc}
+     * Convert quotes to a JAXB element.
+     * @param quotes The list of them
+     * @return JAXB object
      */
-    @Override
-    public boolean add(final Artifact artifact) {
-        this.frame().table().put(
-            new Attributes()
-                .with(DynArtifact.BIBRARIAN, this.owner)
-                .with(DynArtifact.LABEL_FIELD, artifact.label())
-                .with(DynArtifact.REFERAT_FIELD, artifact.referat())
+    private JaxbBundle jaxb(final Iterable<Quote> quotes) {
+        return new JaxbBundle("quotes").add(
+            new JaxbBundle.Group<Quote>(quotes) {
+                @Override
+                public JaxbBundle bundle(final Quote quote) {
+                    return HomeRs.this.bundle(quote);
+                }
+            }
         );
-        return true;
     }
 
     /**
-     * {@inheritDoc}
+     * Convert discovery to a JAXB element.
+     * @param quote The discovery
+     * @return JAXB object
      */
-    @Override
-    protected Queryable<Artifact> with(final Frame frame) {
-        return new DynArtifacts(frame, this.owner);
+    private JaxbBundle bundle(final Quote quote) {
+        return new JaxbBundle("quote")
+            .add("text", quote.text())
+            .up()
+            .add("pages", quote.pages())
+            .up();
     }
 
 }

@@ -29,23 +29,16 @@
  */
 package com.bibrarian.om;
 
-import java.util.Collection;
-import javax.validation.constraints.NotNull;
+import com.jcabi.aspects.Immutable;
 
 /**
- * Queryable collection.
+ * Pageable.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @param <T> Type of encapsulated elements
+ * @since 1.0
  */
-public interface Queryable<T> extends Collection<T> {
-
-    /**
-     * Create a query for refinement.
-     * @return Query ready for refinement
-     */
-    @NotNull
-    Query<T> query();
+@Immutable
+public interface Pageable<T> extends Iterable<T> {
 
 }

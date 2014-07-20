@@ -29,18 +29,18 @@
  */
 package com.bibrarian.web;
 
-import com.bibrarian.om.Bibrarian;
-import com.bibrarian.om.Bibrarians;
+import com.bibrarian.om.Base;
+import com.bibrarian.om.User;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
-import com.rexsl.page.Link;
 import com.rexsl.page.Resource;
 import com.rexsl.page.auth.AuthInset;
 import com.rexsl.page.auth.Facebook;
+import com.rexsl.page.auth.Github;
 import com.rexsl.page.auth.Google;
 import com.rexsl.page.auth.Identity;
 import com.rexsl.page.auth.Provider;
@@ -63,7 +63,7 @@ import javax.ws.rs.core.Response;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Resource.Forwarded
-@Inset.Default({ FlashInset.class, LinksInset.class })
+@Inset.Default(LinksInset.class)
 @Loggable(Loggable.DEBUG)
 public class BaseRs extends BaseResource {
 
@@ -79,6 +79,15 @@ public class BaseRs extends BaseResource {
             Manifests.read("Bibrarian-Revision"),
             Manifests.read("Bibrarian-Date")
         );
+    }
+
+    /**
+     * Flash.
+     * @return The inset with flash
+     */
+    @Inset.Runtime
+    public final FlashInset flash() {
+        return new FlashInset(this);
     }
 
     /**
@@ -98,23 +107,6 @@ public class BaseRs extends BaseResource {
     }
 
     /**
-     * Links.
-     * @return The inset
-     */
-    @Inset.Runtime
-    public final Inset insetLinks() {
-        return new Inset() {
-            @Override
-            public void render(final BasePage<?, ?> page,
-                final Response.ResponseBuilder builder) {
-                page.link(new Link("hypothesizes", "/h"));
-                page.link(new Link("artifacts", "/a"));
-                page.link(new Link("bibitems", "/b"));
-            }
-        };
-    }
-
-    /**
      * Authentication inset.
      * @return The inset
      */
@@ -122,10 +114,10 @@ public class BaseRs extends BaseResource {
     public final AuthInset auth() {
         // @checkstyle LineLength (3 lines)
         final AuthInset auth = new AuthInset(this, Manifests.read("Bibrarian-SecurityKey"))
+            .with(new Github(this, Manifests.read("Bibrarian-GithubId"), Manifests.read("Bibrarian-GithubSecret")))
             .with(new Facebook(this, Manifests.read("Bibrarian-FbId"), Manifests.read("Bibrarian-FbSecret")))
             .with(new Google(this, Manifests.read("Bibrarian-GoogleId"), Manifests.read("Bibrarian-GoogleSecret")));
-        if (Manifests.read("Bibrarian-DynamoKey").matches("[A-Z0-9]{20}")
-            && "12345".equals(Manifests.read("Bibrarian-Revision"))) {
+        if (Manifests.read("Bibrarian-DynamoKey").startsWith("AAAA")) {
             auth.with(
                 new Provider.Always(
                     new Identity.Simple(
@@ -143,7 +135,7 @@ public class BaseRs extends BaseResource {
      * Find and return an authenticated bibrarian.
      * @return The bibrarian
      */
-    protected final Bibrarian bibrarian() {
+    protected final User user() {
         final Identity identity = this.auth().identity();
         if (identity.equals(Identity.ANONYMOUS)) {
             throw FlashInset.forward(
@@ -152,33 +144,21 @@ public class BaseRs extends BaseResource {
                 Level.WARNING
             );
         }
-        return this.bibrarians().fetch(identity.urn());
+        return this.base().get(identity.urn());
     }
 
     /**
-     * Return all bibrarians.
-     * @return The bibrarians
+     * Return base.
+     * @return The base
      */
-    protected final Bibrarians bibrarians() {
-        final Bibrarians bibrarians = Bibrarians.class.cast(
-            this.servletContext().getAttribute(Bibrarians.class.getName())
+    protected final Base base() {
+        final Base base = Base.class.cast(
+            this.servletContext().getAttribute(Base.class.getName())
         );
-        if (bibrarians == null) {
-            throw new IllegalStateException("BIBRARIANS is not initialized");
+        if (base == null) {
+            throw new IllegalStateException("BASE is not initialized");
         }
-        return bibrarians;
-    }
-
-    /**
-     * Index page in current resource.
-     * @return The URI of it
-     */
-    protected final URI indexUri() {
-        return this.uriInfo().getBaseUriBuilder()
-            .clone()
-            .path(this.getClass())
-            .path(this.getClass(), "index")
-            .build();
+        return base;
     }
 
 }

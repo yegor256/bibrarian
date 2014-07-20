@@ -88,6 +88,7 @@
         </site>
     </distributionManagement>
     <properties>
+        <saxon.version>9.1.0.8</saxon.version>
         <jersey.version>1.18.1</jersey.version>
     </properties>
     <dependencies>

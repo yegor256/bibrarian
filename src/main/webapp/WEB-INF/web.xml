@@ -48,7 +48,7 @@
         <url-pattern>/js/*</url-pattern>
     </servlet-mapping>
     <listener>
-        <listener-class>com.bibrarian.web.BibrariansLifespan</listener-class>
+        <listener-class>com.bibrarian.web.Lifespan</listener-class>
     </listener>
     <servlet>
         <servlet-name>ExceptionTrap</servlet-name>

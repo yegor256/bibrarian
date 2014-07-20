@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2013-2014, bibrarian.com
  * All rights reserved.
  *
@@ -26,70 +27,16 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.bibrarian.om;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
-/**
- * One bibitem.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- */
-@Immutable
-public interface Bibitem {
-
-    /**
-     * Get BibTeX content.
-     * @return The content
-     */
-    Bibtex load();
-
-    /**
-     * Save new content.
-     * @param text Text to save, after parsing
-     */
-    void save(@NotNull Bibtex text);
-
-    /**
-     * Simple implementation.
-     */
-    @Loggable(Loggable.DEBUG)
-    @ToString
-    @EqualsAndHashCode(of = "tex")
-    final class Simple implements Bibitem {
-        /**
-         * Text in BibTeX format.
-         */
-        private final transient Bibtex tex;
-        /**
-         * Public ctor.
-         * @param txt Text in BibTeX format
-         */
-        public Simple(@NotNull final Bibtex txt) {
-            this.tex = txt;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull
-        public Bibtex load() {
-            throw new UnsupportedOperationException();
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull
-        public void save(final Bibtex txt) {
-            throw new UnsupportedOperationException();
-        }
-    }
-
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+    <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:include href="/xsl/layout.xsl"/>
+    <xsl:template match="page" mode="head">
+        <title>
+            <xsl:text>home</xsl:text>
+        </title>
+    </xsl:template>
+    <xsl:template match="page" mode="body">
+        <xsl:text>hello</xsl:text>
+    </xsl:template>
+</xsl:stylesheet>

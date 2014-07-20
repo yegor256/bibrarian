@@ -27,35 +27,62 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.dynamo;
 
+import com.bibrarian.om.Base;
+import com.bibrarian.om.Pageable;
+import com.bibrarian.om.Quote;
+import com.bibrarian.om.User;
 import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Region;
+import com.jcabi.urn.URN;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Search query.
+ * Base in DynamoDB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @param <T> Type of result
+ * @since 1.0
  */
 @Immutable
-public interface Query<T> {
+@Loggable(Loggable.DEBUG)
+@ToString
+@EqualsAndHashCode(of = "region")
+public final class DyBase implements Base {
 
     /**
-     * Add this term and return a new query.
-     * @param key The key
-     * @param value The value
-     * @return Query ready for further refinement
+     * Region.
      */
-    @NotNull
-    Query<T> with(@NotNull String key, @NotNull String value);
+    private final transient Region region;
 
     /**
-     * Run the refinement.
-     * @return Queryable collection
+     * Public ctor.
+     * @param reg Region
      */
-    @NotNull
-    Queryable<T> refine();
+    public DyBase(final Region reg) {
+        this.region = reg;
+    }
 
+    @Override
+    public User register(final URN urn, final String name) {
+        throw new UnsupportedOperationException("#register()");
+    }
+
+    @Override
+    public User get(final URN urn) {
+        throw new UnsupportedOperationException("#get()");
+    }
+
+    @Override
+    public Pageable<Quote> quotes() {
+        throw new UnsupportedOperationException("#quotes()");
+    }
+
+    @Override
+    public String check(final String name) {
+        throw new UnsupportedOperationException("#check()");
+    }
 }

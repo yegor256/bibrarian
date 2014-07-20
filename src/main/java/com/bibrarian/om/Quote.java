@@ -27,45 +27,54 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.web;
+package com.bibrarian.om;
 
-import com.rexsl.page.HttpHeadersMocker;
-import com.rexsl.page.UriInfoMocker;
-import com.rexsl.test.JaxbConverter;
-import com.rexsl.test.XhtmlMatchers;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import org.hamcrest.MatcherAssert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.jcabi.aspects.Immutable;
 
 /**
- * Test case for {@link DiscoveriesRs}.
+ * Quote.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-public final class DiscoveriesRsTest {
+@Immutable
+public interface Quote {
 
     /**
-     * DiscoveriesRs can render front page.
-     * @throws Exception If some problem inside
+     * Tags.
+     * @return Tags
      */
-    @Test
-    @Ignore
-    public void rendersFrontPage() throws Exception {
-        final DiscoveriesRs res = new DiscoveriesRs();
-        res.setUriInfo(new UriInfoMocker().mock());
-        res.setHttpHeaders(new HttpHeadersMocker().mock());
-        res.setSecurityContext(Mockito.mock(SecurityContext.class));
-        final Response response = res.index();
-        MatcherAssert.assertThat(
-            JaxbConverter.the(response.getEntity()),
-            XhtmlMatchers.hasXPaths(
-                "/page/millis",
-                "/page/version[name='1.0-SNAPSHOT']"
-            )
-        );
-    }
+    Pageable<Tag> tags();
+
+    /**
+     * Where was it discovered.
+     * @return The book
+     */
+    Book book();
+
+    /**
+     * Text.
+     * @return The text
+     */
+    String text();
+
+    /**
+     * Set text.
+     * @param text The text
+     */
+    void text(String text);
+
+    /**
+     * Where found, page numbers.
+     * @return The pages
+     */
+    String pages();
+
+    /**
+     * Set page numbers.
+     * @param pages The pages
+     */
+    void pages(String pages);
 
 }

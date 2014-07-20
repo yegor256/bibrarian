@@ -27,102 +27,74 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.dynamo;
 
+import com.bibrarian.om.Book;
+import com.bibrarian.om.Pageable;
+import com.bibrarian.om.Quote;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import javax.validation.constraints.NotNull;
+import com.jcabi.dynamo.Item;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * One hypothesis.
+ * Artifact in Dynamo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
 @Immutable
-public interface Hypothesis {
+@Loggable(Loggable.DEBUG)
+@ToString
+@EqualsAndHashCode(of = "item")
+final class DyBook implements Book {
 
     /**
-     * Get its unique name/label.
-     * @return The label
+     * Table in DynamoDB.
      */
-    @NotNull
-    String label();
+    public static final String TABLE = "books";
 
     /**
-     * Get its text description.
-     * @return The description
+     * Hash.
      */
-    @NotNull
-    String description();
+    public static final String HASH = "name";
 
     /**
-     * Set its text description.
-     * @param text The description
+     * Bibitem.
      */
-    void description(@NotNull String text);
+    public static final String ATTR_BIBITEM = "bibitem";
 
     /**
-     * Simple implementation.
+     * Item.
      */
-    @Loggable(Loggable.DEBUG)
-    @ToString
-    @EqualsAndHashCode(of = { "lbl", "desc" })
-    final class Simple implements Hypothesis {
-        /**
-         * Label.
-         */
-        private final transient String lbl;
-        /**
-         * Description.
-         */
-        private final transient String desc;
-        /**
-         * Public ctor.
-         */
-        public Simple() {
-            this("unknown", "");
-        }
-        /**
-         * Public ctor.
-         * @param label The label
-         */
-        public Simple(@NotNull final String label) {
-            this(label, "");
-        }
-        /**
-         * Public ctor.
-         * @param label The label
-         * @param description The description
-         */
-        public Simple(@NotNull final String label,
-            @NotNull final String description) {
-            this.lbl = label;
-            this.desc = description;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String label() {
-            return this.lbl;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String description() {
-            return this.desc;
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void description(final String text) {
-            throw new UnsupportedOperationException();
-        }
+    private final transient Item item;
+
+    /**
+     * Public ctor.
+     * @param itm Item
+     */
+    DyBook(final Item itm) {
+        this.item = itm;
     }
 
+    @Override
+    public String label() {
+        throw new UnsupportedOperationException("#label()");
+    }
+
+    @Override
+    public String bibitem() {
+        throw new UnsupportedOperationException("#bibitem()");
+    }
+
+    @Override
+    public void bibitem(final String tex) {
+        throw new UnsupportedOperationException("#bibitem()");
+    }
+
+    @Override
+    public Pageable<Quote> quotes() {
+        throw new UnsupportedOperationException("#quotes()");
+    }
 }

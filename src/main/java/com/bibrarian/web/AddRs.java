@@ -27,66 +27,80 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dyn;
+package com.bibrarian.web;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.bibrarian.om.Bibitem;
-import com.bibrarian.om.Bibtex;
-import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Item;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.rexsl.page.PageBuilder;
+import java.util.logging.Level;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 
 /**
- * Bibitem in Dynamo.
+ * Add.
+ *
+ * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle MultipleStringLiterals (500 lines)
+ * @since 1.0
  */
-@Immutable
+@Path("/add")
 @Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(of = "item")
-final class DynBibitem implements Bibitem {
+public final class AddRs extends BaseRs {
 
     /**
-     * Column in Dynamo table.
+     * First form.
+     * @return The JAX-RS response
      */
-    public static final String LABEL = "label";
-
-    /**
-     * Column in Dynamo table.
-     */
-    public static final String BIBTEX = "bibtex";
-
-    /**
-     * Item.
-     */
-    private final transient Item item;
-
-    /**
-     * Public ctor.
-     * @param itm Item
-     */
-    protected DynBibitem(final Item itm) {
-        this.item = itm;
+    @GET
+    @Path("/first")
+    public Response first() {
+        return new PageBuilder()
+            .stylesheet("/xsl/add-first.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .render()
+            .build();
     }
 
     /**
-     * {@inheritDoc}
+     * Second form.
+     * @param book Book name
+     * @return The JAX-RS response
      */
-    @Override
-    public Bibtex load() {
-        return new Bibtex(this.item.get(DynBibitem.BIBTEX).getS());
+    @GET
+    @Path("/second")
+    public Response second(@QueryParam("book") final String book) {
+        return new PageBuilder()
+            .stylesheet("/xsl/add-second.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .render()
+            .build();
     }
 
     /**
-     * {@inheritDoc}
+     * Result.
+     * @param book Book name
+     * @param text Text of quote
+     * @param pages Pages
+     * @return The JAX-RS response
      */
-    @Override
-    public void save(final Bibtex tex) {
-        this.item.put(DynBibitem.BIBTEX, new AttributeValue(tex.toString()));
+    @POST
+    @Path("/post")
+    public Response third(@FormParam("book") final String book,
+        @FormParam("text") final String text,
+        @FormParam("pages") final String pages) {
+        throw this.flash().redirect(
+            this.uriInfo().getBaseUri(),
+            String.format("quote added to book \"%s\"", book),
+            Level.INFO
+        );
     }
 
 }

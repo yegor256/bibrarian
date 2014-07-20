@@ -29,73 +29,64 @@
  */
 package com.bibrarian.web;
 
-import com.bibrarian.dyn.DynBibrarians;
-import com.bibrarian.om.Bibitem;
-import com.bibrarian.om.Bibrarian;
-import com.bibrarian.om.Bibrarians;
-import com.bibrarian.om.Queryable;
+import com.bibrarian.dynamo.DyBase;
+import com.bibrarian.om.Base;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.retry.ReRegion;
+import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
-import com.jcabi.urn.URN;
+import java.io.IOException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 /**
- * Lifespan controller of the {@link Bibrarians}.
+ * Lifespan controller.
  *
  * @author Yegor Bugayenko (yegor@woquo.com)
  * @version $Id$
  */
 @Loggable(Loggable.INFO)
-public final class BibrariansLifespan implements ServletContextListener {
+public final class Lifespan implements ServletContextListener {
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>These attributes is used later in
-     * {@link com.woquo.www.BaseRs#setServletContext(ServletContext)}.
-     */
     @Override
     public void contextInitialized(final ServletContextEvent event) {
         try {
             Manifests.append(event.getServletContext());
-        } catch (java.io.IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
-        final String key = Manifests.read("Bibrarian-DynamoKey");
-        final Bibrarians bibrarians;
-        if (key.matches("[A-Z0-9]{20}")) {
-            bibrarians = new DynBibrarians(
-                new Credentials.Simple(
-                    key,
-                    Manifests.read("Bibrarian-DynamoSecret")
-                ),
-                Manifests.read("Bibrarian-DynamoPrefix")
-            );
-        } else {
-            bibrarians = new Bibrarians() {
-                @Override
-                public Bibrarian fetch(final URN urn) {
-                    throw new UnsupportedOperationException();
-                }
-                @Override
-                public Queryable<Bibitem> bibitems() {
-                    throw new UnsupportedOperationException();
-                }
-            };
-        }
         event.getServletContext().setAttribute(
-            Bibrarians.class.getName(), bibrarians
+            Base.class.getName(), new DyBase(this.dynamo())
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void contextDestroyed(final ServletContextEvent event) {
         // nothing to do
+    }
+
+    /**
+     * Dynamo DB region.
+     * @return Region
+     */
+    private Region dynamo() {
+        final String key = Manifests.read("Bibrarian-DynamoKey");
+        Credentials creds = new Credentials.Simple(
+            key,
+            Manifests.read("Bibrarian-DynamoSecret")
+        );
+        if (key.startsWith("AAAAA")) {
+            final int port = Integer.parseInt(
+                System.getProperty("dynamo.port")
+            );
+            creds = new Credentials.Direct(creds, port);
+            Logger.warn(this, "test DynamoDB at port #%d", port);
+        }
+        return new Region.Prefixed(
+            new ReRegion(new Region.Simple(creds)), "bib-"
+        );
     }
 
 }

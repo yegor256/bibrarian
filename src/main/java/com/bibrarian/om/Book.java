@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2013-2014, bibrarian.com
  * All rights reserved.
  *
@@ -27,37 +26,43 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:variable name="section">hypothesizes</xsl:variable>
-    <xsl:include href="/xsl/layout.xsl"/>
-    <xsl:template name="head">
-        <title>
-            <xsl:value-of select="/page/hypothesis/label"/>
-        </title>
-    </xsl:template>
-    <xsl:template name="content">
-        <h1><xsl:value-of select="label"/><xsl:text> Hypothesis</xsl:text></h1>
-        <xsl:apply-templates select="/page/hypothesis"/>
-        <h1><xsl:text>Discoveries</xsl:text></h1>
-        <xsl:apply-templates select="discoveries/discovery"/>
-    </xsl:template>
-    <xsl:template match="hypothesis">
-        <p>
-            <xsl:value-of select="label"/>
-            <xsl:text>: </xsl:text>
-            <xsl:value-of select="description"/>
-            <xsl:text> </xsl:text>
-        </p>
-    </xsl:template>
-    <xsl:template match="discovery">
-        <p>
-            <span>
-                <xsl:value-of select="label"/>
-            </span>
-            <xsl:value-of select="quote"/>
-            <xsl:value-of select="pages"/>
-        </p>
-    </xsl:template>
-</xsl:stylesheet>
+ */
+package com.bibrarian.om;
+
+import com.jcabi.aspects.Immutable;
+
+/**
+ * Book.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+@Immutable
+public interface Book {
+
+    /**
+     * Get its unique name/label.
+     * @return The label
+     */
+    String label();
+
+    /**
+     * Bibitem.
+     * @return The bibitem
+     */
+    String bibitem();
+
+    /**
+     * Change bibitem.
+     * @param tex TeX to set
+     */
+    void bibitem(String tex);
+
+    /**
+     * Get all quotes.
+     * @return The quotes
+     */
+    Pageable<Quote> quotes();
+
+}

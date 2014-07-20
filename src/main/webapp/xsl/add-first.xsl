@@ -30,22 +30,20 @@
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:variable name="section">bibitems</xsl:variable>
     <xsl:include href="/xsl/layout.xsl"/>
-    <xsl:template name="head">
+    <xsl:template match="page" mode="head">
         <title>
-            <xsl:text>bibitems</xsl:text>
+            <xsl:text>add new quote</xsl:text>
         </title>
     </xsl:template>
-    <xsl:template name="content">
+    <xsl:template match="page" mode="body">
         <form method="post">
             <xsl:attribute name="action">
-                <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
+                <xsl:value-of select="links/link[@rel='save']/@href"/>
             </xsl:attribute>
             <fieldset>
-                <legend>New Bibitem</legend>
-                <label for="bibitem"><xsl:text>BibTeX item</xsl:text></label>
-                <textarea name="bibitem" id="bibitem" rows="6"><xsl:comment>enter here</xsl:comment></textarea>
+                <label for="referat"><xsl:text>Referat</xsl:text></label>
+                <textarea name="referat" id="referat" rows="6"><xsl:value-of select="referat"/></textarea>
                 <label><xsl:comment>for the submit button below</xsl:comment></label>
                 <button type="submit" class="btn">
                     <i class="icon-circle-arrow-right icon-large"><xsl:comment>button</xsl:comment></i>
@@ -53,15 +51,5 @@
                 </button>
             </fieldset>
         </form>
-        <h1><xsl:text>All BibTeX Items</xsl:text></h1>
-        <xsl:apply-templates select="bibitems/bibitem"/>
-    </xsl:template>
-    <xsl:template match="bibitem">
-        <p>
-            <span>
-                <xsl:value-of select="label"/>
-            </span>
-        </p>
-        <pre><xsl:value-of select="tex"/></pre>
     </xsl:template>
 </xsl:stylesheet>

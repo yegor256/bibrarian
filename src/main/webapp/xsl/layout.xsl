@@ -29,33 +29,19 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
-    <xsl:template match="/">
-        <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;</xsl:text>
-        <xsl:apply-templates select="page"/>
-    </xsl:template>
     <xsl:template match="page">
+        <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;</xsl:text>
         <html lang="en">
             <head>
                 <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <meta name="description" content="LaTeX bibliography management in cloud"/>
                 <meta name="keywords" content="BibTeX, LaTeX, bibliography, library, references, referants"/>
                 <meta name="author" content="www.bibrarian.com"/>
-                <link href="//img.bibrarian.com/bootstrap-readable.min.css" rel="stylesheet" />
-                <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet" />
-                <link rel="stylesheet" type="text/css" media="all">
-                    <xsl:attribute name="href">
-                        <xsl:text>/css/screen.css?</xsl:text>
-                        <xsl:value-of select="/page/version/revision"/>
-                    </xsl:attribute>
-                </link>
-                <link rel="icon" type="image/gif">
-                    <xsl:attribute name="href">
-                        <xsl:text>http://img.bibrarian.com/favicon.ico?</xsl:text>
-                        <xsl:value-of select="/page/version/revision"/>
-                    </xsl:attribute>
-                </link>
-                <xsl:call-template name="head"/>
-                <script type="text/javascript"><![CDATA[
+                <link rel="stylesheet" type="text/css" media="all" href="/css/style.css?{version/revision}"/>
+                <link rel="icon" type="image/gif" href="//img.bibrarian.com/favicon.ico?{version/revision}"/>
+                <xsl:apply-templates select="." mode="head"/>
+                <script type="text/javascript">//<![CDATA[
                     var _gaq = _gaq || [];
                     _gaq.push(['_setAccount', 'UA-1963507-26']);
                     _gaq.push(['_trackPageview']);
@@ -64,8 +50,7 @@
                         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
                         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
                     })();
-                ]]></script>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                //]]></script>
             </head>
             <body>
                 <xsl:apply-templates select="version"/>
@@ -81,9 +66,9 @@
                                 <xsl:call-template name="login"/>
                             </xsl:otherwise>
                         </xsl:choose>
-                        <xsl:call-template name="bottom"/>
                     </div>
                 </div>
+                <xsl:apply-templates select="." mode="body"/>
             </body>
         </html>
     </xsl:template>
@@ -140,7 +125,6 @@
     </xsl:template>
     <xsl:template name="login">
         <p>
-            <xsl:text>To start, login using one of your accounts at: </xsl:text>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
@@ -155,56 +139,6 @@
                 <i class="icon-google-plus-sign icon-2x"><xsl:comment>google plus sign</xsl:comment></i>
             </a>
         </p>
-    </xsl:template>
-    <xsl:template name="nav">
-        <div class="navbar navbar-static-top">
-            <div class="navbar-inner">
-                <div class="container-fluid">
-                    <a class="brand" title="Back home" style="font-family: 'Bibrarian Logo'; font-size: 2em;">
-                        <xsl:attribute name="href">
-                            <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
-                        </xsl:attribute>
-                        <xsl:text>B</xsl:text>
-                    </a>
-                    <ul class="nav">
-                        <li>
-                            <xsl:if test="$section = 'artifacts'">
-                                <xsl:attribute name="class">active</xsl:attribute>
-                            </xsl:if>
-                            <a title="All artifacts discovered by you">
-                                <xsl:attribute name="href">
-                                    <xsl:value-of select="/page/links/link[@rel='artifacts']/@href"/>
-                                </xsl:attribute>
-                                <xsl:text>Artifacts</xsl:text>
-                            </a>
-                        </li>
-                        <li>
-                            <xsl:if test="$section = 'hypothesizes'">
-                                <xsl:attribute name="class">active</xsl:attribute>
-                            </xsl:if>
-                            <a title="Your hypothesizes">
-                                <xsl:attribute name="href">
-                                    <xsl:value-of select="/page/links/link[@rel='hypothesizes']/@href"/>
-                                </xsl:attribute>
-                                <xsl:text>Hypothesizes</xsl:text>
-                            </a>
-                        </li>
-                        <li>
-                            <xsl:if test="$section = 'bibitems'">
-                                <xsl:attribute name="class">active</xsl:attribute>
-                            </xsl:if>
-                            <a title="All bibitems">
-                                <xsl:attribute name="href">
-                                    <xsl:value-of select="/page/links/link[@rel='bibitems']/@href"/>
-                                </xsl:attribute>
-                                <xsl:text>Bibitems</xsl:text>
-                            </a>
-                        </li>
-                    </ul>
-                    <xsl:apply-templates select="identity"/>
-                </div>
-            </div>
-        </div>
     </xsl:template>
     <xsl:template match="identity">
         <div class="pull-right">
@@ -261,31 +195,5 @@
                 </li>
             </ul>
         </div>
-    </xsl:template>
-    <xsl:template name="bottom">
-        <p id="bottom">
-            <xsl:text>bibrarian.com is an open source Java project, hosted by </xsl:text>
-            <a href="https://github.com/yegor256/bibrarian">
-                <xsl:text>Github</xsl:text>
-            </a>
-            <xsl:text> and </xsl:text>
-            <a href="https://www.cloudbees.com">
-                <xsl:text>CloudBees</xsl:text>
-            </a>
-            <xsl:text>. The service is absolutely free of charge, since it is sponsored by </xsl:text>
-            <a href="http://www.tpc2.com/">
-                <xsl:text>tpc2.com</xsl:text>
-            </a>
-            <xsl:text>. See also terms of use, privacy policy and license agreement at </xsl:text>
-            <a href="/misc/LICENSE.txt">
-                <xsl:text>LICENSE.txt</xsl:text>
-            </a>
-            <xsl:text>.</xsl:text>
-            <xsl:text> This website is using </xsl:text>
-            <a href="http://www.rexsl.com/">
-                <xsl:text>ReXSL</xsl:text>
-            </a>
-            <xsl:text>, Java RESTful development framework.</xsl:text>
-        </p>
     </xsl:template>
 </xsl:stylesheet>

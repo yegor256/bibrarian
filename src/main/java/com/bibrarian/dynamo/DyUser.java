@@ -27,99 +27,64 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dyn;
+package com.bibrarian.dynamo;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.bibrarian.om.Hypothesis;
+import com.bibrarian.om.Pageable;
+import com.bibrarian.om.Quote;
+import com.bibrarian.om.Tag;
+import com.bibrarian.om.User;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Item;
-import java.util.Map;
+import com.jcabi.dynamo.Region;
+import com.jcabi.urn.URN;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Hypothesis in Dynamo.
+ * User in DynamoDB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(of = "item")
-final class DynHypothesis implements Hypothesis {
+@EqualsAndHashCode(of = { "region", "urn" })
+final class DyUser implements User {
 
     /**
-     * Column in Dynamo table.
+     * Region.
      */
-    public static final String BIBRARIAN = "bibrarian";
+    private final transient Region region;
 
     /**
-     * Column in Dynamo table.
+     * URN of it.
      */
-    public static final String LABEL_FIELD = "label";
-
-    /**
-     * Column in Dynamo table.
-     */
-    public static final String DESCRIPTION_LABEL = "description";
-
-    /**
-     * Item.
-     */
-    private final transient Item item;
+    private final transient URN urn;
 
     /**
      * Public ctor.
-     * @param itm Item
+     * @param reg Region
+     * @param name URN of him
      */
-    protected DynHypothesis(final Item itm) {
-        this.item = itm;
+    DyUser(final Region reg, final URN name) {
+        this.region = reg;
+        this.urn = name;
     }
 
-    /**
-     * Map an object to attributes.
-     * @param hypothesis Hypothesis
-     * @param attributes Where to map to
-     */
-    public static void toItem(final Hypothesis hypothesis,
-        final Map<String, AttributeValue> attributes) {
-        attributes.put(
-            DynHypothesis.LABEL_FIELD,
-            new AttributeValue(hypothesis.label())
-        );
-        attributes.put(
-            DynHypothesis.DESCRIPTION_LABEL,
-            new AttributeValue(hypothesis.description())
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public String label() {
-        return this.item.get(DynHypothesis.LABEL_FIELD).getS();
+    public String name() {
+        throw new UnsupportedOperationException("#name()");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public String description() {
-        return this.item.get(DynHypothesis.DESCRIPTION_LABEL).getS();
+    public Pageable<Tag> tags() {
+        throw new UnsupportedOperationException("#tags()");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void description(final String text) {
-        this.item.put(
-            DynHypothesis.DESCRIPTION_LABEL,
-            new AttributeValue(text)
-        );
+    public Pageable<Quote> quotes() {
+        throw new UnsupportedOperationException("#quotes()");
     }
-
 }

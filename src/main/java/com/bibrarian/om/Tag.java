@@ -27,66 +27,48 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dyn;
+package com.bibrarian.om;
 
-import com.bibrarian.om.Hypothesis;
-import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Attributes;
-import com.jcabi.dynamo.Frame;
-import com.jcabi.urn.URN;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * Artifacts.
+ * Tag.
  *
- * @param <T> Type of encapsulated elements
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
 @Immutable
-@Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(callSuper = true, of = "owner")
-final class DynHypothesizes extends AbstractQueryable<Hypothesis> {
+public interface Tag {
 
     /**
-     * Owner of the collection.
+     * Get its owner.
+     * @return The user
      */
-    private final transient URN owner;
+    User user();
 
     /**
-     * Public ctor.
-     * @param frame Frame
-     * @param urn Owner of them
+     * Get its unique name.
+     * @return The name
      */
-    protected DynHypothesizes(final Frame frame, final URN urn) {
-        super(frame);
-        this.owner = urn;
-    }
+    String name();
 
     /**
-     * {@inheritDoc}
+     * Get all quotes.
+     * @return Quotes
      */
-    @Override
-    public boolean add(final Hypothesis hypothesis) {
-        this.frame().table().put(
-            new Attributes()
-                .with(DynHypothesis.BIBRARIAN, this.owner)
-                .with(DynHypothesis.LABEL_FIELD, hypothesis.label())
-                .with(DynHypothesis.DESCRIPTION_LABEL, hypothesis.description())
-        );
-        return true;
-    }
+    Pageable<Quote> quotes();
 
     /**
-     * {@inheritDoc}
+     * Get review.
+     * @return The review
      */
-    @Override
-    protected Queryable<Hypothesis> with(final Frame frame) {
-        return new DynHypothesizes(frame, this.owner);
-    }
+    String review();
+
+    /**
+     * Add review.
+     * @param review The review
+     */
+    void review(String review);
 
 }

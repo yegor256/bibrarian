@@ -27,57 +27,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dyn;
+package com.bibrarian.om;
 
-import com.bibrarian.om.Bibitem;
-import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Attributes;
-import com.jcabi.dynamo.Frame;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.jcabi.urn.URN;
 
 /**
- * Artifacts.
+ * Base.
  *
- * @param <T> Type of encapsulated elements
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
 @Immutable
-@Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(callSuper = true)
-final class DynBibitems extends AbstractQueryable<Bibitem> {
+public interface Base {
 
     /**
-     * Public ctor.
-     * @param frame Frame
+     * Register new user name.
+     * @param urn URN
+     * @param name Name of the user
      */
-    protected DynBibitems(final Frame frame) {
-        super(frame);
-    }
+    User register(URN urn, String name);
 
     /**
-     * {@inheritDoc}
+     * Get user by URN.
+     * @return Tags of the user
      */
-    @Override
-    public boolean add(final Bibitem bibitem) {
-        this.frame().table().put(
-            new Attributes()
-                .with(DynBibitem.LABEL, bibitem.load().label())
-                .with(DynBibitem.BIBTEX, bibitem.load())
-        );
-        return true;
-    }
+    User get(URN urn);
 
     /**
-     * {@inheritDoc}
+     * Get all quotes.
+     * @return The quotes
      */
-    @Override
-    protected Queryable<Bibitem> with(final Frame frame) {
-        return new DynBibitems(frame);
-    }
+    Pageable<Quote> quotes();
+
+    /**
+     * Check user name.
+     * @param name Name of the user
+     * @return Empty if it's available, error message otherwise
+     */
+    String check(String name);
 
 }

@@ -27,71 +27,96 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dyn;
+package com.bibrarian.dynamo;
 
-import com.bibrarian.om.Discovery;
-import com.bibrarian.om.Queryable;
+import com.bibrarian.om.Book;
+import com.bibrarian.om.Pageable;
+import com.bibrarian.om.Quote;
+import com.bibrarian.om.Tag;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Attributes;
-import com.jcabi.dynamo.Frame;
-import com.jcabi.urn.URN;
-import java.util.Date;
+import com.jcabi.dynamo.Item;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Artifacts.
+ * Quote in Dynamo.
  *
- * @param <T> Type of encapsulated elements
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(callSuper = true, of = "owner")
-final class DynDiscoveries extends AbstractQueryable<Discovery> {
+@EqualsAndHashCode(of = "item")
+final class DyQuote implements Quote {
 
     /**
-     * Owner of the collection.
+     * Table name.
      */
-    private final transient URN owner;
+    public static final String TABLE = "quotes";
+
+    /**
+     * Hash.
+     */
+    public static final String HASH = "id";
+
+    /**
+     * Range.
+     */
+    public static final String RANGE = "book";
+
+    /**
+     * Text of the quote.
+     */
+    public static final String ATTR_TEXT = "text";
+
+    /**
+     * Pages of the quote.
+     */
+    public static final String ATTR_PAGES = "pages";
+
+    /**
+     * Item.
+     */
+    private final transient Item item;
 
     /**
      * Public ctor.
-     * @param frame Frame
-     * @param urn Owner of them
+     * @param itm Item
      */
-    protected DynDiscoveries(final Frame frame, final URN urn) {
-        super(frame);
-        this.owner = urn;
+    DyQuote(final Item itm) {
+        this.item = itm;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean add(final Discovery discovery) {
-        this.frame().table().put(
-            new Attributes()
-                .with(DynDiscovery.BIBRARIAN, this.owner)
-                .with(DynDiscovery.ARTIFACT_FIELD, discovery.artifact().label())
-                .with(
-                    DynDiscovery.HYPOTHESIS_FIELD,
-                    discovery.hypothesis().label()
-                )
-                .with(DynDiscovery.DATE_FIELD, new Date().getTime())
-        );
-        return true;
+    public Pageable<Tag> tags() {
+        throw new UnsupportedOperationException("#tags()");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected Queryable<Discovery> with(final Frame frame) {
-        return new DynDiscoveries(frame, this.owner);
+    public Book book() {
+        throw new UnsupportedOperationException("#book()");
     }
 
+    @Override
+    public String text() {
+        throw new UnsupportedOperationException("#text()");
+    }
+
+    @Override
+    public void text(final String text) {
+        throw new UnsupportedOperationException("#text()");
+    }
+
+    @Override
+    public String pages() {
+        throw new UnsupportedOperationException("#pages()");
+    }
+
+    @Override
+    public void pages(final String pages) {
+        throw new UnsupportedOperationException("#pages()");
+    }
 }

@@ -27,87 +27,91 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dyn;
+package com.bibrarian.dynamo;
 
-import com.bibrarian.om.Artifact;
-import com.bibrarian.om.Bibrarian;
-import com.bibrarian.om.Discovery;
-import com.bibrarian.om.Hypothesis;
-import com.bibrarian.om.Queryable;
+import com.bibrarian.om.Pageable;
+import com.bibrarian.om.Quote;
+import com.bibrarian.om.Tag;
+import com.bibrarian.om.User;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Conditions;
-import com.jcabi.dynamo.Region;
-import com.jcabi.urn.URN;
+import com.jcabi.dynamo.Item;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Bibrarian in Dynamo DB.
+ * Tag in Dynamo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(of = { "region", "urn" })
-final class DynBibrarian implements Bibrarian {
+@EqualsAndHashCode(of = "item")
+final class DyTag implements Tag {
 
     /**
-     * Region.
+     * Table in DynamoDB.
      */
-    private final transient Region region;
+    public static final String TABLE = "tags";
 
     /**
-     * URN of it.
+     * Hash.
      */
-    private final transient URN urn;
+    public static final String HASH = "user";
+
+    /**
+     * Range.
+     */
+    public static final String RANGE = "tag";
+
+    /**
+     * Quote ID.
+     */
+    public static final String ATTR_QUOTE = "quote";
+
+    /**
+     * Review.
+     */
+    public static final String ATTR_REVIEW = "review";
+
+    /**
+     * Item.
+     */
+    private final transient Item item;
 
     /**
      * Public ctor.
-     * @param reg Region
-     * @param name URN of him
+     * @param itm Item
      */
-    protected DynBibrarian(final Region reg, final URN name) {
-        this.region = reg;
-        this.urn = name;
+    DyTag(final Item itm) {
+        this.item = itm;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Queryable<Artifact> artifacts() {
-        return new DynArtifacts(
-            this.region.table("artifacts").frame()
-                .where(DynArtifact.BIBRARIAN, Conditions.equalTo(this.urn)),
-            this.urn
-        );
+    public User user() {
+        throw new UnsupportedOperationException("#user()");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Queryable<Hypothesis> hypothesizes() {
-        return new DynHypothesizes(
-            this.region.table("hypothesizes").frame()
-                .where(DynHypothesis.BIBRARIAN, Conditions.equalTo(this.urn)),
-            this.urn
-        );
+    public String name() {
+        throw new UnsupportedOperationException("#name()");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Queryable<Discovery> discoveries() {
-        return new DynDiscoveries(
-            this.region.table("discoveries").frame()
-                .where(DynDiscovery.BIBRARIAN, Conditions.equalTo(this.urn)),
-            this.urn
-        );
+    public Pageable<Quote> quotes() {
+        throw new UnsupportedOperationException("#quotes()");
     }
 
+    @Override
+    public String review() {
+        throw new UnsupportedOperationException("#review()");
+    }
+
+    @Override
+    public void review(final String review) {
+        throw new UnsupportedOperationException("#review()");
+    }
 }

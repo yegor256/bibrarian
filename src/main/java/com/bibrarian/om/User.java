@@ -27,62 +27,36 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dyn;
+package com.bibrarian.om;
 
-import com.bibrarian.om.Bibitem;
-import com.bibrarian.om.Bibrarian;
-import com.bibrarian.om.Bibrarians;
-import com.bibrarian.om.Queryable;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Credentials;
-import com.jcabi.dynamo.Region;
-import com.jcabi.urn.URN;
-import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * All known bibrarians.
+ * One user.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
 @Immutable
-@Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(callSuper = false, of = "region")
-public final class DynBibrarians implements Bibrarians {
+public interface User {
 
     /**
-     * Dynamo region.
+     * His unique name.
+     * @return Name of him
      */
-    private final transient Region region;
+    String name();
 
     /**
-     * Public ctor.
-     * @param creds Credentials
-     * @param prefix Prefix
+     * Get a list of tags.
+     * @return Tags of the user
      */
-    public DynBibrarians(@NotNull final Credentials creds,
-        @NotNull final String prefix) {
-        this.region = new Region.Prefixed(new Region.Simple(creds), prefix);
-    }
+    Pageable<Tag> tags();
 
     /**
-     * {@inheritDoc}
+     * Get all his quotes.
+     * @return The quotes
      */
-    @Override
-    public Bibrarian fetch(@NotNull final URN urn) {
-        return new DynBibrarian(this.region, urn);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Queryable<Bibitem> bibitems() {
-        return new DynBibitems(this.region.table("bibitems").frame());
-    }
+    Pageable<Quote> quotes();
 
 }

@@ -29,7 +29,7 @@
  */
 package com.bibrarian.web;
 
-import com.bibrarian.om.Hypothesis;
+import com.bibrarian.om.Tag;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
@@ -85,8 +85,8 @@ public final class HypothesizesRs extends BaseRs {
     @Path("/add")
     public Response add(@FormParam("label") @NotNull final String label,
         @FormParam("description") @NotNull final String desc) {
-        final Hypothesis hypothesis = new Hypothesis.Simple(label, desc);
-        if (!this.bibrarian().hypothesizes().add(hypothesis)) {
+        final Tag tag = new Tag.Simple(label, desc);
+        if (!this.bibrarian().hypothesizes().add(tag)) {
             throw FlashInset.forward(
                 this.indexUri(),
                 "hypothesis was NOT added",
@@ -105,12 +105,12 @@ public final class HypothesizesRs extends BaseRs {
      * @param hypothesizes The list of them
      * @return JAXB object
      */
-    private JaxbBundle jaxb(final Collection<Hypothesis> hypothesizes) {
+    private JaxbBundle jaxb(final Collection<Tag> hypothesizes) {
         return new JaxbBundle("hypothesizes").add(
-            new JaxbBundle.Group<Hypothesis>(hypothesizes) {
+            new JaxbBundle.Group<Tag>(hypothesizes) {
                 @Override
-                public JaxbBundle bundle(final Hypothesis hypothesis) {
-                    return HypothesizesRs.this.bundle(hypothesis);
+                public JaxbBundle bundle(final Tag tag) {
+                    return HypothesizesRs.this.bundle(tag);
                 }
             }
         );
@@ -118,14 +118,14 @@ public final class HypothesizesRs extends BaseRs {
 
     /**
      * Convert hypothesis to a JAXB element.
-     * @param hypothesis The element
+     * @param tag The element
      * @return JAXB object
      */
-    private JaxbBundle bundle(final Hypothesis hypothesis) {
+    private JaxbBundle bundle(final Tag tag) {
         return new JaxbBundle("hypothesis")
-            .add("label", hypothesis.label())
+            .add("label", tag.label())
             .up()
-            .add("description", hypothesis.description())
+            .add("description", tag.description())
             .up()
             .link(
                 new Link(
@@ -136,7 +136,7 @@ public final class HypothesizesRs extends BaseRs {
                         .path(HypothesisRs.class)
                         .path(HypothesisRs.class, "index")
                         .queryParam(HypothesisRs.QUERY_LABEL, "{x}")
-                        .build(hypothesis.label())
+                        .build(tag.label())
                 )
             );
     }

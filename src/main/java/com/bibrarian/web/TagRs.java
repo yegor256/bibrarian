@@ -27,39 +27,42 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.web;
 
-import com.jcabi.aspects.Immutable;
-import javax.validation.constraints.NotNull;
+import com.jcabi.aspects.Loggable;
+import com.rexsl.page.Link;
+import com.rexsl.page.PageBuilder;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 
 /**
- * One bibrarian (user of the system).
+ * List of all quotes.
+ *
+ * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
-@Immutable
-public interface Bibrarian {
+@Path("/t/{user}/{name}")
+@Loggable(Loggable.DEBUG)
+public final class TagRs extends BaseRs {
 
     /**
-     * Get a read-only list of all his artifacts.
-     * @return The artifacts
+     * List of them.
+     * @return The JAX-RS response
      */
-    @NotNull
-    Queryable<Artifact> artifacts();
-
-    /**
-     * Get all hypothesizes.
-     * @return The hypothesizes
-     */
-    @NotNull
-    Queryable<Hypothesis> hypothesizes();
-
-    /**
-     * Get all discoveries.
-     * @return The discoveries
-     */
-    @NotNull
-    Queryable<Discovery> discoveries();
+    @GET
+    @Path("/")
+    public Response index() {
+        return new PageBuilder()
+            .stylesheet("/xsl/tag.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .link(new Link("add", "./add"))
+            .render()
+            .build();
+    }
 
 }

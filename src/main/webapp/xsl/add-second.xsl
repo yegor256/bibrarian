@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2013-2014, bibrarian.com
  * All rights reserved.
  *
@@ -26,35 +27,29 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.bibrarian.om;
-
-import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
-import javax.validation.constraints.NotNull;
-
-/**
- * All known bibrarians.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- */
-@Immutable
-public interface Bibrarians {
-
-    /**
-     * Get bibrarian by URN (always returns a valid object, even if such a user
-     * was not used before).
-     * @param urn The unique system-wide name of it
-     * @return The found bibrarian
-     */
-    @NotNull
-    Bibrarian fetch(@NotNull URN urn);
-
-    /**
-     * All known bibitems.
-     * @return Bibitems
-     */
-    Queryable<Bibitem> bibitems();
-
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+    <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:include href="/xsl/layout.xsl"/>
+    <xsl:template match="page" mode="head">
+        <title>
+            <xsl:text>add new quote</xsl:text>
+        </title>
+    </xsl:template>
+    <xsl:template match="page" mode="body">
+        <form method="post">
+            <xsl:attribute name="action">
+                <xsl:value-of select="links/link[@rel='save']/@href"/>
+            </xsl:attribute>
+            <fieldset>
+                <label for="referat"><xsl:text>Referat</xsl:text></label>
+                <textarea name="referat" id="referat" rows="6"><xsl:value-of select="referat"/></textarea>
+                <label><xsl:comment>for the submit button below</xsl:comment></label>
+                <button type="submit" class="btn">
+                    <i class="icon-circle-arrow-right icon-large"><xsl:comment>button</xsl:comment></i>
+                    <xsl:text> Save</xsl:text>
+                </button>
+            </fieldset>
+        </form>
+    </xsl:template>
+</xsl:stylesheet>

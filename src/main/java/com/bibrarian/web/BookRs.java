@@ -29,99 +29,95 @@
  */
 package com.bibrarian.web;
 
-import com.bibrarian.om.Bibitem;
-import com.bibrarian.om.Bibtex;
+import com.bibrarian.om.Quote;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
-import com.rexsl.page.inset.FlashInset;
-import java.util.logging.Level;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
- * List of all bibitems.
+ * Single book.
  *
  * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
-@Path("/b")
+@Path("/b/{name}")
 @Loggable(Loggable.DEBUG)
-public final class BibitemsRs extends BaseRs {
+public final class BookRs extends BaseRs {
 
     /**
-     * List of them.
+     * Its name.
+     */
+    private transient String name;
+
+    /**
+     * Set its name.
+     */
+    @PathParam("name")
+    public void setName(final String label) {
+        this.name = label;
+    }
+
+    /**
+     * Show it.
      * @return The JAX-RS response
      */
     @GET
     @Path("/")
     public Response index() {
         return new PageBuilder()
-            .stylesheet("/xsl/bibitems.xsl")
+            .stylesheet("/xsl/book.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(this.jaxb(this.bibrarians().bibitems()))
-            .link(new Link("add", "./add"))
+            .link(
+                new Link(
+                    "add",
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path(AddRs.class)
+                        .path(AddRs.class, "second")
+                        .queryParam("book", "{b}")
+                        .build(this.name)
+                )
+            )
+            .append(this.jaxb(this.base().quotes()))
             .render()
             .build();
     }
 
     /**
-     * Add new bibitem.
-     * @param tex Text in BibTeX format
-     * @return The JAX-RS response
-     */
-    @POST
-    @Path("/add")
-    public Response add(@FormParam("tex") @NotNull final String tex) {
-        final Bibitem item = new Bibitem.Simple(new Bibtex(tex));
-        if (!this.bibrarians().bibitems().add(item)) {
-            throw FlashInset.forward(
-                this.indexUri(),
-                "bibitem was NOT added",
-                Level.WARNING
-            );
-        }
-        throw FlashInset.forward(
-            this.indexUri(),
-            "bibitem was added successfully",
-            Level.INFO
-        );
-    }
-
-    /**
-     * Convert bibitems to a JAXB element.
-     * @param bibitems List of them
+     * Convert quotes to a JAXB element.
+     * @param quotes The list of them
      * @return JAXB object
      */
-    private JaxbBundle jaxb(final Iterable<Bibitem> bibitems) {
-        return new JaxbBundle("bibitems").add(
-            new JaxbBundle.Group<Bibitem>(bibitems) {
+    private JaxbBundle jaxb(final Iterable<Quote> quotes) {
+        return new JaxbBundle("quotes").add(
+            new JaxbBundle.Group<Quote>(quotes) {
                 @Override
-                public JaxbBundle bundle(final Bibitem bibitem) {
-                    return BibitemsRs.this.bundle(bibitem);
+                public JaxbBundle bundle(final Quote quote) {
+                    return BookRs.this.bundle(quote);
                 }
             }
         );
     }
 
     /**
-     * Convert bibitem to a JAXB element.
-     * @param bibitem The bibitem
+     * Convert discovery to a JAXB element.
+     * @param quote The discovery
      * @return JAXB object
      */
-    private JaxbBundle bundle(final Bibitem bibitem) {
-        return new JaxbBundle("discovery")
-            .add("label", bibitem.load().label())
+    private JaxbBundle bundle(final Quote quote) {
+        return new JaxbBundle("quote")
+            .add("text", quote.text())
             .up()
-            .add("tex", bibitem.toString())
+            .add("pages", quote.pages())
             .up();
     }
 
