@@ -29,42 +29,55 @@
  */
 package com.bibrarian.dynamo;
 
+import co.stateful.Counter;
 import com.bibrarian.om.Book;
+import com.bibrarian.om.Quote;
+import com.bibrarian.om.Quotes;
+import com.bibrarian.om.Term;
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.AttributeUpdates;
-import com.jcabi.dynamo.QueryValve;
+import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Region;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Artifact in Dynamo.
+ * Quotes in DynamoDB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 1.0
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(of = { "region", "label" })
-final class DyBook implements Book {
+@EqualsAndHashCode(of = { "region", "counter" })
+final class DyQuotes implements Quotes {
 
     /**
-     * Table in DynamoDB.
+     * Table name.
      */
-    public static final String TABLE = "books";
+    public static final String TABLE = "quotes";
 
     /**
      * Hash.
      */
-    public static final String HASH = "name";
+    public static final String HASH = "id";
 
     /**
-     * Bibitem.
+     * Text of the quote.
      */
-    public static final String ATTR_BIBITEM = "bibitem";
+    public static final String ATTR_TEXT = "text";
+
+    /**
+     * Pages of the quote.
+     */
+    public static final String ATTR_PAGES = "pages";
 
     /**
      * Region.
@@ -72,43 +85,57 @@ final class DyBook implements Book {
     private final transient Region region;
 
     /**
-     * Name.
+     * Counter.
      */
-    private final transient String label;
+    private final transient Counter counter;
 
     /**
      * Public ctor.
      * @param reg Region
-     * @param name Name
+     * @param cnt Counter
      */
-    DyBook(final Region reg, final String name) {
+    DyQuotes(final Region reg, final Counter cnt) {
         this.region = reg;
-        this.label = name;
+        this.counter = cnt;
     }
 
     @Override
-    public String name() {
-        return this.label;
+    public Quotes refine(final Term term) {
+        return this;
     }
 
     @Override
-    public String bibitem() throws IOException {
-        return this.region.table(DyBook.TABLE)
-            .frame()
-            .through(new QueryValve().withLimit(1))
-            .where(DyBook.HASH, this.label)
-            .iterator().next()
-            .get(DyBook.ATTR_BIBITEM).getS();
+    public Collection<Term> terms() {
+        return Collections.emptyList();
     }
 
     @Override
-    public void bibitem(final String tex) throws IOException {
-        this.region.table(DyBook.TABLE)
-            .frame()
-            .through(new QueryValve().withLimit(1))
-            .where(DyBook.HASH, this.label)
-            .iterator().next()
-            .put(new AttributeUpdates().with(DyBook.ATTR_BIBITEM, tex));
+    public Quote add(final Book book, final String text,
+        final String pages) throws IOException {
+        final long number = this.counter.incrementAndGet(1L);
+        new Refs(this.region).add(String.format("Q:%d", number), "-");
+        this.region.table(DyQuotes.TABLE).put(
+            new Attributes()
+                .with(DyQuotes.HASH, number)
+                .with(DyQuotes.ATTR_TEXT, text)
+                .with(DyQuotes.ATTR_PAGES, pages)
+        );
+        return new DyQuote(this.region, number);
     }
 
+    @Override
+    public Iterable<Quote> iterate() {
+        return Iterables.transform(
+            new Refs(this.region).reverse("-", "Q:"),
+            new Function<String, Quote>() {
+                @Override
+                public Quote apply(final String input) {
+                    return new DyQuote(
+                        DyQuotes.this.region,
+                        Long.parseLong(input.substring(2))
+                    );
+                }
+            }
+        );
+    }
 }

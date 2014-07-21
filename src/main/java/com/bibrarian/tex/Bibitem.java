@@ -27,42 +27,47 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.tex;
 
 import com.jcabi.aspects.Immutable;
 
 /**
- * Tag.
+ * Bibtex Item.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Tag {
+public final class Bibitem {
 
     /**
-     * Get its owner.
-     * @return The user
+     * TeX source.
      */
-    User user();
+    private final transient String source;
 
     /**
-     * Get its unique name.
-     * @return The name
+     * Ctor.
+     * @param item TeX bibitem
      */
-    String name();
+    public Bibitem(final String item) {
+        this.source = item;
+    }
 
     /**
-     * Get review.
-     * @return The review
+     * Name.
+     * @return Name
      */
-    String review();
+    public String name() {
+        return "test";
+    }
 
     /**
-     * Add review.
-     * @param review The review
+     * TeX.
+     * @return TeX
      */
-    void review(String review);
+    public String tex() {
+        return this.source;
+    }
 
 }

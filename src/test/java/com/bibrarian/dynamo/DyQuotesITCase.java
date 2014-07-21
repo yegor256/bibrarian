@@ -27,53 +27,69 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.web;
+package com.bibrarian.dynamo;
 
+import co.stateful.mock.MkSttc;
+import com.bibrarian.om.Base;
 import com.bibrarian.om.Book;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.bibrarian.om.Quote;
+import com.bibrarian.om.Quotes;
+import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.retry.ReRegion;
+import com.jcabi.manifests.Manifests;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Assume;
+import org.junit.Test;
 
 /**
- * Jaxb Book.
- *
+ * Integration test for {@link DyQuotes}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@XmlRootElement(name = "book")
-@XmlAccessorType(XmlAccessType.NONE)
-final class JxBook {
+public final class DyQuotesITCase {
 
     /**
-     * Book.
+     * DyQuotes can list quotes.
+     * @throws Exception If some problem inside
      */
-    private final transient Book book;
-
-    /**
-     * Ctor.
-     * @param bok Book
-     */
-    JxBook(final Book bok) {
-        this.book = bok;
+    @Test
+    public void addsAndListsQuotes() throws Exception {
+        final Base base = new DyBase(
+            this.dynamo(), new MkSttc().counters().get("cnt")
+        );
+        final Book book = base.books().add("test", "@book {}");
+        final Quotes quotes = base.quotes();
+        final Quote quote = quotes.add(book, "hey", "5-8");
+        MatcherAssert.assertThat(
+            quotes.iterate(),
+            Matchers.hasItem(quote)
+        );
     }
 
     /**
-     * Name of it.
-     * @return Name
+     * DynamoDB region for tests.
+     * @return Region
      */
-    @XmlElement(name = "name")
-    public String getName() {
-        return this.book.name();
+    private Region dynamo() {
+        final String key = Manifests.read("Bibrarian-DynamoKey");
+        Assume.assumeTrue(key.startsWith("AAAA"));
+        return new Region.Prefixed(
+            new ReRegion(
+                new Region.Simple(
+                    new Credentials.Direct(
+                        new Credentials.Simple(
+                            key,
+                            Manifests.read("Bibrarian-DynamoSecret")
+                        ),
+                        Integer.parseInt(System.getProperty("dynamo.port"))
+                    )
+                )
+            ),
+            "rt-"
+        );
     }
 
-    /**
-     * Cite of it.
-     * @return Cite
-     */
-    @XmlElement(name = "cite")
-    public String getCite() {
-        return "not implemented yet";
-    }
 }

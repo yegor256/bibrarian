@@ -644,6 +644,7 @@
                                     <tables>
                                         <table>${basedir}/src/test/dynamodb/books.json</table>
                                         <table>${basedir}/src/test/dynamodb/quotes.json</table>
+                                        <table>${basedir}/src/test/dynamodb/refs.json</table>
                                     </tables>
                                 </configuration>
                             </execution>

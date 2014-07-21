@@ -64,7 +64,7 @@ public final class HomeRsITCase {
             .as(RestResponse.class)
             .assertStatus(HttpURLConnection.HTTP_OK)
             .as(XmlResponse.class)
-            .assertXPath("//xhtml:title[.='Internal application error']");
+            .assertXPath("//xhtml:title[.='oops...']");
     }
 
     /**

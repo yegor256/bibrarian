@@ -29,14 +29,20 @@
  */
 package com.bibrarian.web;
 
+import co.stateful.RtSttc;
+import co.stateful.Sttc;
+import co.stateful.cached.CdSttc;
+import co.stateful.retry.ReSttc;
 import com.bibrarian.dynamo.DyBase;
 import com.bibrarian.om.Base;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
+import com.jcabi.urn.URN;
 import java.io.IOException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -54,12 +60,16 @@ public final class Lifespan implements ServletContextListener {
     public void contextInitialized(final ServletContextEvent event) {
         try {
             Manifests.append(event.getServletContext());
+            event.getServletContext().setAttribute(
+                Base.class.getName(),
+                new DyBase(
+                    this.dynamo(),
+                    this.sttc().counters().get("bib-quote")
+                )
+            );
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
-        event.getServletContext().setAttribute(
-            Base.class.getName(), new DyBase(this.dynamo())
-        );
     }
 
     @Override
@@ -86,6 +96,23 @@ public final class Lifespan implements ServletContextListener {
         }
         return new Region.Prefixed(
             new ReRegion(new Region.Simple(creds)), "bib-"
+        );
+    }
+
+    /**
+     * Sttc.
+     * @return Sttc
+     */
+    @Cacheable(forever = true)
+    private Sttc sttc() {
+        Logger.warn(this, "Sttc connected");
+        return new CdSttc(
+            new ReSttc(
+                RtSttc.make(
+                    URN.create(Manifests.read("Bibrarian-SttcUrn")),
+                    Manifests.read("Bibrarian-SttcToken")
+                )
+            )
         );
     }
 

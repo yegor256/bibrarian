@@ -27,53 +27,19 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.web;
+package com.bibrarian.om;
 
-import com.bibrarian.om.Book;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.jcabi.aspects.Immutable;
 
 /**
- * Jaxb Book.
+ * Query term.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@XmlRootElement(name = "book")
-@XmlAccessorType(XmlAccessType.NONE)
-final class JxBook {
+@Immutable
+public interface Term {
 
-    /**
-     * Book.
-     */
-    private final transient Book book;
 
-    /**
-     * Ctor.
-     * @param bok Book
-     */
-    JxBook(final Book bok) {
-        this.book = bok;
-    }
-
-    /**
-     * Name of it.
-     * @return Name
-     */
-    @XmlElement(name = "name")
-    public String getName() {
-        return this.book.name();
-    }
-
-    /**
-     * Cite of it.
-     * @return Cite
-     */
-    @XmlElement(name = "cite")
-    public String getCite() {
-        return "not implemented yet";
-    }
 }

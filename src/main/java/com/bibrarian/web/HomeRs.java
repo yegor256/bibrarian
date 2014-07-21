@@ -34,6 +34,7 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import java.io.IOException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -72,7 +73,7 @@ public final class HomeRs extends BaseRs {
                         .build()
                 )
             )
-            .append(this.jaxb(this.base().quotes(null)))
+            .append(this.jaxb(this.base().quotes().iterate()))
             .render()
             .build();
     }
@@ -87,7 +88,11 @@ public final class HomeRs extends BaseRs {
             new JaxbBundle.Group<Quote>(quotes) {
                 @Override
                 public JaxbBundle bundle(final Quote quote) {
-                    return HomeRs.this.bundle(quote);
+                    try {
+                        return HomeRs.this.bundle(quote);
+                    } catch (final IOException ex) {
+                        throw new IllegalStateException(ex);
+                    }
                 }
             }
         );
@@ -97,11 +102,12 @@ public final class HomeRs extends BaseRs {
      * Convert discovery to a JAXB element.
      * @param quote The discovery
      * @return JAXB object
+     * @throws IOException If fails
      */
-    private JaxbBundle bundle(final Quote quote) {
+    private JaxbBundle bundle(final Quote quote) throws IOException {
         return new JaxbBundle("quote")
             .add("book", quote.book().bibitem())
-            .attr("name", quote.book().label())
+            .attr("name", quote.book().name())
             .up()
             .add("text", quote.text())
             .up()

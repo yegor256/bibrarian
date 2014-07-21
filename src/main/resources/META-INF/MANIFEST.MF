@@ -6,3 +6,5 @@ Bibrarian-Revision: ${buildNumber}
 Bibrarian-Date: ${buildDate}
 Bibrarian-DynamoKey: ${dynamo.key}
 Bibrarian-DynamoSecret: ${dynamo.secret}
+Bibrarian-SttcUrn: ${sttc.urn}
+Bibrarian-SttcToken: ${sttc.token}

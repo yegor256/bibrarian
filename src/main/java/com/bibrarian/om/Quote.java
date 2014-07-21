@@ -30,6 +30,8 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
+import java.io.IOException;
+import java.util.Collection;
 
 /**
  * Quote.
@@ -45,36 +47,36 @@ public interface Quote {
      * Tags.
      * @return Tags
      */
-    Pageable<Tag> tags();
+    Collection<String> tags();
 
     /**
      * Where was it discovered.
      * @return The book
      */
-    Book book();
+    Book book() throws IOException;
 
     /**
      * Text.
      * @return The text
      */
-    String text();
+    String text() throws IOException;
 
     /**
      * Set text.
      * @param text The text
      */
-    void text(String text);
+    void text(String text) throws IOException;
 
     /**
      * Where found, page numbers.
      * @return The pages
      */
-    String pages();
+    String pages() throws IOException;
 
     /**
      * Set page numbers.
      * @param pages The pages
      */
-    void pages(String pages);
+    void pages(String pages) throws IOException;
 
 }

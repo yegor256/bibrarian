@@ -34,6 +34,7 @@ import com.bibrarian.om.Quote;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import java.io.IOException;
 import java.util.logging.Level;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -91,12 +92,13 @@ public final class AddQuoteRs extends BaseRs {
      * @param text Text of quote
      * @param pages Pages
      * @return The JAX-RS response
+     * @throws IOException If fails
      */
     @POST
     @Path("/save")
     public Response save(@FormParam("text") final String text,
-        @FormParam("pages") final String pages) {
-        final Quote quote = this.book().add(text, pages);
+        @FormParam("pages") final String pages) throws IOException {
+        final Quote quote = this.base().quotes().add(this.book(), text, pages);
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),
             String.format("quote added to \"%s\"", quote.book()),
@@ -109,7 +111,7 @@ public final class AddQuoteRs extends BaseRs {
      * @return Book
      */
     private Book book() {
-        return this.base().book(this.name);
+        return this.base().books().get(this.name);
     }
 
 }

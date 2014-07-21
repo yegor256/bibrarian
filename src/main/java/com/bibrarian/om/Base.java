@@ -30,7 +30,6 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
 
 /**
  * Base.
@@ -43,37 +42,21 @@ import com.jcabi.urn.URN;
 public interface Base {
 
     /**
-     * Register new user name.
-     * @param urn URN
-     * @param name Name of the user
+     * Get user by his unique name.
+     * @return Name of the user (Github login)
      */
-    User register(URN urn, String name);
+    User user(String login);
 
     /**
-     * Get user by URN.
-     * @return Tags of the user
+     * Get all books.
+     * @return Books
      */
-    User get(URN urn);
-
-    /**
-     * Check user name.
-     * @param name Name of the user
-     * @return Empty if it's available, error message otherwise
-     */
-    String check(String name);
+    Books books();
 
     /**
      * Get all quotes.
-     * @param query Query
-     * @return The quotes
+     * @return Quotes
      */
-    Pageable<Quote> quotes(Query query);
-
-    /**
-     * Get book by name.
-     * @param name Name of it
-     * @return Book
-     */
-    Book book(String name);
+    Quotes quotes();
 
 }

@@ -27,18 +27,56 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.dynamo;
 
+import com.bibrarian.om.Book;
+import com.bibrarian.om.Books;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Attributes;
+import com.jcabi.dynamo.Region;
+import java.io.IOException;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Pageable.
+ * Books in DynamoDB.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Pageable<T> extends Iterable<T> {
+@Loggable(Loggable.DEBUG)
+@ToString
+@EqualsAndHashCode(of = "region")
+final class DyBooks implements Books {
 
+    /**
+     * Region.
+     */
+    private final transient Region region;
+
+    /**
+     * Public ctor.
+     * @param reg Region
+     */
+    DyBooks(final Region reg) {
+        this.region = reg;
+    }
+
+    @Override
+    public Book get(final String name) {
+        return new DyBook(this.region, name);
+    }
+
+    @Override
+    public Book add(final String name, final String bibtex) throws IOException {
+        this.region.table(DyBook.TABLE).put(
+            new Attributes()
+                .with(DyBook.HASH, name)
+                .with(DyBook.ATTR_BIBITEM, bibtex)
+        );
+        return new DyBook(this.region, name);
+    }
 }

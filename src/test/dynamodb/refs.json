@@ -1,0 +1,49 @@
+{
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "left",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "right",
+            "AttributeType": "S"
+        }
+    ],
+    "KeySchema": [
+        {
+            "AttributeName": "right",
+            "KeyType": "HASH"
+        },
+        {
+            "AttributeName": "left",
+            "KeyType": "RANGE"
+        }
+    ],
+    "ProvisionedThroughput": {
+        "ReadCapacityUnits": "1",
+        "WriteCapacityUnits": "1"
+    },
+    "TableName": "bib-refs",
+    "GlobalSecondaryIndexes": [
+        {
+            "IndexName": "reverse",
+            "KeySchema": [
+                {
+                    "AttributeName": "right",
+                    "KeyType": "HASH"
+                },
+                {
+                    "AttributeName": "left",
+                    "KeyType": "RANGE"
+                }
+            ],
+            "Projection": {
+                "ProjectionType": "KEYS_ONLY"
+            },
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": "1",
+                "WriteCapacityUnits": "1"
+            }
+        }
+    ]
+}

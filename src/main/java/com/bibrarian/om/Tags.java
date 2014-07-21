@@ -30,22 +30,22 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
-import java.util.Collection;
 
 /**
- * Query.
+ * Tags.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Query {
+public interface Tags {
 
     /**
-     * Get all terms.
-     * @return Terms
+     * Tag single quote.
+     * @param quote Quote to tag
+     * @param name Tag name to use
      */
-    Collection<String> terms();
+    void add(Quote quote, String name);
 
 }

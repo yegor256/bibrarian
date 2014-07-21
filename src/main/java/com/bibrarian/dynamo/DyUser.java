@@ -29,16 +29,11 @@
  */
 package com.bibrarian.dynamo;
 
-import com.bibrarian.om.Book;
-import com.bibrarian.om.Pageable;
-import com.bibrarian.om.Quote;
-import com.bibrarian.om.Tag;
+import com.bibrarian.om.Tags;
 import com.bibrarian.om.User;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Region;
-import com.jcabi.urn.URN;
-import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -52,7 +47,7 @@ import lombok.ToString;
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(of = { "region", "urn" })
+@EqualsAndHashCode(of = { "region", "login" })
 final class DyUser implements User {
 
     /**
@@ -61,43 +56,28 @@ final class DyUser implements User {
     private final transient Region region;
 
     /**
-     * URN of it.
+     * His login.
      */
-    private final transient URN urn;
+    private final transient String login;
 
     /**
      * Public ctor.
      * @param reg Region
-     * @param name URN of him
+     * @param name His Github login
      */
-    DyUser(final Region reg, final URN name) {
+    DyUser(final Region reg, final String name) {
         this.region = reg;
-        this.urn = name;
+        this.login = name;
     }
 
     @Override
     public String name() {
-        throw new UnsupportedOperationException("#name()");
+        return this.login;
     }
 
     @Override
-    public URI photo() {
-        throw new UnsupportedOperationException("#photo()");
-    }
-
-    @Override
-    public Pageable<String> tags() {
+    public Tags tags() {
         throw new UnsupportedOperationException("#tags()");
-    }
-
-    @Override
-    public Book add(final String bibtex) {
-        throw new UnsupportedOperationException("#add()");
-    }
-
-    @Override
-    public Tag tag(final Quote quote, final String name) {
-        throw new UnsupportedOperationException("#tag()");
     }
 
 }

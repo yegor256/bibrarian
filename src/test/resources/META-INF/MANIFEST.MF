@@ -6,3 +6,5 @@ Bibrarian-Revision: ${buildNumber}
 Bibrarian-Date: 9-Dec-2012
 Bibrarian-DynamoKey: ${failsafe.dynamo.key}
 Bibrarian-DynamoSecret: ${failsafe.dynamo.secret}
+Bibrarian-SttcUrn: ${failsafe.sttc.urn}
+Bibrarian-SttcToken: ${sttc.token}

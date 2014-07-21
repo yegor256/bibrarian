@@ -29,16 +29,14 @@
  */
 package com.bibrarian.dynamo;
 
+import co.stateful.Counter;
 import com.bibrarian.om.Base;
-import com.bibrarian.om.Book;
-import com.bibrarian.om.Pageable;
-import com.bibrarian.om.Query;
-import com.bibrarian.om.Quote;
+import com.bibrarian.om.Books;
+import com.bibrarian.om.Quotes;
 import com.bibrarian.om.User;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Region;
-import com.jcabi.urn.URN;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -52,7 +50,7 @@ import lombok.ToString;
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(of = "region")
+@EqualsAndHashCode(of = { "region", "counter" })
 public final class DyBase implements Base {
 
     /**
@@ -61,35 +59,33 @@ public final class DyBase implements Base {
     private final transient Region region;
 
     /**
+     * Sttc.
+     */
+    private final transient Counter counter;
+
+    /**
      * Public ctor.
      * @param reg Region
+     * @param cnt Counters
      */
-    public DyBase(final Region reg) {
+    public DyBase(final Region reg, final Counter cnt) {
         this.region = reg;
+        this.counter = cnt;
     }
 
     @Override
-    public User register(final URN urn, final String name) {
-        throw new UnsupportedOperationException("#register()");
+    public User user(final String login) {
+        return new DyUser(this.region, login);
     }
 
     @Override
-    public User get(final URN urn) {
-        throw new UnsupportedOperationException("#get()");
+    public Books books() {
+        return new DyBooks(this.region);
     }
 
     @Override
-    public Pageable<Quote> quotes(final Query query) {
-        throw new UnsupportedOperationException("#quotes()");
+    public Quotes quotes() {
+        return new DyQuotes(this.region, this.counter);
     }
 
-    @Override
-    public Book book(final String name) {
-        throw new UnsupportedOperationException("#book()");
-    }
-
-    @Override
-    public String check(final String name) {
-        throw new UnsupportedOperationException("#check()");
-    }
 }

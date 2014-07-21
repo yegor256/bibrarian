@@ -30,9 +30,11 @@
 package com.bibrarian.web;
 
 import com.bibrarian.om.Book;
+import com.bibrarian.tex.Bibitem;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import java.io.IOException;
 import java.util.logging.Level;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -74,14 +76,17 @@ public final class AddBookRs extends BaseRs {
      * Safe.
      * @param bibtex Bibtex
      * @return The JAX-RS response
+     * @throws IOException If fails
      */
     @POST
     @Path("/save")
-    public Response add(@FormParam("bibtex") final String bibtex) {
-        final Book book = this.user().add(bibtex);
+    public Response add(@FormParam("bibtex") final String bibtex)
+        throws IOException {
+        final Bibitem bib = new Bibitem(bibtex);
+        final Book book = this.base().books().add(bib.name(), bib.tex());
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),
-            String.format("book \"%s\" added", book.label()),
+            String.format("book \"%s\" added", book.name()),
             Level.INFO
         );
     }

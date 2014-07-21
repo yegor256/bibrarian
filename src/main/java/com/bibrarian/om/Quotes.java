@@ -27,53 +27,48 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.web;
+package com.bibrarian.om;
 
-import com.bibrarian.om.Book;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.jcabi.aspects.Immutable;
+import java.io.IOException;
+import java.util.Collection;
 
 /**
- * Jaxb Book.
+ * Quotes.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@XmlRootElement(name = "book")
-@XmlAccessorType(XmlAccessType.NONE)
-final class JxBook {
+@Immutable
+public interface Quotes {
 
     /**
-     * Book.
+     * Iterate them.
+     * @return Quotes
      */
-    private final transient Book book;
+    Iterable<Quote> iterate();
 
     /**
-     * Ctor.
-     * @param bok Book
+     * Refine with a new term.
+     * @param term Query
+     * @return The quotes
      */
-    JxBook(final Book bok) {
-        this.book = bok;
-    }
+    Quotes refine(Term term);
 
     /**
-     * Name of it.
-     * @return Name
+     * Get all terms.
+     * @return The terms
      */
-    @XmlElement(name = "name")
-    public String getName() {
-        return this.book.name();
-    }
+    Collection<Term> terms();
 
     /**
-     * Cite of it.
-     * @return Cite
+     * Add new quote.
+     * @param book Book
+     * @param text Quote text
+     * @param pages Pages
+     * @return Quote created
      */
-    @XmlElement(name = "cite")
-    public String getCite() {
-        return "not implemented yet";
-    }
+    Quote add(Book book, String text, String pages) throws IOException;
+
 }

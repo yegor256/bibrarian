@@ -1,22 +1,14 @@
 {
     "AttributeDefinitions": [
         {
-            "AttributeName": "book",
-            "AttributeType": "S"
-        },
-        {
             "AttributeName": "id",
             "AttributeType": "N"
         }
     ],
     "KeySchema": [
         {
-            "AttributeName": "book",
-            "KeyType": "HASH"
-        },
-        {
             "AttributeName": "id",
-            "KeyType": "RANGE"
+            "KeyType": "HASH"
         }
     ],
     "ProvisionedThroughput": {

@@ -30,12 +30,17 @@
 package com.bibrarian.dynamo;
 
 import com.bibrarian.om.Book;
-import com.bibrarian.om.Pageable;
 import com.bibrarian.om.Quote;
-import com.bibrarian.om.Tag;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.AttributeUpdates;
+import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.QueryValve;
+import com.jcabi.dynamo.Region;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -49,74 +54,82 @@ import lombok.ToString;
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(of = "item")
+@EqualsAndHashCode(of = { "region", "number" })
 final class DyQuote implements Quote {
 
     /**
-     * Table name.
+     * Region.
      */
-    public static final String TABLE = "quotes";
+    private final transient Region region;
 
     /**
-     * Hash.
+     * Number.
      */
-    public static final String HASH = "id";
-
-    /**
-     * Range.
-     */
-    public static final String RANGE = "book";
-
-    /**
-     * Text of the quote.
-     */
-    public static final String ATTR_TEXT = "text";
-
-    /**
-     * Pages of the quote.
-     */
-    public static final String ATTR_PAGES = "pages";
-
-    /**
-     * Item.
-     */
-    private final transient Item item;
+    private final transient long number;
 
     /**
      * Public ctor.
-     * @param itm Item
+     * @param reg Region
+     * @param num Number
      */
-    DyQuote(final Item itm) {
-        this.item = itm;
+    DyQuote(final Region reg, final long num) {
+        this.region = reg;
+        this.number = num;
     }
 
     @Override
-    public Pageable<Tag> tags() {
-        throw new UnsupportedOperationException("#tags()");
+    public Collection<String> tags() {
+        return Collections.emptyList();
     }
 
     @Override
-    public Book book() {
-        throw new UnsupportedOperationException("#book()");
+    public Book book() throws IOException {
+        return new DyBook(
+            this.item().frame().table().region(),
+            new Refs(this.region).forward(
+                String.format("Q:%d", this.number), "B:"
+            ).iterator().next()
+        );
     }
 
     @Override
-    public String text() {
-        throw new UnsupportedOperationException("#text()");
+    public String text() throws IOException {
+        return this.item().get(DyQuotes.ATTR_TEXT).getS();
     }
 
     @Override
-    public void text(final String text) {
-        throw new UnsupportedOperationException("#text()");
+    public void text(final String text) throws IOException {
+        this.item().put(
+            new AttributeUpdates().with(
+                DyQuotes.ATTR_TEXT, text
+            )
+        );
     }
 
     @Override
-    public String pages() {
-        throw new UnsupportedOperationException("#pages()");
+    public String pages() throws IOException {
+        return this.item().get(DyQuotes.ATTR_PAGES).getS();
     }
 
     @Override
-    public void pages(final String pages) {
-        throw new UnsupportedOperationException("#pages()");
+    public void pages(final String pages) throws IOException {
+        this.item().put(
+            new AttributeUpdates().with(
+                DyQuotes.ATTR_PAGES, pages
+            )
+        );
     }
+
+    /**
+     * Get its item.
+     * @return Item
+     */
+    private Item item() {
+        return this.region.table(DyQuotes.TABLE)
+            .frame()
+            .through(new QueryValve().withLimit(1))
+            .where(DyQuotes.HASH, Conditions.equalTo(this.number))
+            .iterator().next();
+    }
+
 }

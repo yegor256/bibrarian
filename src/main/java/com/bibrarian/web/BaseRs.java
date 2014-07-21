@@ -140,7 +140,7 @@ public class BaseRs extends BaseResource {
                 Level.WARNING
             );
         }
-        return this.base().get(identity.urn());
+        return this.base().user(identity.name());
     }
 
     /**

@@ -30,6 +30,7 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
+import java.io.IOException;
 
 /**
  * Book.
@@ -45,26 +46,18 @@ public interface Book {
      * Get its unique name/label.
      * @return The label
      */
-    String label();
+    String name();
 
     /**
      * Bibitem.
      * @return The bibitem
      */
-    String bibitem();
+    String bibitem() throws IOException;
 
     /**
      * Change bibitem.
      * @param tex TeX to set
      */
-    void bibitem(String tex);
-
-    /**
-     * Add new quote.
-     * @param text Quote text
-     * @param pages Pages
-     * @return Quote created
-     */
-    Quote add(String text, String pages);
+    void bibitem(String tex) throws IOException;
 
 }
