@@ -38,16 +38,9 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <xsl:if test="links/link[@rel='add-book']">
+        <xsl:if test="links/link[@rel='add']">
             <p>
-                <a href="{links/link[@rel='add-book']/@href}">
-                    <xsl:text>Add New Book</xsl:text>
-                </a>
-            </p>
-        </xsl:if>
-        <xsl:if test="links/link[@rel='add-quote']">
-            <p>
-                <a href="{links/link[@rel='add-quote']/@href}">
+                <a href="{links/link[@rel='add']/@href}">
                     <xsl:text>Add New Quote</xsl:text>
                 </a>
             </p>

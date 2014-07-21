@@ -70,4 +70,12 @@ public final class Bibitem {
         return this.source;
     }
 
+    /**
+     * Cite.
+     * @return Cite
+     */
+    public String cite() {
+        return "\"Object Thinking\" by David West";
+    }
+
 }

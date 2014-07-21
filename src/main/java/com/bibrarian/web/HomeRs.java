@@ -30,6 +30,7 @@
 package com.bibrarian.web;
 
 import com.bibrarian.om.Quote;
+import com.bibrarian.tex.Bibitem;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
@@ -66,7 +67,7 @@ public final class HomeRs extends BaseRs {
             .init(this)
             .link(
                 new Link(
-                    "add-book",
+                    "add",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
                         .path(AddBookRs.class)
@@ -106,8 +107,9 @@ public final class HomeRs extends BaseRs {
      */
     private JaxbBundle bundle(final Quote quote) throws IOException {
         return new JaxbBundle("quote")
-            .add("book", quote.book().bibitem())
-            .attr("name", quote.book().name())
+            .add("book")
+            .add("name", quote.book().name()).up()
+            .add("cite", new Bibitem(quote.book().bibitem()).cite()).up()
             .up()
             .add("text", quote.text())
             .up()

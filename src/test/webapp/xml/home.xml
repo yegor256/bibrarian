@@ -38,7 +38,7 @@
     <links>
         <link href="/" rel="root" type="text/xml"/>
         <link href="/xml/home.xml" rel="self" type="text/xml"/>
-        <link href="/xml/add-book.xml" rel="add-book" type="text/xml"/>
+        <link href="/xml/add-book.xml" rel="add" type="text/xml"/>
     </links>
     <millis>16</millis>
     <quotes>

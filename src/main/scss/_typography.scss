@@ -40,6 +40,8 @@
 
 body {
   @include serif;
+  font-size: $em;
+  padding: $em;
   color: $black;
 }
 

@@ -99,7 +99,9 @@ public final class AddQuoteRs extends BaseRs {
     @Path("/save")
     public Response save(@FormParam("text") final String text,
         @FormParam("pages") final String pages) throws IOException {
-        final Quote quote = this.base().quotes().add(this.book(), text, pages);
+        final Quote quote = this.base().quotes().add(
+            this.book(), text.trim(), pages.trim()
+        );
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),
             String.format("quote added to \"%s\"", quote.book()),

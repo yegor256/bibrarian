@@ -93,10 +93,7 @@ final class DyQuote implements Quote {
                 String.format("book not found for quote #%d", this.number)
             );
         }
-        return new DyBook(
-            this.item().frame().table().region(),
-            books.next()
-        );
+        return new DyBook(this.region, books.next().substring(2));
     }
 
     @Override
