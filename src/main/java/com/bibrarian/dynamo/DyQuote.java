@@ -41,6 +41,7 @@ import com.jcabi.dynamo.Region;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -84,11 +85,17 @@ final class DyQuote implements Quote {
 
     @Override
     public Book book() throws IOException {
+        final Iterator<String> books = new Refs(this.region).forward(
+            String.format("Q:%d", this.number), "B:"
+        ).iterator();
+        if (!books.hasNext()) {
+            throw new IllegalStateException(
+                String.format("book not found for quote #%d", this.number)
+            );
+        }
         return new DyBook(
             this.item().frame().table().region(),
-            new Refs(this.region).forward(
-                String.format("Q:%d", this.number), "B:"
-            ).iterator().next()
+            books.next()
         );
     }
 
@@ -125,11 +132,17 @@ final class DyQuote implements Quote {
      * @return Item
      */
     private Item item() {
-        return this.region.table(DyQuotes.TABLE)
+        final Iterator<Item> items = this.region.table(DyQuotes.TABLE)
             .frame()
             .through(new QueryValve().withLimit(1))
             .where(DyQuotes.HASH, Conditions.equalTo(this.number))
-            .iterator().next();
+            .iterator();
+        if (!items.hasNext()) {
+            throw new IllegalStateException(
+                String.format("quote #%d not found", this.number)
+            );
+        }
+        return items.next();
     }
 
 }

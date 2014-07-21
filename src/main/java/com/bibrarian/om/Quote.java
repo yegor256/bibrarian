@@ -52,30 +52,35 @@ public interface Quote {
     /**
      * Where was it discovered.
      * @return The book
+     * @throws IOException If fails
      */
     Book book() throws IOException;
 
     /**
      * Text.
      * @return The text
+     * @throws IOException If fails
      */
     String text() throws IOException;
 
     /**
      * Set text.
      * @param text The text
+     * @throws IOException If fails
      */
     void text(String text) throws IOException;
 
     /**
      * Where found, page numbers.
      * @return The pages
+     * @throws IOException If fails
      */
     String pages() throws IOException;
 
     /**
      * Set page numbers.
      * @param pages The pages
+     * @throws IOException If fails
      */
     void pages(String pages) throws IOException;
 

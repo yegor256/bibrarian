@@ -33,9 +33,11 @@ import com.bibrarian.om.Book;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.AttributeUpdates;
+import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import java.io.IOException;
+import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -50,21 +52,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "region", "label" })
 final class DyBook implements Book {
-
-    /**
-     * Table in DynamoDB.
-     */
-    public static final String TABLE = "books";
-
-    /**
-     * Hash.
-     */
-    public static final String HASH = "name";
-
-    /**
-     * Bibitem.
-     */
-    public static final String ATTR_BIBITEM = "bibitem";
 
     /**
      * Region.
@@ -93,22 +80,30 @@ final class DyBook implements Book {
 
     @Override
     public String bibitem() throws IOException {
-        return this.region.table(DyBook.TABLE)
-            .frame()
-            .through(new QueryValve().withLimit(1))
-            .where(DyBook.HASH, this.label)
-            .iterator().next()
-            .get(DyBook.ATTR_BIBITEM).getS();
+        return this.item().get(DyBooks.ATTR_BIBITEM).getS();
     }
 
     @Override
     public void bibitem(final String tex) throws IOException {
-        this.region.table(DyBook.TABLE)
+        this.item().put(new AttributeUpdates().with(DyBooks.ATTR_BIBITEM, tex));
+    }
+
+    /**
+     * Get item.
+     * @return Item
+     */
+    private Item item() {
+        final Iterator<Item> items = this.region.table(DyBooks.TABLE)
             .frame()
             .through(new QueryValve().withLimit(1))
-            .where(DyBook.HASH, this.label)
-            .iterator().next()
-            .put(new AttributeUpdates().with(DyBook.ATTR_BIBITEM, tex));
+            .where(DyBooks.HASH, this.label)
+            .iterator();
+        if (!items.hasNext()) {
+            throw new IllegalStateException(
+                String.format("book '%s' not found", this.label)
+            );
+        }
+        return items.next();
     }
 
 }

@@ -51,12 +51,14 @@ public interface Book {
     /**
      * Bibitem.
      * @return The bibitem
+     * @throws IOException If fails
      */
     String bibitem() throws IOException;
 
     /**
      * Change bibitem.
      * @param tex TeX to set
+     * @throws IOException If fails
      */
     void bibitem(String tex) throws IOException;
 

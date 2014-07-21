@@ -105,6 +105,19 @@ final class Refs {
     }
 
     /**
+     * Add new reference.
+     * @param left Left
+     * @param rights Rights
+     * @throws IOException If fails
+     */
+    public void add(final String left, final Iterable<String> rights)
+        throws IOException {
+        for (final String right : rights) {
+            this.add(left, right);
+        }
+    }
+
+    /**
      * Forward search.
      * @param left Left
      * @param prefix Prefix

@@ -119,7 +119,7 @@ public class BaseRs extends BaseResource {
                     new Identity.Simple(
                         URN.create("urn:test:1"),
                         "localhost",
-                        URI.create("http://img.bibrarian.com/localhost.png")
+                        URI.create("http://img.bibrarian.com/localhost.jpg")
                     )
                 )
             );

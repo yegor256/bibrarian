@@ -52,6 +52,7 @@ import javax.servlet.ServletContextListener;
  *
  * @author Yegor Bugayenko (yegor@woquo.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Loggable(Loggable.INFO)
 public final class Lifespan implements ServletContextListener {

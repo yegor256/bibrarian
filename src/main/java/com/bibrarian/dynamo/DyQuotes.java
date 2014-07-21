@@ -41,6 +41,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Region;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import lombok.EqualsAndHashCode;
@@ -113,7 +114,13 @@ final class DyQuotes implements Quotes {
     public Quote add(final Book book, final String text,
         final String pages) throws IOException {
         final long number = this.counter.incrementAndGet(1L);
-        new Refs(this.region).add(String.format("Q:%d", number), "-");
+        new Refs(this.region).add(
+            String.format("Q:%08d", number),
+            Arrays.asList(
+                "-",
+                String.format("B:%s", book.name())
+            )
+        );
         this.region.table(DyQuotes.TABLE).put(
             new Attributes()
                 .with(DyQuotes.HASH, number)

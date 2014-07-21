@@ -43,7 +43,8 @@ public interface Base {
 
     /**
      * Get user by his unique name.
-     * @return Name of the user (Github login)
+     * @param login User login
+     * @return User
      */
     User user(String login);
 

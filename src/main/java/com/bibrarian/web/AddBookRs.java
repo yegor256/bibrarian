@@ -85,7 +85,10 @@ public final class AddBookRs extends BaseRs {
         final Bibitem bib = new Bibitem(bibtex);
         final Book book = this.base().books().add(bib.name(), bib.tex());
         throw this.flash().redirect(
-            this.uriInfo().getBaseUri(),
+            this.uriInfo().getBaseUriBuilder()
+                .clone()
+                .path(AddQuoteRs.class)
+                .build(book.name()),
             String.format("book \"%s\" added", book.name()),
             Level.INFO
         );

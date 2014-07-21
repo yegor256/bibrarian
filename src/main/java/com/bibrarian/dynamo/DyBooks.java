@@ -53,6 +53,21 @@ import lombok.ToString;
 final class DyBooks implements Books {
 
     /**
+     * Table in DynamoDB.
+     */
+    public static final String TABLE = "books";
+
+    /**
+     * Hash.
+     */
+    public static final String HASH = "name";
+
+    /**
+     * Bibitem.
+     */
+    public static final String ATTR_BIBITEM = "bibitem";
+
+    /**
      * Region.
      */
     private final transient Region region;
@@ -72,10 +87,10 @@ final class DyBooks implements Books {
 
     @Override
     public Book add(final String name, final String bibtex) throws IOException {
-        this.region.table(DyBook.TABLE).put(
+        this.region.table(DyBooks.TABLE).put(
             new Attributes()
-                .with(DyBook.HASH, name)
-                .with(DyBook.ATTR_BIBITEM, bibtex)
+                .with(DyBooks.HASH, name)
+                .with(DyBooks.ATTR_BIBITEM, bibtex)
         );
         return new DyBook(this.region, name);
     }

@@ -11,11 +11,11 @@
     ],
     "KeySchema": [
         {
-            "AttributeName": "right",
+            "AttributeName": "left",
             "KeyType": "HASH"
         },
         {
-            "AttributeName": "left",
+            "AttributeName": "right",
             "KeyType": "RANGE"
         }
     ],

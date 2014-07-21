@@ -53,6 +53,13 @@ final class JxBook {
 
     /**
      * Ctor.
+     */
+    JxBook() {
+        throw new UnsupportedOperationException("#JxBook()");
+    }
+
+    /**
+     * Ctor.
      * @param bok Book
      */
     JxBook(final Book bok) {

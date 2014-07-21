@@ -60,12 +60,21 @@ public final class DyQuotesITCase {
         final Base base = new DyBase(
             this.dynamo(), new MkSttc().counters().get("cnt")
         );
-        final Book book = base.books().add("test", "@book {}");
+        final String name = "test10";
+        final Book book = base.books().add(name, "@book {}");
         final Quotes quotes = base.quotes();
         final Quote quote = quotes.add(book, "hey", "5-8");
         MatcherAssert.assertThat(
             quotes.iterate(),
             Matchers.hasItem(quote)
+        );
+        MatcherAssert.assertThat(
+            quote.book().name(),
+            Matchers.equalTo(name)
+        );
+        MatcherAssert.assertThat(
+            quote.book().bibitem(),
+            Matchers.notNullValue()
         );
     }
 

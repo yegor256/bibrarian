@@ -64,6 +64,7 @@ public final class AddQuoteRs extends BaseRs {
 
     /**
      * Set book name.
+     * @param book Name of the book
      */
     @PathParam("name")
     public void setName(final String book) {

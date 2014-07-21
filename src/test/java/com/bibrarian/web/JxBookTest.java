@@ -27,18 +27,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.web;
 
-import com.jcabi.aspects.Immutable;
+import com.bibrarian.om.Book;
+import com.jcabi.matchers.JaxbConverter;
+import com.jcabi.matchers.XhtmlMatchers;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Query term.
- *
+ * Test case for {@link JxBook}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Term {
+public final class JxBookTest {
+
+    /**
+     * JxBook can be converted to XML.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void convertsToXml() throws Exception {
+        final Book book = Mockito.mock(Book.class);
+        Mockito.doReturn("hello").when(book).name();
+        MatcherAssert.assertThat(
+            JaxbConverter.the(new JxBook(book)),
+            XhtmlMatchers.hasXPaths("/book[name='hello']")
+        );
+    }
 
 }

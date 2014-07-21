@@ -7,20 +7,24 @@
         <link rel="stylesheet" type="text/css" href="/css/style.css"/>
     </head>
     <body>
-        <div class="container-fluid">
-            <h1>
-                Internal Application Error
-            </h1>
-            <p>
-                Release: <code>${buildNumber}</code>
-            </p>
-            <p>
-                Sorry, something went terribly wrong. We are already informed
-                about the problem. We'll try to fix it ASAP. In the meantime,
-                go back to the site and try again:
-                <a href="http://www.bibrarian.com">www.bibrarian.com</a>.
-            </p>
-            <pre>${text}</pre>
-        </div>
+        <p>
+            <a href="/">
+                <img src="http://img.bibrarian.com/logo.svg"
+                     style="width:64px;height:64px;" alt="bibrarian logo"/>
+            </a>
+        </p>
+        <h1>
+            Internal Application Error
+        </h1>
+        <p>
+            Release: <code>${buildNumber}</code>
+        </p>
+        <p>
+            Sorry, something went terribly wrong. We are already informed
+            about the problem. We'll try to fix it ASAP. In the meantime,
+            go back to the site and try again:
+            <a href="http://www.bibrarian.com">www.bibrarian.com</a>.
+        </p>
+        <pre>${text}</pre>
     </body>
 </html>

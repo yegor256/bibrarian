@@ -27,18 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
-
-import com.jcabi.aspects.Immutable;
 
 /**
- * Query term.
+ * TeX processing.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Term {
-
-}
+package com.bibrarian.tex;
