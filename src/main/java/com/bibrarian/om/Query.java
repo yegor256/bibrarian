@@ -27,84 +27,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dynamo;
+package com.bibrarian.om;
 
-import com.bibrarian.om.Tag;
-import com.bibrarian.om.User;
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Item;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import java.util.Collection;
 
 /**
- * Tag in Dynamo.
+ * Query.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-@Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(of = "item")
-final class DyTag implements Tag {
+public interface Query {
 
     /**
-     * Table in DynamoDB.
+     * Get all terms.
+     * @return Terms
      */
-    public static final String TABLE = "tags";
+    Collection<String> terms();
 
-    /**
-     * Hash.
-     */
-    public static final String HASH = "user";
-
-    /**
-     * Range.
-     */
-    public static final String RANGE = "tag";
-
-    /**
-     * Quote ID.
-     */
-    public static final String ATTR_QUOTE = "quote";
-
-    /**
-     * Review.
-     */
-    public static final String ATTR_REVIEW = "review";
-
-    /**
-     * Item.
-     */
-    private final transient Item item;
-
-    /**
-     * Public ctor.
-     * @param itm Item
-     */
-    DyTag(final Item itm) {
-        this.item = itm;
-    }
-
-    @Override
-    public User user() {
-        throw new UnsupportedOperationException("#user()");
-    }
-
-    @Override
-    public String name() {
-        throw new UnsupportedOperationException("#name()");
-    }
-
-    @Override
-    public String review() {
-        throw new UnsupportedOperationException("#review()");
-    }
-
-    @Override
-    public void review(final String review) {
-        throw new UnsupportedOperationException("#review()");
-    }
 }

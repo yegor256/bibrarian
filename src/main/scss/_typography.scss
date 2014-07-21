@@ -27,84 +27,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dynamo;
 
-import com.bibrarian.om.Tag;
-import com.bibrarian.om.User;
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Item;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+@import "fonts";
+@import "defs";
+@import "forms";
+@import "quotes";
 
-/**
- * Tag in Dynamo.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-@Immutable
-@Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(of = "item")
-final class DyTag implements Tag {
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
 
-    /**
-     * Table in DynamoDB.
-     */
-    public static final String TABLE = "tags";
+body {
+  @include serif;
+  color: #333;
+}
 
-    /**
-     * Hash.
-     */
-    public static final String HASH = "user";
+code, pre {
+  @include monospace;
+}
 
-    /**
-     * Range.
-     */
-    public static final String RANGE = "tag";
+a, a:visited {
+  color: inherit;
+  &:hover {
+    color: $gray;
+  }
+}
 
-    /**
-     * Quote ID.
-     */
-    public static final String ATTR_QUOTE = "quote";
-
-    /**
-     * Review.
-     */
-    public static final String ATTR_REVIEW = "review";
-
-    /**
-     * Item.
-     */
-    private final transient Item item;
-
-    /**
-     * Public ctor.
-     * @param itm Item
-     */
-    DyTag(final Item itm) {
-        this.item = itm;
-    }
-
-    @Override
-    public User user() {
-        throw new UnsupportedOperationException("#user()");
-    }
-
-    @Override
-    public String name() {
-        throw new UnsupportedOperationException("#name()");
-    }
-
-    @Override
-    public String review() {
-        throw new UnsupportedOperationException("#review()");
-    }
-
-    @Override
-    public void review(final String review) {
-        throw new UnsupportedOperationException("#review()");
-    }
+.par {
+  margin: $em 0;
 }

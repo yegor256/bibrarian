@@ -27,84 +27,32 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dynamo;
 
-import com.bibrarian.om.Tag;
-import com.bibrarian.om.User;
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Item;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+@import "fonts";
+@import "defs";
+@import "typography";
+@import "forms";
+@import "quotes";
 
-/**
- * Tag in Dynamo.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-@Immutable
-@Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(of = "item")
-final class DyTag implements Tag {
+.wrapper {
+  margin: 2 * $em auto;
+  width: $width;
+}
 
-    /**
-     * Table in DynamoDB.
-     */
-    public static final String TABLE = "tags";
+.inline-list {
+  list-style: none;
+  padding-left: 0;
+  li {
+    display: inline;
+  }
+}
 
-    /**
-     * Hash.
-     */
-    public static final String HASH = "user";
-
-    /**
-     * Range.
-     */
-    public static final String RANGE = "tag";
-
-    /**
-     * Quote ID.
-     */
-    public static final String ATTR_QUOTE = "quote";
-
-    /**
-     * Review.
-     */
-    public static final String ATTR_REVIEW = "review";
-
-    /**
-     * Item.
-     */
-    private final transient Item item;
-
-    /**
-     * Public ctor.
-     * @param itm Item
-     */
-    DyTag(final Item itm) {
-        this.item = itm;
+.head {
+  text-align: center;
+  ul {
+    @extend .inline-list;
+    li {
+      margin: 0 .2 * $em;
     }
-
-    @Override
-    public User user() {
-        throw new UnsupportedOperationException("#user()");
-    }
-
-    @Override
-    public String name() {
-        throw new UnsupportedOperationException("#name()");
-    }
-
-    @Override
-    public String review() {
-        throw new UnsupportedOperationException("#review()");
-    }
-
-    @Override
-    public void review(final String review) {
-        throw new UnsupportedOperationException("#review()");
-    }
+  }
 }

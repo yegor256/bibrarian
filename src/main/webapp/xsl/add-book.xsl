@@ -29,7 +29,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
+    xmlns="http://www.w3.org/1999/xhtml" version="2.0">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template match="page" mode="head">
@@ -38,17 +38,16 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <form method="post">
-            <xsl:attribute name="action">
-                <xsl:value-of select="links/link[@rel='save']/@href"/>
-            </xsl:attribute>
+        <form method="post" action="{links/link[@rel='save']/@href}">
             <fieldset>
-                <label for="referat"><xsl:text>Referat</xsl:text></label>
-                <textarea name="referat" id="referat" rows="6"><xsl:value-of select="referat"/></textarea>
-                <label><xsl:comment>for the submit button below</xsl:comment></label>
-                <button type="submit" class="btn">
-                    <i class="icon-circle-arrow-right icon-large"><xsl:comment>button</xsl:comment></i>
-                    <xsl:text> Save</xsl:text>
+                <label for="bibtex">
+                    <xsl:text>BibTeX</xsl:text>
+                </label>
+                <textarea name="bibtex" id="bibtex">
+                    <xsl:text> </xsl:text>
+                </textarea>
+                <button type="submit">
+                    <xsl:text>Add</xsl:text>
                 </button>
             </fieldset>
         </form>

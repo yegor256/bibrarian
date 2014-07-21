@@ -27,84 +27,53 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.dynamo;
+package com.bibrarian.web;
 
-import com.bibrarian.om.Tag;
-import com.bibrarian.om.User;
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Item;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.bibrarian.om.Book;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Tag in Dynamo.
+ * Jaxb Book.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-@Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(of = "item")
-final class DyTag implements Tag {
+@XmlRootElement(name = "book")
+@XmlAccessorType(XmlAccessType.NONE)
+final class JxBook {
 
     /**
-     * Table in DynamoDB.
+     * Book.
      */
-    public static final String TABLE = "tags";
+    private final transient Book book;
 
     /**
-     * Hash.
+     * Ctor.
+     * @param bok Book
      */
-    public static final String HASH = "user";
-
-    /**
-     * Range.
-     */
-    public static final String RANGE = "tag";
-
-    /**
-     * Quote ID.
-     */
-    public static final String ATTR_QUOTE = "quote";
-
-    /**
-     * Review.
-     */
-    public static final String ATTR_REVIEW = "review";
-
-    /**
-     * Item.
-     */
-    private final transient Item item;
-
-    /**
-     * Public ctor.
-     * @param itm Item
-     */
-    DyTag(final Item itm) {
-        this.item = itm;
+    JxBook(final Book bok) {
+        this.book = bok;
     }
 
-    @Override
-    public User user() {
-        throw new UnsupportedOperationException("#user()");
+    /**
+     * Name of it.
+     * @return Name
+     */
+    @XmlElement(name = "name")
+    public String getName() {
+        return this.book.label();
     }
 
-    @Override
-    public String name() {
-        throw new UnsupportedOperationException("#name()");
-    }
-
-    @Override
-    public String review() {
-        throw new UnsupportedOperationException("#review()");
-    }
-
-    @Override
-    public void review(final String review) {
-        throw new UnsupportedOperationException("#review()");
+    /**
+     * Cite of it.
+     * @return Cite
+     */
+    @XmlElement(name = "cite")
+    public String getCite() {
+        return "not implemented yet";
     }
 }

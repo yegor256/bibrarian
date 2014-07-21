@@ -38,7 +38,7 @@
     <links>
         <link href="/" rel="root" type="text/xml"/>
         <link href="/xml/home.xml" rel="self" type="text/xml"/>
-        <link href="/xml/add-first.xml" rel="add" type="text/xml"/>
+        <link href="/xml/add-book.xml" rel="add-book" type="text/xml"/>
     </links>
     <millis>16</millis>
     <quotes>
@@ -49,7 +49,10 @@
                 object developer is a lobotomy
             </text>
             <pages>p.30</pages>
-            <book name="West04">"Object Thinking", David West, O'Reilly Media Inc., 2004</book>
+            <book>
+                <name>West04</name>
+                <cite>"Object Thinking", David West, O'Reilly Media Inc., 2004</cite>
+            </book>
             <tags>
                 <tag>
                     <user>yegor256</user>

@@ -30,8 +30,6 @@
 package com.bibrarian.dynamo;
 
 import com.bibrarian.om.Book;
-import com.bibrarian.om.Pageable;
-import com.bibrarian.om.Quote;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Item;
@@ -93,8 +91,4 @@ final class DyBook implements Book {
         throw new UnsupportedOperationException("#bibitem()");
     }
 
-    @Override
-    public Pageable<Quote> quotes() {
-        throw new UnsupportedOperationException("#quotes()");
-    }
 }

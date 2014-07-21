@@ -38,9 +38,16 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <xsl:if test="links/link[@rel='add']">
-            <div>
-                <a href="{links/link[@rel='add']/@href}">
+        <xsl:if test="links/link[@rel='add-book']">
+            <div class="par">
+                <a href="{links/link[@rel='add-book']/@href}">
+                    <xsl:text>Add New Book</xsl:text>
+                </a>
+            </div>
+        </xsl:if>
+        <xsl:if test="links/link[@rel='add-quote']">
+            <div class="par">
+                <a href="{links/link[@rel='add-quote']/@href}">
                     <xsl:text>Add New Quote</xsl:text>
                 </a>
             </div>
@@ -48,23 +55,26 @@
         <xsl:apply-templates select="quotes/quote"/>
     </xsl:template>
     <xsl:template match="quote">
-        <div class="quote">
+        <div class="par quote">
             <div class="text">
                 <xsl:value-of select="text"/>
             </div>
-            <div class="book">
-                <span class="cite">
-                    <xsl:value-of select="book/@name"/>
-                </span>
-                <xsl:value-of select="book"/>
-                <xsl:text>, </xsl:text>
-                <xsl:value-of select="pages"/>
-            </div>
+            <xsl:apply-templates select="." mode="book"/>
             <xsl:if test="tags[tag]">
                 <ul class="tags">
                     <xsl:apply-templates select="tags/tag"/>
                 </ul>
             </xsl:if>
+        </div>
+    </xsl:template>
+    <xsl:template match="quote" mode="book">
+        <div class="book">
+            <span class="cite">
+                <xsl:value-of select="book/name"/>
+            </span>
+            <xsl:value-of select="book/cite"/>
+            <xsl:text>, </xsl:text>
+            <xsl:value-of select="pages"/>
         </div>
     </xsl:template>
     <xsl:template match="tags/tag">

@@ -65,14 +65,14 @@ public final class HomeRs extends BaseRs {
             .init(this)
             .link(
                 new Link(
-                    "add",
+                    "add-book",
                     this.uriInfo().getBaseUriBuilder()
                         .clone()
-                        .path(AddRs.class)
+                        .path(AddBookRs.class)
                         .build()
                 )
             )
-            .append(this.jaxb(this.base().quotes()))
+            .append(this.jaxb(this.base().quotes(null)))
             .render()
             .build();
     }
@@ -100,6 +100,9 @@ public final class HomeRs extends BaseRs {
      */
     private JaxbBundle bundle(final Quote quote) {
         return new JaxbBundle("quote")
+            .add("book", quote.book().bibitem())
+            .attr("name", quote.book().label())
+            .up()
             .add("text", quote.text())
             .up()
             .add("pages", quote.pages())

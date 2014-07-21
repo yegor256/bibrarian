@@ -1,4 +1,6 @@
-/**
+<?xml version="1.0"?>
+<?xml-stylesheet type='text/xsl' href='/xsl/add-book.xsl'?>
+<!--
  * Copyright (c) 2013-2014, bibrarian.com
  * All rights reserved.
  *
@@ -26,85 +28,18 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.bibrarian.dynamo;
-
-import com.bibrarian.om.Tag;
-import com.bibrarian.om.User;
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import com.jcabi.dynamo.Item;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
-/**
- * Tag in Dynamo.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-@Immutable
-@Loggable(Loggable.DEBUG)
-@ToString
-@EqualsAndHashCode(of = "item")
-final class DyTag implements Tag {
-
-    /**
-     * Table in DynamoDB.
-     */
-    public static final String TABLE = "tags";
-
-    /**
-     * Hash.
-     */
-    public static final String HASH = "user";
-
-    /**
-     * Range.
-     */
-    public static final String RANGE = "tag";
-
-    /**
-     * Quote ID.
-     */
-    public static final String ATTR_QUOTE = "quote";
-
-    /**
-     * Review.
-     */
-    public static final String ATTR_REVIEW = "review";
-
-    /**
-     * Item.
-     */
-    private final transient Item item;
-
-    /**
-     * Public ctor.
-     * @param itm Item
-     */
-    DyTag(final Item itm) {
-        this.item = itm;
-    }
-
-    @Override
-    public User user() {
-        throw new UnsupportedOperationException("#user()");
-    }
-
-    @Override
-    public String name() {
-        throw new UnsupportedOperationException("#name()");
-    }
-
-    @Override
-    public String review() {
-        throw new UnsupportedOperationException("#review()");
-    }
-
-    @Override
-    public void review(final String review) {
-        throw new UnsupportedOperationException("#review()");
-    }
-}
+ -->
+<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
+    <version>
+        <name>1.0-SNAPSHOT</name>
+        <revision>123</revision>
+        <date>22-Aug-2012</date>
+    </version>
+    <links>
+        <link href="/" rel="root" type="text/xml"/>
+        <link href="/xml/add-book.xml" rel="self" type="text/xml"/>
+        <link href="/xml/home.xml" rel="home" type="text/xml"/>
+        <link href="/xml/add-quote.xml" rel="save" type="text/xml"/>
+    </links>
+    <millis>16</millis>
+</page>

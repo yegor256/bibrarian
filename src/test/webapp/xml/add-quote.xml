@@ -1,4 +1,6 @@
-/**
+<?xml version="1.0"?>
+<?xml-stylesheet type='text/xsl' href='/xsl/add-quote.xsl'?>
+<!--
  * Copyright (c) 2013-2014, bibrarian.com
  * All rights reserved.
  *
@@ -26,43 +28,22 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.bibrarian.web;
-
-import com.jcabi.aspects.Loggable;
-import com.rexsl.page.Link;
-import com.rexsl.page.PageBuilder;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-
-/**
- * List of all quotes.
- *
- * <p>The class is mutable and NOT thread-safe.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @checkstyle MultipleStringLiterals (500 lines)
- */
-@Path("/t/{user}/{name}")
-@Loggable(Loggable.DEBUG)
-public final class TagRs extends BaseRs {
-
-    /**
-     * List of them.
-     * @return The JAX-RS response
-     */
-    @GET
-    @Path("/")
-    public Response index() {
-        return new PageBuilder()
-            .stylesheet("/xsl/tag.xsl")
-            .build(EmptyPage.class)
-            .init(this)
-            .link(new Link("add", "./add"))
-            .render()
-            .build();
-    }
-
-}
+ -->
+<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
+    <version>
+        <name>1.0-SNAPSHOT</name>
+        <revision>123</revision>
+        <date>22-Aug-2012</date>
+    </version>
+    <links>
+        <link href="/" rel="root" type="text/xml"/>
+        <link href="/xml/home.xml" rel="home" type="text/xml"/>
+        <link href="/xml/add-quote.xml" rel="self" type="text/xml"/>
+        <link href="/xml/home.xml" rel="save" type="text/xml"/>
+    </links>
+    <millis>16</millis>
+    <book>
+        <name>West04</name>
+        <cite>"Object Thinking", David West, O'Reilly Media Inc., 2004</cite>
+    </book>
+</page>

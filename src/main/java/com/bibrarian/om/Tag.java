@@ -54,12 +54,6 @@ public interface Tag {
     String name();
 
     /**
-     * Get all quotes.
-     * @return Quotes
-     */
-    Pageable<Quote> quotes();
-
-    /**
      * Get review.
      * @return The review
      */

@@ -60,9 +60,11 @@ public interface Book {
     void bibitem(String tex);
 
     /**
-     * Get all quotes.
-     * @return The quotes
+     * Add new quote.
+     * @param text Quote text
+     * @param pages Pages
+     * @return Quote created
      */
-    Pageable<Quote> quotes();
+    Quote add(String text, String pages);
 
 }

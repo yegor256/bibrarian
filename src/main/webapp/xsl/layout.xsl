@@ -59,25 +59,25 @@
                 <div class="wrapper">
                     <header class="head">
                         <div>
-                            <img src="//img.bibrarian.com/logo.svg"
-                            style="width:64px;height:64px;" alt="bibrarian logo"/>
+                            <a href="{links/link[@rel='home']/@href}">
+                                <img src="//img.bibrarian.com/logo.svg"
+                                    style="width:64px;height:64px;" alt="bibrarian logo"/>
+                            </a>
                         </div>
                         <ul>
                             <xsl:apply-templates select="version"/>
-                            <xsl:choose>
-                                <xsl:when test="identity">
-                                    <xsl:apply-templates select="identity"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:call-template name="login"/>
-                                </xsl:otherwise>
-                            </xsl:choose>
+                            <xsl:apply-templates select="identity"/>
                             <li>
                                 <xsl:call-template name="millis">
                                     <xsl:with-param name="millis" select="millis"/>
                                 </xsl:call-template>
                             </li>
                         </ul>
+                        <xsl:if test="not(identity)">
+                            <ul>
+                                <xsl:call-template name="login"/>
+                            </ul>
+                        </xsl:if>
                     </header>
                     <div>
                         <xsl:apply-templates select="flash"/>

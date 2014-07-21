@@ -29,18 +29,21 @@
  */
 package com.bibrarian.web;
 
+import com.bibrarian.om.Book;
+import com.bibrarian.om.Quote;
 import com.jcabi.aspects.Loggable;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import java.util.logging.Level;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
- * Add.
+ * Add quote.
  *
  * <p>The class is mutable and NOT thread-safe.
  *
@@ -49,58 +52,64 @@ import javax.ws.rs.core.Response;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @since 1.0
  */
-@Path("/add")
+@Path("/quote/{name}")
 @Loggable(Loggable.DEBUG)
-public final class AddRs extends BaseRs {
+public final class AddQuoteRs extends BaseRs {
 
     /**
-     * First form.
+     * Book name.
+     */
+    private transient String name;
+
+    /**
+     * Set book name.
+     */
+    @PathParam("name")
+    public void setName(final String book) {
+        this.name = book;
+    }
+
+    /**
+     * Entry page.
      * @return The JAX-RS response
      */
     @GET
-    @Path("/first")
-    public Response first() {
+    @Path("/")
+    public Response entry() {
         return new PageBuilder()
-            .stylesheet("/xsl/add-first.xsl")
+            .stylesheet("/xsl/add-quote.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .link(new Link("save", "./save"))
+            .append(new JxBook(this.book()))
             .render()
             .build();
     }
 
     /**
-     * Second form.
-     * @param book Book name
-     * @return The JAX-RS response
-     */
-    @GET
-    @Path("/second")
-    public Response second(@QueryParam("book") final String book) {
-        return new PageBuilder()
-            .stylesheet("/xsl/add-second.xsl")
-            .build(EmptyPage.class)
-            .init(this)
-            .render()
-            .build();
-    }
-
-    /**
-     * Result.
-     * @param book Book name
+     * Save.
      * @param text Text of quote
      * @param pages Pages
      * @return The JAX-RS response
      */
     @POST
-    @Path("/post")
-    public Response third(@FormParam("book") final String book,
-        @FormParam("text") final String text,
+    @Path("/save")
+    public Response save(@FormParam("text") final String text,
         @FormParam("pages") final String pages) {
+        final Quote quote = this.book().add(text, pages);
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),
-            String.format("quote added to book \"%s\"", book),
+            String.format("quote added to \"%s\"", quote.book()),
             Level.INFO
         );
+    }
+
+    /**
+     * Get book.
+     * @return Book
+     */
+    private Book book() {
+        return this.base().book(this.name);
     }
 
 }

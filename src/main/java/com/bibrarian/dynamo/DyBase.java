@@ -31,6 +31,7 @@ package com.bibrarian.dynamo;
 
 import com.bibrarian.om.Base;
 import com.bibrarian.om.Pageable;
+import com.bibrarian.om.Query;
 import com.bibrarian.om.Quote;
 import com.bibrarian.om.User;
 import com.jcabi.aspects.Immutable;
@@ -77,7 +78,7 @@ public final class DyBase implements Base {
     }
 
     @Override
-    public Pageable<Quote> quotes() {
+    public Pageable<Quote> quotes(final Query query) {
         throw new UnsupportedOperationException("#quotes()");
     }
 

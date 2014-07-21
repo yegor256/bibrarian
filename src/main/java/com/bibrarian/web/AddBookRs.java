@@ -29,96 +29,61 @@
  */
 package com.bibrarian.web;
 
-import com.bibrarian.om.Quote;
+import com.bibrarian.om.Book;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import java.util.logging.Level;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
- * Single book.
+ * Add book.
  *
  * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle MultipleStringLiterals (500 lines)
  * @since 1.0
  */
-@Path("/b/{name}")
+@Path("/book")
 @Loggable(Loggable.DEBUG)
-public final class BookRs extends BaseRs {
+public final class AddBookRs extends BaseRs {
 
     /**
-     * Its name.
-     */
-    private transient String name;
-
-    /**
-     * Set its name.
-     */
-    @PathParam("name")
-    public void setName(final String label) {
-        this.name = label;
-    }
-
-    /**
-     * Show it.
+     * Entry page.
      * @return The JAX-RS response
      */
     @GET
     @Path("/")
-    public Response index() {
+    public Response first() {
         return new PageBuilder()
-            .stylesheet("/xsl/book.xsl")
+            .stylesheet("/xsl/add-book.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .link(
-                new Link(
-                    "add",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(AddRs.class)
-                        .path(AddRs.class, "second")
-                        .queryParam("book", "{b}")
-                        .build(this.name)
-                )
-            )
-            .append(this.jaxb(this.base().quotes()))
+            .link(new Link("save", "./save"))
             .render()
             .build();
     }
 
     /**
-     * Convert quotes to a JAXB element.
-     * @param quotes The list of them
-     * @return JAXB object
+     * Safe.
+     * @param bibtex Bibtex
+     * @return The JAX-RS response
      */
-    private JaxbBundle jaxb(final Iterable<Quote> quotes) {
-        return new JaxbBundle("quotes").add(
-            new JaxbBundle.Group<Quote>(quotes) {
-                @Override
-                public JaxbBundle bundle(final Quote quote) {
-                    return BookRs.this.bundle(quote);
-                }
-            }
+    @POST
+    @Path("/save")
+    public Response add(@FormParam("bibtex") final String bibtex) {
+        final Book book = this.user().add(bibtex);
+        throw this.flash().redirect(
+            this.uriInfo().getBaseUri(),
+            String.format("book \"%s\" added", book.label()),
+            Level.INFO
         );
-    }
-
-    /**
-     * Convert discovery to a JAXB element.
-     * @param quote The discovery
-     * @return JAXB object
-     */
-    private JaxbBundle bundle(final Quote quote) {
-        return new JaxbBundle("quote")
-            .add("text", quote.text())
-            .up()
-            .add("pages", quote.pages())
-            .up();
     }
 
 }

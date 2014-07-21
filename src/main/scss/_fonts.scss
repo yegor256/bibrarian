@@ -51,3 +51,12 @@
   src: url('//img.yegor256.com/fonts/2AACA7_3_0.woff');
   src: url('//img.yegor256.com/fonts/2AACA7_3_0.ttf');
 }
+
+@mixin serif() {
+  font-family: "Cambria", "Times New Roman", serif;
+  font-weight: 400;
+}
+@mixin monospace() {
+  font-family: "Source Code Pro", "Courier New", monospace;
+  font-weight: 400;
+}

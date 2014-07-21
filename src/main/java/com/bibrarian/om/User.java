@@ -30,6 +30,7 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
+import java.net.URI;
 
 /**
  * One user.
@@ -48,15 +49,30 @@ public interface User {
     String name();
 
     /**
+     * His photo.
+     * @return Photo of him
+     */
+    URI photo();
+
+    /**
      * Get a list of tags.
      * @return Tags of the user
      */
-    Pageable<Tag> tags();
+    Pageable<String> tags();
 
     /**
-     * Get all his quotes.
-     * @return The quotes
+     * Add new book.
+     * @param bibtex Bibtex
+     * @return Book created or found
      */
-    Pageable<Quote> quotes();
+    Book add(String bibtex);
+
+    /**
+     * Tag single quote.
+     * @param quote Quote to tag
+     * @param name Tag name to use
+     * @return Tag created or retrieved
+     */
+    Tag tag(Quote quote, String name);
 
 }

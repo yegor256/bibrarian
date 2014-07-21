@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2013-2014, bibrarian.com
  * All rights reserved.
  *
@@ -26,101 +27,33 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-@import "fonts";
-
-$em: 16px;
-$gray: #555;
-$light-gray: #ccc;
-$white: white;
-
-body {
-  color: #333;
-  font-family: "Cambria", "Times New Roman", serif;
-}
-
-code, pre {
-  font-family: "Source+Code+Pro";
-  font-weight: 400;
-}
-
-a, a:visited {
-  color: inherit;
-  &:hover {
-
-  }
-}
-
-.wrapper {
-  margin: 2 * $em auto;
-  width: 700px;
-}
-
-.inline-list {
-  list-style: none;
-  padding-left: 0;
-  li {
-    display: inline;
-  }
-}
-
-.head {
-  text-align: center;
-  ul {
-    @extend .inline-list;
-    li {
-      margin: 0 .2 * $em;
-    }
-  }
-}
-
-.quote {
-  margin: $em 0;
-  .text {
-    font-size: 1.2 * $em;
-    &:before {
-      content: "\201C";
-    }
-    &:after {
-      content: "\201D";
-    }
-  }
-  .book {
-    margin-left: 2 * $em;
-    .cite {
-      font-variant: small-caps;
-      &:before {
-        content: "[";
-      }
-      &:after {
-        content: "]";
-      }
-    }
-  }
-  .tags {
-    @extend .inline-list;
-    margin-left: 2 * $em;
-    li {
-      padding: .2 * $em .5 * $em;
-      margin-right: .4 * $em;
-      background-color: $light-gray;
-      border-radius: .2 * $em;
-      &:hover {
-        background-color: $gray;
-        color: $white;
-      }
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      .quotes {
-        background: $white;
-        color: $gray;
-        font-size: .8 * $em;
-        margin-left: .5 * $em;
-        padding: 0 .3 * $em;
-      }
-    }
-  }
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns="http://www.w3.org/1999/xhtml" version="2.0">
+    <xsl:output method="xml" omit-xml-declaration="yes"/>
+    <xsl:include href="/xsl/layout.xsl"/>
+    <xsl:template match="page" mode="head">
+        <title>
+            <xsl:text>add new quote</xsl:text>
+        </title>
+    </xsl:template>
+    <xsl:template match="page" mode="body">
+        <form method="post" action="{links/link[@rel='save']/@href}">
+            <fieldset>
+                <label for="text">
+                    <xsl:text>Text</xsl:text>
+                </label>
+                <textarea name="text" id="text">
+                    <xsl:text> </xsl:text>
+                </textarea>
+                <label for="pages">
+                    <xsl:text>Pages</xsl:text>
+                </label>
+                <input name="pages" id="pages" size="45" maxlength="30"/>
+                <button type="submit">
+                    <xsl:text>Add</xsl:text>
+                </button>
+            </fieldset>
+        </form>
+    </xsl:template>
+</xsl:stylesheet>

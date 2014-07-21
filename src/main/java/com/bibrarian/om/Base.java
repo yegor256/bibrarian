@@ -56,16 +56,24 @@ public interface Base {
     User get(URN urn);
 
     /**
-     * Get all quotes.
-     * @return The quotes
-     */
-    Pageable<Quote> quotes();
-
-    /**
      * Check user name.
      * @param name Name of the user
      * @return Empty if it's available, error message otherwise
      */
     String check(String name);
+
+    /**
+     * Get all quotes.
+     * @param query Query
+     * @return The quotes
+     */
+    Pageable<Quote> quotes(Query query);
+
+    /**
+     * Get book by name.
+     * @param name Name of it
+     * @return Book
+     */
+    Book book(String name);
 
 }
