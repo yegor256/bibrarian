@@ -32,6 +32,7 @@ package com.bibrarian.dynamo;
 import com.bibrarian.om.Book;
 import com.bibrarian.om.Pageable;
 import com.bibrarian.om.Quote;
+import com.bibrarian.om.Tag;
 import com.bibrarian.om.User;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -95,8 +96,8 @@ final class DyUser implements User {
     }
 
     @Override
-    public Quote add(final String book, final String text, final String pages) {
-        throw new UnsupportedOperationException("#add()");
+    public Tag tag(final Quote quote, final String name) {
+        throw new UnsupportedOperationException("#tag()");
     }
 
 }

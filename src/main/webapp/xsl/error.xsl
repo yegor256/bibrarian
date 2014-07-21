@@ -38,9 +38,6 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <h1>
-            <xsl:text>Page not found</xsl:text>
-        </h1>
         <p>
             <xsl:text>Invalid request or page not found.</xsl:text>
         </p>

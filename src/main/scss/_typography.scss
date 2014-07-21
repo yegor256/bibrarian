@@ -30,8 +30,6 @@
 
 @import "fonts";
 @import "defs";
-@import "forms";
-@import "quotes";
 
 * {
   box-sizing: border-box;
@@ -42,7 +40,7 @@
 
 body {
   @include serif;
-  color: #333;
+  color: $black;
 }
 
 code, pre {
@@ -56,6 +54,10 @@ a, a:visited {
   }
 }
 
-.par {
-  margin: $em 0;
+p {
+  margin: 2 * $em 0;
+}
+
+pre {
+  @extend p;
 }

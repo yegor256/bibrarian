@@ -57,7 +57,6 @@
                 <tag>
                     <user>yegor256</user>
                     <name>object-thinking</name>
-                    <quotes>45</quotes>
                     <links>
                         <link rel="open" href="/xml/tag.xml"/>
                     </links>
@@ -65,7 +64,6 @@
                 <tag>
                     <user>william</user>
                     <name>object-vs-procedural</name>
-                    <quotes>139</quotes>
                     <links>
                         <link rel="open" href="/xml/tag.xml"/>
                     </links>
@@ -79,12 +77,14 @@
                 slows down to one that management considers acceptable
             </text>
             <pages>p.13</pages>
-            <book name="West04">"Object Thinking", David West, O'Reilly Media Inc., 2004</book>
+            <book>
+                <name>West04</name>
+                <cite>"Object Thinking", David West, O'Reilly Media Inc., 2004</cite>
+            </book>
             <tags>
                 <tag>
                     <user>yegor256</user>
                     <name>testing</name>
-                    <quotes>13</quotes>
                     <links>
                         <link rel="open" href="/xml/tag.xml"/>
                     </links>
@@ -92,7 +92,6 @@
                 <tag>
                     <user>bobby13</user>
                     <name>quality-of-software</name>
-                    <quotes>2</quotes>
                     <links>
                         <link rel="open" href="/xml/tag.xml"/>
                     </links>
@@ -100,7 +99,6 @@
                 <tag>
                     <user>bobby13</user>
                     <name>quality</name>
-                    <quotes>45</quotes>
                     <links>
                         <link rel="open" href="/xml/tag.xml"/>
                     </links>

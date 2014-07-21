@@ -29,10 +29,12 @@
  */
 
 @import "defs";
+@import "typography";
 
 .quote {
+  @extend p;
   .text {
-    font-size: 1.2 * $em;
+    font-size: 1.6 * $em;
     margin-bottom: .5 * $em;
     &:before {
       content: "\201C";
@@ -55,28 +57,7 @@
     }
   }
   .tags {
-    @extend .inline-list;
+    list-style: none;
     margin-left: 2 * $em;
-    li {
-      padding: .2 * $em .5 * $em;
-      margin-right: .4 * $em;
-      background-color: $light-gray;
-      border-radius: .2 * $em;
-      &:hover {
-        background-color: $gray;
-        color: $white;
-      }
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      .quotes {
-        background: $white;
-        color: $gray;
-        font-size: .8 * $em;
-        margin-left: .5 * $em;
-        padding: 0 .3 * $em;
-      }
-    }
   }
 }

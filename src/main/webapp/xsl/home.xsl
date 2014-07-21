@@ -39,23 +39,23 @@
     </xsl:template>
     <xsl:template match="page" mode="body">
         <xsl:if test="links/link[@rel='add-book']">
-            <div class="par">
+            <p>
                 <a href="{links/link[@rel='add-book']/@href}">
                     <xsl:text>Add New Book</xsl:text>
                 </a>
-            </div>
+            </p>
         </xsl:if>
         <xsl:if test="links/link[@rel='add-quote']">
-            <div class="par">
+            <p>
                 <a href="{links/link[@rel='add-quote']/@href}">
                     <xsl:text>Add New Quote</xsl:text>
                 </a>
-            </div>
+            </p>
         </xsl:if>
         <xsl:apply-templates select="quotes/quote"/>
     </xsl:template>
     <xsl:template match="quote">
-        <div class="par quote">
+        <div class="quote">
             <div class="text">
                 <xsl:value-of select="text"/>
             </div>
@@ -84,9 +84,6 @@
                 <xsl:text>:</xsl:text>
                 <xsl:value-of select="name"/>
             </a>
-            <span class="quotes">
-            <xsl:value-of select="quotes"/>
-            </span>
         </li>
     </xsl:template>
 </xsl:stylesheet>

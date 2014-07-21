@@ -30,6 +30,7 @@
 package com.bibrarian.dynamo;
 
 import com.bibrarian.om.Base;
+import com.bibrarian.om.Book;
 import com.bibrarian.om.Pageable;
 import com.bibrarian.om.Query;
 import com.bibrarian.om.Quote;
@@ -80,6 +81,11 @@ public final class DyBase implements Base {
     @Override
     public Pageable<Quote> quotes(final Query query) {
         throw new UnsupportedOperationException("#quotes()");
+    }
+
+    @Override
+    public Book book(final String name) {
+        throw new UnsupportedOperationException("#book()");
     }
 
     @Override
