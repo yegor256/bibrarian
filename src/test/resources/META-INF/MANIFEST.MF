@@ -1,7 +1,3 @@
-Bibrarian-FbId: test
-Bibrarian-FbSecret: test
-Bibrarian-GoogleId: test
-Bibrarian-GoogleSecret: test
 Bibrarian-GithubId: test
 Bibrarian-GithubSecret: test
 Bibrarian-SecurityKey: key

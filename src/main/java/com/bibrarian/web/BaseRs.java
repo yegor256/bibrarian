@@ -39,9 +39,7 @@ import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
 import com.rexsl.page.Resource;
 import com.rexsl.page.auth.AuthInset;
-import com.rexsl.page.auth.Facebook;
 import com.rexsl.page.auth.Github;
-import com.rexsl.page.auth.Google;
 import com.rexsl.page.auth.Identity;
 import com.rexsl.page.auth.Provider;
 import com.rexsl.page.inset.FlashInset;
@@ -114,14 +112,12 @@ public class BaseRs extends BaseResource {
     public final AuthInset auth() {
         // @checkstyle LineLength (3 lines)
         final AuthInset auth = new AuthInset(this, Manifests.read("Bibrarian-SecurityKey"))
-            .with(new Github(this, Manifests.read("Bibrarian-GithubId"), Manifests.read("Bibrarian-GithubSecret")))
-            .with(new Facebook(this, Manifests.read("Bibrarian-FbId"), Manifests.read("Bibrarian-FbSecret")))
-            .with(new Google(this, Manifests.read("Bibrarian-GoogleId"), Manifests.read("Bibrarian-GoogleSecret")));
+            .with(new Github(this, Manifests.read("Bibrarian-GithubId"), Manifests.read("Bibrarian-GithubSecret")));
         if (Manifests.read("Bibrarian-DynamoKey").startsWith("AAAA")) {
             auth.with(
                 new Provider.Always(
                     new Identity.Simple(
-                        URN.create("urn:facebook:1"),
+                        URN.create("urn:test:1"),
                         "localhost",
                         URI.create("http://img.bibrarian.com/localhost.png")
                     )

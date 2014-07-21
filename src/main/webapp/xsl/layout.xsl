@@ -67,17 +67,15 @@
                         <ul>
                             <xsl:apply-templates select="version"/>
                             <xsl:apply-templates select="identity"/>
-                            <li>
-                                <xsl:call-template name="millis">
-                                    <xsl:with-param name="millis" select="millis"/>
-                                </xsl:call-template>
-                            </li>
+                            <xsl:if test="not(identity)">
+                                <li>
+                                    <a href="{links/link[@rel='rexsl:github']/@href}">
+                                        <xsl:text>login</xsl:text>
+                                    </a>
+                                </li>
+                            </xsl:if>
+                            <xsl:apply-templates select="millis"/>
                         </ul>
-                        <xsl:if test="not(identity)">
-                            <ul>
-                                <xsl:call-template name="login"/>
-                            </ul>
-                        </xsl:if>
                     </header>
                     <div>
                         <xsl:apply-templates select="flash"/>
@@ -87,116 +85,60 @@
             </body>
         </html>
     </xsl:template>
-    <xsl:template name="millis">
-        <xsl:param name="millis" as="xs:integer"/>
-        <xsl:choose>
-            <xsl:when test="$millis &gt; 1000">
-                <xsl:value-of select="format-number($millis div 1000, '0.0')"/>
-                <xsl:text>s</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="format-number($millis, '#')"/>
-                <xsl:text>ms</xsl:text>
-            </xsl:otherwise>
-        </xsl:choose>
+    <xsl:template match="page/millis">
+        <xsl:variable name="msec" select="number(.)"/>
+        <li>
+            <xsl:choose>
+                <xsl:when test="$msec &gt; 1000">
+                    <xsl:value-of select="format-number($msec div 1000, '0.0')"/>
+                    <xsl:text>s</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="format-number($msec, '#')"/>
+                    <xsl:text>ms</xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+        </li>
     </xsl:template>
     <xsl:template match="version">
-        <li>
+        <li title="deployed version">
             <xsl:value-of select="name"/>
         </li>
         <li>
-            <a title="see commit in Github">
-                <xsl:attribute name="href">
-                    <xsl:text>https://github.com/yegor256/bibrarian/commit/</xsl:text>
-                    <xsl:value-of select="revision"/>
-                </xsl:attribute>
+            <a title="see commit in Github"
+                href="https://github.com/yegor256/bibrarian/commit/{revision}">
                 <xsl:value-of select="substring(revision,1,3)"/>
             </a>
         </li>
     </xsl:template>
     <xsl:template match="flash">
-        <div>
+        <p>
             <xsl:attribute name="class">
-                <xsl:text>flash </xsl:text>
+                <xsl:text>flash-</xsl:text>
                 <xsl:choose>
                     <xsl:when test="level = 'INFO'">
                         <xsl:text>success</xsl:text>
                     </xsl:when>
                     <xsl:when test="level = 'WARNING'">
-                        <xsl:text>info</xsl:text>
+                        <xsl:text>warning</xsl:text>
                     </xsl:when>
-                    <xsl:when test="level = 'ERROR'">
+                    <xsl:when test="level = 'SEVERE'">
                         <xsl:text>error</xsl:text>
                     </xsl:when>
                 </xsl:choose>
             </xsl:attribute>
             <xsl:value-of select="message"/>
-        </div>
-    </xsl:template>
-    <xsl:template name="login">
-        <li>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='rexsl:github']/@href"/>
-                </xsl:attribute>
-                <xsl:text>github</xsl:text>
-            </a>
-        </li>
-        <li>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='rexsl:facebook']/@href"/>
-                </xsl:attribute>
-                <xsl:text>facebook</xsl:text>
-            </a>
-        </li>
-        <li>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='rexsl:google']/@href"/>
-                </xsl:attribute>
-                <xsl:text>google+</xsl:text>
-            </a>
-        </li>
+        </p>
     </xsl:template>
     <xsl:template match="identity">
         <li>
-            <img style="width: 1.5em; height: 1.5em;">
-                <xsl:attribute name="src">
-                    <xsl:value-of select="photo"/>
-                </xsl:attribute>
-                <xsl:attribute name="alt">
-                    <xsl:value-of select="name"/>
-                </xsl:attribute>
-            </img>
-        </li>
-        <li class="navbar-text">
-            <i>
-                <xsl:attribute name="class">
-                    <xsl:text>icon-</xsl:text>
-                    <xsl:choose>
-                        <xsl:when test="starts-with(urn, 'urn:facebook:')">
-                            <xsl:text>facebook-sign</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="starts-with(urn, 'urn:github:')">
-                            <xsl:text>github-sign</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="starts-with(urn, 'urn:google:')">
-                            <xsl:text>google-sign</xsl:text>
-                        </xsl:when>
-                    </xsl:choose>
-                </xsl:attribute>
-                <xsl:comment>authenticated</xsl:comment>
-            </i>
+            <img style="width: 1.5em; height: 1.5em;" src="{photo}" alt="{name}"/>
         </li>
         <li>
             <xsl:value-of select="name"/>
         </li>
         <li>
-            <a title="log out">
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='rexsl:logout']/@href"/>
-                </xsl:attribute>
+            <a title="log out" href="{/page/links/link[@rel='rexsl:logout']/@href}">
                 <xsl:text>logout</xsl:text>
             </a>
         </li>

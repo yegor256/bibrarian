@@ -1,7 +1,3 @@
-Bibrarian-FbId: ${fb.id}
-Bibrarian-FbSecret: ${fb.secret}
-Bibrarian-GoogleId: ${google.id}
-Bibrarian-GoogleSecret: ${google.secret}
 Bibrarian-GithubId: ${github.id}
 Bibrarian-GithubSecret: ${github.secret}
 Bibrarian-SecurityKey: ${security.key}
