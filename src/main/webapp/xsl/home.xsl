@@ -73,7 +73,7 @@
             <xsl:text>, </xsl:text>
             <xsl:value-of select="pages"/>
             <xsl:text> </xsl:text>
-            <a href="{links/link[@rel='add-quote']/@href}">
+            <a href="{book/links/link[@rel='add-quote']/@href}">
                 <xsl:text>+quote</xsl:text>
             </a>
         </div>

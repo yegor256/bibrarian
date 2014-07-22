@@ -72,4 +72,24 @@ public final class BibitemTest {
         new Bibitem("broken text");
     }
 
+    /**
+     * Bibitem can render cite.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void rendersBibTeXCite() throws Exception {
+        final String tex = Joiner.on(' ').join(
+            "@article{test2014,\ntitle=\"Good Article\",\nyear=2013,",
+            "author={Jeff Lebowski}}"
+        );
+        MatcherAssert.assertThat(
+            new Bibitem(tex).cite(),
+            Matchers.allOf(
+                Matchers.containsString("Jeff Lebowski, "),
+                Matchers.containsString("\"Good Article\""),
+                Matchers.containsString(", 2013")
+            )
+        );
+    }
+
 }

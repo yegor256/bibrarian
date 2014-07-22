@@ -35,11 +35,16 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.immutable.ArrayMap;
+import com.jcabi.xml.XMLDocument;
+import com.jcabi.xml.XSLDocument;
 import java.util.Map;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.TokenStream;
+import org.xembly.Directives;
+import org.xembly.ImpossibleModificationException;
+import org.xembly.Xembler;
 
 /**
  * Bibtex Item.
@@ -113,12 +118,17 @@ public final class Bibitem {
      * @return Cite
      */
     public String cite() {
-        return String.format(
-            "%s, %s, %s",
-            this.map.get("title"),
-            this.map.get("author"),
-            this.map.get("publisher")
-        );
+        final Directives dirs = new Directives().add("bib");
+        for (final Map.Entry<String, String> ent : this.tags()) {
+            dirs.add(ent.getKey()).set(ent.getValue()).up();
+        }
+        try {
+            return XSLDocument.make(
+                this.getClass().getResourceAsStream("cite.xsl")
+            ).applyTo(new XMLDocument(new Xembler(dirs).xml()));
+        } catch (final ImpossibleModificationException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
