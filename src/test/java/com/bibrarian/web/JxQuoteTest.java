@@ -60,6 +60,7 @@ public final class JxQuoteTest {
         Mockito.doReturn("34--35").when(quote).pages();
         final Book book = Mockito.mock(Book.class);
         Mockito.doReturn(book).when(quote).book();
+        Mockito.doReturn("@article{test12,year=2012}").when(book).bibitem();
         Mockito.doReturn("hello").when(book).name();
         final Tags tags = Mockito.mock(Tags.class);
         Mockito.doReturn(tags).when(quote).tags();

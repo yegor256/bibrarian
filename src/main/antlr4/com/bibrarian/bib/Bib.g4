@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013-2014, bibrarian.com
+ * Copyright (c) 2009-2014, requs.org
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * disclaimer. 2) Redistributions in binary form must reproduce the above
  * copyright notice, this list of conditions and the following
  * disclaimer in the documentation and/or other materials provided
- * with the distribution. 3) Neither the name of the bibrarian.com nor
+ * with the distribution. 3) Neither the name of the requs.org nor
  * the names of its contributors may be used to endorse or promote
  * products derived from this software without specific prior written
  * permission.
@@ -27,55 +27,56 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.tex;
+grammar Bib;
 
-import com.jcabi.aspects.Immutable;
-
-/**
- * Bibtex Item.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 1.0
- */
-@Immutable
-public final class Bibitem {
-
-    /**
-     * TeX source.
-     */
-    private final transient String source;
-
-    /**
-     * Ctor.
-     * @param item TeX bibitem
-     */
-    public Bibitem(final String item) {
-        this.source = item;
-    }
-
-    /**
-     * Name.
-     * @return Name
-     */
-    public String name() {
-        return "test";
-    }
-
-    /**
-     * TeX.
-     * @return TeX
-     */
-    public String tex() {
-        return this.source;
-    }
-
-    /**
-     * Cite.
-     * @return Cite
-     */
-    public String cite() {
-        return "\"Object Thinking\" by David West";
-    }
-
+@header {
+    import java.util.Map;
+    import java.util.HashMap;
+    import org.apache.commons.lang3.StringUtils;
 }
+
+tags returns [Map<String, String> map]
+    :
+    { $map = new HashMap<String, String>(); }
+    TYPE
+    { $map.put("@", $TYPE.text.substring(1)); }
+    '{'
+    NAME
+    { $map.put("", $NAME.text); }
+    (
+        ','
+        TAG
+        '='
+        tex
+        { $map.put($TAG.text, $tex.ret); }
+    )*
+    '}'
+    EOF
+    ;
+
+tex returns [String ret]
+    :
+    NUMBER
+    { $ret = $NUMBER.text; }
+    |
+    QUOTED
+    { $ret = $QUOTED.text; }
+    ;
+
+fragment LOWCASE: 'a'..'z';
+fragment UPCASE: 'A'..'Z';
+fragment DIGIT: '0'..'9';
+TYPE: '@' LOWCASE+;
+NUMBER: DIGIT+;
+NAME: LOWCASE LOWCASE LOWCASE LOWCASE* DIGIT DIGIT;
+TAG: ( LOWCASE | UPCASE )+;
+TEX: .+?;
+QUOTED:
+    '"' ('\\"' | ~'"')* '"'
+    { this.setText(StringUtils.strip(this.getText(), "\"")); }
+    ;
+SPACE
+    :
+    ( ' ' | '\t' | '\n' | '\r' )+
+    { skip(); }
+    ;

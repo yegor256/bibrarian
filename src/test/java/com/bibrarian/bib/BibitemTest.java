@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2013-2014, bibrarian.com
  * All rights reserved.
  *
@@ -27,34 +26,45 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns="http://www.w3.org/1999/xhtml" version="2.0">
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="/xsl/layout.xsl"/>
-    <xsl:template match="page" mode="head">
-        <title>
-            <xsl:text>book</xsl:text>
-        </title>
-    </xsl:template>
-    <xsl:template match="page" mode="body">
-        <p>
-            First, you should create a "book" with its full
-            <a href="http://www.bibtex.org/Format/">BibTeX</a>
-            entry. Once created, you will be able to add
-            quotes to this book. If a book is already registered,
-            find it first using the search control above, and then
-            click "+quote" next to its name.
-        </p>
-        <form method="post" action="{links/link[@rel='save']/@href}">
-            <fieldset>
-                <textarea name="bibtex" id="bibtex" style="height:10em;">
-                    <xsl:text> </xsl:text>
-                </textarea>
-                <button type="submit">
-                    <xsl:text>Create New Book</xsl:text>
-                </button>
-            </fieldset>
-        </form>
-    </xsl:template>
-</xsl:stylesheet>
+ */
+package com.bibrarian.bib;
+
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+
+/**
+ * Test case for {@link Bibitem}.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.0
+ */
+public final class BibitemTest {
+
+    /**
+     * Bibitem can parse and print BibTeX.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void parsesAndPrintsBibTeX() throws Exception {
+        final String tex = "@article{test14,title=\"How are you?\",year=2014}";
+        MatcherAssert.assertThat(
+            new Bibitem(tex).tex(),
+            Matchers.allOf(
+                Matchers.containsString("@article{test14,\n"),
+                Matchers.containsString("title=\"How are you?\""),
+                Matchers.containsString("year=\"2014\"")
+            )
+        );
+    }
+
+    /**
+     * Bibitem can reject broken BibTeX.
+     * @throws Exception If some problem inside
+     */
+    @Test(expected = BibSyntaxException.class)
+    public void rejectsBrokenBibTeX() throws Exception {
+        new Bibitem("broken text");
+    }
+
+}

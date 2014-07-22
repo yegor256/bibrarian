@@ -53,6 +53,7 @@ public final class JxBookTest {
     public void convertsToXml() throws Exception {
         final Book book = Mockito.mock(Book.class);
         Mockito.doReturn("hello").when(book).name();
+        Mockito.doReturn("@article{test14}").when(book).bibitem();
         MatcherAssert.assertThat(
             JaxbConverter.the(new JxBook(book, new UriInfoMocker().mock())),
             XhtmlMatchers.hasXPaths(

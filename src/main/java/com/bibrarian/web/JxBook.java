@@ -29,12 +29,13 @@
  */
 package com.bibrarian.web;
 
+import com.bibrarian.bib.BibSyntaxException;
 import com.bibrarian.om.Book;
-import com.bibrarian.tex.Bibitem;
+import com.bibrarian.bib.Bibitem;
 import com.rexsl.page.Link;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -96,7 +97,11 @@ final class JxBook {
      */
     @XmlElement(name = "cite")
     public String getCite() throws IOException {
-        return new Bibitem(this.book.bibitem()).cite();
+        try {
+            return new Bibitem(this.book.bibitem()).cite();
+        } catch (final BibSyntaxException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
@@ -106,13 +111,19 @@ final class JxBook {
     @XmlElementWrapper(name = "links")
     @XmlElement(name = "link")
     public Collection<Link> getLinks() {
-        return Collections.singleton(
+        return Arrays.asList(
             new Link(
                 "open",
                 this.info.getBaseUriBuilder().clone()
                     .path(HomeRs.class)
                     .queryParam("q", "{term}")
                     .build(String.format("B:%s", this.book.name()))
+            ),
+            new Link(
+                "add-quote",
+                this.info.getBaseUriBuilder().clone()
+                    .path(AddQuoteRs.class)
+                    .build(this.book.name())
             )
         );
     }

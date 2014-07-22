@@ -72,6 +72,10 @@
             <xsl:value-of select="book/cite"/>
             <xsl:text>, </xsl:text>
             <xsl:value-of select="pages"/>
+            <xsl:text> </xsl:text>
+            <a href="{links/link[@rel='add-quote']/@href}">
+                <xsl:text>+quote</xsl:text>
+            </a>
         </div>
     </xsl:template>
     <xsl:template match="tags/tag">

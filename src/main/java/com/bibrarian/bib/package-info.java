@@ -35,4 +35,4 @@
  * @version $Id$
  * @since 1.0
  */
-package com.bibrarian.tex;
+package com.bibrarian.bib;
