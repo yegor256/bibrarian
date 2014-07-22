@@ -66,11 +66,12 @@ public final class DyQuotesITCase {
         final String name = "test2010";
         final Book book = base.books().add(String.format("@book {%s }", name));
         final Quotes quotes = base.quotes();
-        final Quote quote = quotes.add(book, "hey", "58");
+        quotes.add(book, "hey", "58");
         MatcherAssert.assertThat(
             quotes.iterate(),
-            Matchers.hasItem(quote)
+            Matchers.<Quote>iterableWithSize(1)
         );
+        final Quote quote = quotes.iterate().iterator().next();
         MatcherAssert.assertThat(
             quote.book().name(),
             Matchers.equalTo(name)

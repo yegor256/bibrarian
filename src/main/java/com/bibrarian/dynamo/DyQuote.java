@@ -113,7 +113,7 @@ final class DyQuote implements Quote {
     }
 
     @Override
-    public Book book() throws IOException {
+    public Book book() {
         final Iterator<String> books = new Refs(this.region).forward(
             String.format(DyQuote.FMT, this.num),
             Collections.singleton(Refs.withPrefix("B:"))
