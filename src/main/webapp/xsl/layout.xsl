@@ -144,9 +144,6 @@
     </xsl:template>
     <xsl:template match="identity">
         <li>
-            <img style="width: 1.5em; height: 1.5em;" src="{photo}" alt="{name}"/>
-        </li>
-        <li>
             <xsl:value-of select="name"/>
         </li>
         <li>
