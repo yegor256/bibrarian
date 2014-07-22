@@ -63,7 +63,7 @@ public final class DyQuotesITCase {
         final Base base = new DyBase(
             this.dynamo.region(), new MkSttc().counters().get("cnt")
         );
-        final String name = "test10";
+        final String name = "test2010";
         final Book book = base.books().add(String.format("@book {%s }", name));
         final Quotes quotes = base.quotes();
         final Quote quote = quotes.add(book, "hey", "58");

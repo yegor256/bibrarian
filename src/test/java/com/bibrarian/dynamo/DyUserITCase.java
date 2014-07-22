@@ -64,7 +64,7 @@ public final class DyUserITCase {
         final Base base = new DyBase(
             this.dynamo.region(), new MkSttc().counters().get("ttt")
         );
-        final Book book = base.books().add("@book {west14}");
+        final Book book = base.books().add("@book {west2014}");
         final Quotes quotes = base.quotes();
         final Quote quote = quotes.add(book, "never give up", "99");
         final Tag tag = new Tag.Simple("jeff", "my-tag");

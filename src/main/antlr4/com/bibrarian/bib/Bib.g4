@@ -72,7 +72,7 @@ OPEN: '{';
 CLOSE: '}';
 TYPE: '@' LOWCASE+ OPEN { this.setText(this.getText().replaceAll("[^a-z]", "")); };
 NUMBER: DIGIT+;
-NAME: LOWCASE LOWCASE LOWCASE LOWCASE* DIGIT DIGIT;
+NAME: LOWCASE LOWCASE LOWCASE LOWCASE* DIGIT DIGIT DIGIT DIGIT;
 TAG: ( LOWCASE | UPCASE )+;
 QUOTED:
     '"' ('\\"' | ~'"')* '"'

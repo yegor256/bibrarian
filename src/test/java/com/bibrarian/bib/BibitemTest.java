@@ -49,13 +49,13 @@ public final class BibitemTest {
     @Test
     public void parsesAndPrintsBibTeX() throws Exception {
         final String tex = Joiner.on(' ').join(
-            "@article{test14,\ntitle=\"How are you?\",year=2014,",
+            "@article{test2014,\ntitle=\"How are you?\",year=2014,",
             "publisher={Microsoft Publishing}}"
         );
         MatcherAssert.assertThat(
             new Bibitem(tex).tex(),
             Matchers.allOf(
-                Matchers.containsString("@article{test14,\n"),
+                Matchers.containsString("@article{test2014,\n"),
                 Matchers.containsString("title=\"How are you?\""),
                 Matchers.containsString("year=\"2014\"")
             )
