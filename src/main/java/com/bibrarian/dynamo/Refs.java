@@ -108,7 +108,7 @@ final class Refs {
      * @param right Right
      * @throws IOException If fails
      */
-    public void add(final String left, final String right) throws IOException {
+    public void put(final String left, final String right) throws IOException {
         this.region.table(Refs.TABLE).put(
             new Attributes()
                 .with(Refs.HASH, left)
@@ -122,10 +122,10 @@ final class Refs {
      * @param rights Rights
      * @throws IOException If fails
      */
-    public void add(final String left, final Iterable<String> rights)
+    public void put(final String left, final Iterable<String> rights)
         throws IOException {
         for (final String right : rights) {
-            this.add(left, right);
+            this.put(left, right);
         }
     }
 

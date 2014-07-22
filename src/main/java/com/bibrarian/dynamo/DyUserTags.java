@@ -27,87 +27,69 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.dynamo;
 
+import com.bibrarian.om.Tag;
+import com.bibrarian.om.Tags;
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
-import java.io.IOException;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Region;
+import java.util.Collection;
+import java.util.Collections;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Quotes.
+ * User tags in Dynamo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Quotes {
+@Loggable(Loggable.DEBUG)
+@ToString
+@EqualsAndHashCode(of = { "region", "login" })
+final class DyUserTags implements Tags {
 
     /**
-     * Get by id.
-     * @param number Quote number
-     * @return Quote
-     * @throws IOException If fails
+     * Region.
      */
-    Quote get(long number) throws IOException;
+    private final transient Region region;
 
     /**
-     * Iterate them.
-     * @return Quotes
+     * User login.
      */
-    Iterable<Quote> iterate();
+    private final transient String login;
 
     /**
-     * Refine with a new term.
-     * @param term Term
-     * @return The quotes
+     * Public ctor.
+     * @param reg Region
+     * @param user User login
      */
-    Quotes refine(String term);
-
-    /**
-     * Add new quote.
-     *
-     * <p>Throws {@link com.bibrarian.om.Quotes.InvalidQuoteException}
-     * if this quote is not valid.</p>
-     *
-     * @param book Book
-     * @param text Quote text
-     * @param pages Pages
-     * @return Quote created
-     * @throws IOException If fails
-     */
-    Quote add(Book book, String text, String pages) throws IOException;
-
-    /**
-     * When quote not found.
-     */
-    final class QuoteNotFoundException extends IOException {
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = 6540914607613240525L;
-        /**
-         * Ctor.
-         * @param cause Cause
-         */
-        public QuoteNotFoundException(final String cause) {
-            super(cause);
-        }
+    DyUserTags(final Region reg, final String user) {
+        this.region = reg;
+        this.login = user;
     }
 
-    /**
-     * When quote is not valid.
-     */
-    final class InvalidQuoteException extends IOException {
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = 6540914607613240525L;
-        /**
-         * Ctor.
-         * @param cause Cause
-         */
-        public InvalidQuoteException(final String cause) {
-            super(cause);
-        }
+    @Override
+    public Collection<Tag> iterate() {
+        return Lists.newArrayList(
+            Iterables.transform(
+                new Refs(this.region).forward(
+                    String.format("U:%s", this.login),
+                    Collections.singleton(Refs.withPrefix("T:"))
+                ),
+                new Function<String, Tag>() {
+                    @Override
+                    public Tag apply(final String input) {
+                        return new Tag.Simple(input);
+                    }
+                }
+            )
+        );
     }
 }

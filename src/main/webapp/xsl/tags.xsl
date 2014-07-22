@@ -34,51 +34,17 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template match="page" mode="head">
         <title>
-            <xsl:text>home</xsl:text>
+            <xsl:text>tags</xsl:text>
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <form method="get" action="{links/link[@rel='self']/@href}"
-            style="text-align:center">
-            <fieldset class="inline">
-                <input name="q" id="q" size="40" maxlength="120"
-                    value="{term}"/>
-            </fieldset>
-        </form>
-        <xsl:apply-templates select="quotes/quote"/>
-    </xsl:template>
-    <xsl:template match="quote">
-        <div class="quote">
-            <div class="text">
-                <a href="{links/link[@rel='open']/@href}">
-                    <xsl:value-of select="text"/>
-                </a>
-            </div>
-            <xsl:apply-templates select="." mode="book"/>
-            <xsl:if test="tags[tag]">
-                <ul class="tags">
-                    <xsl:apply-templates select="tags/tag"/>
-                </ul>
-            </xsl:if>
-        </div>
-    </xsl:template>
-    <xsl:template match="quote" mode="book">
-        <div class="book">
-            <span class="abbr">
-                <a href="{book/links/link[@rel='open']/@href}">
-                    <xsl:value-of select="book/name"/>
-                </a>
-            </span>
-            <xsl:value-of select="book/cite"/>
-            <xsl:text>, </xsl:text>
-            <xsl:value-of select="pages"/>
-        </div>
+        <ul>
+            <xsl:apply-templates select="tags/tag"/>
+        </ul>
     </xsl:template>
     <xsl:template match="tags/tag">
         <li>
             <a href="{links/link[@rel='open']/@href}">
-                <xsl:value-of select="user"/>
-                <xsl:text>:</xsl:text>
                 <xsl:value-of select="name"/>
             </a>
         </li>

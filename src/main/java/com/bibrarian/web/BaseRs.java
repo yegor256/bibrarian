@@ -37,6 +37,7 @@ import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
+import com.rexsl.page.Link;
 import com.rexsl.page.Resource;
 import com.rexsl.page.auth.AuthInset;
 import com.rexsl.page.auth.Github;
@@ -100,6 +101,39 @@ public class BaseRs extends BaseResource {
                 final Response.ResponseBuilder builder) {
                 builder.type(MediaType.TEXT_XML);
                 builder.header(HttpHeaders.VARY, "Cookie");
+            }
+        };
+    }
+
+    /**
+     * Links if the user is logged in.
+     * @return The inset
+     */
+    @Inset.Runtime
+    public final Inset insetLinks() {
+        // @checkstyle AnonInnerLengthCheck (50 lines)
+        return new Inset() {
+            @Override
+            public void render(final BasePage<?, ?> page,
+                final Response.ResponseBuilder builder) {
+                page.link(
+                    new Link(
+                        "add",
+                        BaseRs.this.uriInfo().getBaseUriBuilder()
+                            .clone()
+                            .path(AddBookRs.class)
+                            .build()
+                    )
+                );
+                page.link(
+                    new Link(
+                        "my-tags",
+                        BaseRs.this.uriInfo().getBaseUriBuilder()
+                            .clone()
+                            .path(TagsRs.class)
+                            .build()
+                    )
+                );
             }
         };
     }

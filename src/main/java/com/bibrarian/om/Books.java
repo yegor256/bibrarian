@@ -59,6 +59,7 @@ public interface Books {
      * @param name Book name
      * @param bibtex Bibtex
      * @return Book created or found
+     * @throws IOException If fails
      */
     Book add(String name, String bibtex) throws IOException;
 

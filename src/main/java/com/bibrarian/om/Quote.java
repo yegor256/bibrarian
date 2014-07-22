@@ -61,6 +61,7 @@ public interface Quote {
      * tag is not valid.
      *
      * @param tag Tag to add
+     * @throws IOException If fails
      */
     void tag(Tag tag) throws IOException;
 

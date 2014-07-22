@@ -77,7 +77,7 @@ final class DyUser implements User {
 
     @Override
     public Tags tags() {
-        throw new UnsupportedOperationException("#tags()");
+        return new DyUserTags(this.region, this.login);
     }
 
 }

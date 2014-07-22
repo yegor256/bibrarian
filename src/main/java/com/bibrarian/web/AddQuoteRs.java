@@ -95,6 +95,7 @@ public final class AddQuoteRs extends BaseRs {
      * Save.
      * @param text Text of quote
      * @param pages Pages
+     * @param tag Tag to add
      * @return The JAX-RS response
      * @throws IOException If fails
      */
@@ -104,7 +105,7 @@ public final class AddQuoteRs extends BaseRs {
         @FormParam("pages") final String pages,
         @FormParam("tag") final String tag) throws IOException {
         final Quote quote = this.base().quotes().add(
-            this.book(), text.trim(), pages.trim()
+            this.book(), text, pages
         );
         try {
             quote.tag(new Tag.Simple(this.user().name(), tag));

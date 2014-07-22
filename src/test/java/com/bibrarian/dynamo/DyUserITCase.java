@@ -29,49 +29,49 @@
  */
 package com.bibrarian.dynamo;
 
-import com.jcabi.dynamo.Credentials;
-import com.jcabi.dynamo.Region;
-import com.jcabi.dynamo.retry.ReRegion;
-import com.jcabi.manifests.Manifests;
-import org.junit.Assume;
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
+import co.stateful.mock.MkSttc;
+import com.bibrarian.om.Base;
+import com.bibrarian.om.Book;
+import com.bibrarian.om.Quote;
+import com.bibrarian.om.Quotes;
+import com.bibrarian.om.Tag;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Rule;
+import org.junit.Test;
 
 /**
- * Rule for unit tests.
+ * Integration test for {@link DyUser}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-final class DynamoRule implements TestRule {
-
-    @Override
-    public Statement apply(final Statement base,
-        final Description description) {
-        return base;
-    }
+public final class DyUserITCase {
 
     /**
-     * DynamoDB region for tests.
-     * @return Region
+     * Dynamo rule.
+     * @checkstyle VisibilityModifierCheck (5 lines)
      */
-    public Region region() {
-        final String key = Manifests.read("Bibrarian-DynamoKey");
-        Assume.assumeTrue(key.startsWith("AAAA"));
-        return new Region.Prefixed(
-            new ReRegion(
-                new Region.Simple(
-                    new Credentials.Direct(
-                        new Credentials.Simple(
-                            key,
-                            Manifests.read("Bibrarian-DynamoSecret")
-                        ),
-                        Integer.parseInt(System.getProperty("dynamo.port"))
-                    )
-                )
-            ),
-            "rt-"
+    @Rule
+    public transient DynamoRule dynamo = new DynamoRule();
+
+    /**
+     * DyUser can tag and find tags.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void findsByKeyword() throws Exception {
+        final Base base = new DyBase(
+            this.dynamo.region(), new MkSttc().counters().get("ttt")
+        );
+        final Book book = base.books().add("west04", "@book {}");
+        final Quotes quotes = base.quotes();
+        final Quote quote = quotes.add(book, "never give up", "99");
+        final Tag tag = new Tag.Simple("jeff", "my-tag");
+        quote.tag(tag);
+        MatcherAssert.assertThat(
+            base.user(tag.login()).tags().iterate(),
+            Matchers.hasItem(tag)
         );
     }
 

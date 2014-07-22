@@ -35,9 +35,11 @@ import com.bibrarian.om.Quote;
 import com.bibrarian.om.Quotes;
 import com.bibrarian.tex.Bibitem;
 import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
@@ -45,8 +47,12 @@ import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +63,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
@@ -85,6 +92,16 @@ final class DyQuotes implements Quotes {
     public static final String ATTR_PAGES = "pages";
 
     /**
+     * Pages pattern.
+     */
+    private static final Pattern PTN = Pattern.compile("\\d+(?:\\-\\d+)");
+
+    /**
+     * Stub for search.
+     */
+    private static final String STUB = "-";
+
+    /**
      * Region.
      */
     private final transient Region region;
@@ -105,7 +122,7 @@ final class DyQuotes implements Quotes {
      * @param cnt Counter
      */
     DyQuotes(final Region reg, final Counter cnt) {
-        this(reg, cnt, "-");
+        this(reg, cnt, DyQuotes.STUB);
     }
 
     /**
@@ -128,12 +145,22 @@ final class DyQuotes implements Quotes {
     @Override
     public Quote add(final Book book, final String text,
         final String pages) throws IOException {
+        if (text.trim().length() < Tv.THIRTY) {
+            throw new Quotes.InvalidQuoteException(
+                "quote text can't be empty or shorter than 30 characters"
+            );
+        }
+        if (text.length() > Tv.FIVE * Tv.HUNDRED) {
+            throw new Quotes.InvalidQuoteException(
+                "quote text can't be longer than 500 characters"
+            );
+        }
         final long number = this.counter.incrementAndGet(1L);
-        new Refs(this.region).add(
+        new Refs(this.region).put(
             String.format("Q:%08d", number),
             Iterables.concat(
                 Arrays.asList(
-                    "-",
+                    DyQuotes.STUB,
                     String.format("B:%s", book.name())
                 ),
                 DyQuotes.words(
@@ -147,8 +174,8 @@ final class DyQuotes implements Quotes {
         this.region.table(DyQuotes.TABLE).put(
             new Attributes()
                 .with(DyQuotes.HASH, number)
-                .with(DyQuotes.ATTR_TEXT, text)
-                .with(DyQuotes.ATTR_PAGES, pages)
+                .with(DyQuotes.ATTR_TEXT, text.trim())
+                .with(DyQuotes.ATTR_PAGES, DyQuotes.pages(pages))
         );
         return new DyQuote(this.region, number);
     }
@@ -199,6 +226,32 @@ final class DyQuotes implements Quotes {
                 ' '
             )
         );
+    }
+
+    /**
+     * Normalize pages.
+     * @param text Text
+     * @return Pages in "pp.34-38" or "p.56, p.78" format
+     * @throws Quotes.InvalidQuoteException If can't parse
+     */
+    private static String pages(final CharSequence text)
+        throws Quotes.InvalidQuoteException {
+        final Matcher matcher = DyQuotes.PTN.matcher(text);
+        final Collection<String> found = new LinkedList<String>();
+        while (matcher.find()) {
+            found.add(matcher.group(1));
+        }
+        if (found.isEmpty()) {
+            throw new Quotes.InvalidQuoteException(
+                "at least one page should be referenced"
+            );
+        }
+        if (found.size() > Tv.FIVE) {
+            throw new Quotes.InvalidQuoteException(
+                "too many page references, maximum is five"
+            );
+        }
+        return Joiner.on(" and ").join(found);
     }
 
 }

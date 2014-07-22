@@ -92,6 +92,7 @@ public final class QuoteRs extends BaseRs {
 
     /**
      * Add new tag.
+     * @param tag Tag to add
      * @throws IOException If fails
      */
     @POST

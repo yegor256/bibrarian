@@ -32,6 +32,8 @@ package com.bibrarian.om;
 import com.jcabi.aspects.Immutable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Tag.
@@ -50,7 +52,7 @@ public interface Tag {
     String login();
 
     /**
-     * Name of the tag
+     * Name of the tag.
      * @return Name
      */
     String name();
@@ -59,10 +61,13 @@ public interface Tag {
      * Simple.
      */
     @Immutable
+    @EqualsAndHashCode(of = { "user", "tag" })
+    @ToString
     final class Simple implements Tag {
         /**
          * Pattern.
          */
+        @SuppressWarnings("PMD.UnusedPrivateField")
         private static final Pattern PTN = Pattern.compile("T:([^/]+)/(.*)");
         /**
          * Login.

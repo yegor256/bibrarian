@@ -37,7 +37,6 @@ import com.google.common.collect.Lists;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.JaxbGroup;
-import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -65,6 +64,7 @@ public final class HomeRs extends BaseRs {
 
     /**
      * Set term.
+     * @param trm Term from query string
      */
     @QueryParam("q")
     public void setTerm(final String trm) {
@@ -89,15 +89,6 @@ public final class HomeRs extends BaseRs {
             .build(EmptyPage.class)
             .init(this)
             .append(new JaxbBundle("term", this.term))
-            .link(
-                new Link(
-                    "add",
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path(AddBookRs.class)
-                        .build()
-                )
-            )
             .append(
                 JaxbGroup.build(
                     Lists.newArrayList(

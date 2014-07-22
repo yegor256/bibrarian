@@ -48,6 +48,7 @@ public final class RefsITCase {
 
     /**
      * Dynamo rule.
+     * @checkstyle VisibilityModifierCheck (5 lines)
      */
     @Rule
     public transient DynamoRule dynamo = new DynamoRule();
@@ -60,9 +61,9 @@ public final class RefsITCase {
     public void addsAndFetches() throws Exception {
         final Refs refs = new Refs(this.dynamo.region());
         final String name = "test10";
-        refs.add(name, "alpha:124");
-        refs.add(name, "alpha:899");
-        refs.add(name, "beta:600");
+        refs.put(name, "alpha:124");
+        refs.put(name, "alpha:899");
+        refs.put(name, "beta:600");
         MatcherAssert.assertThat(
             refs.reverse(
                 name,

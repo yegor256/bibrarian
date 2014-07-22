@@ -76,6 +76,15 @@
                             </xsl:if>
                             <xsl:apply-templates select="millis"/>
                         </ul>
+                        <p>
+                            <a href="{links/link[@rel='add']/@href}">
+                                <xsl:text>Add New Quote</xsl:text>
+                            </a>
+                            <xsl:text>|</xsl:text>
+                            <a href="{links/link[@rel='my-tags']/@href}">
+                                <xsl:text>My Tags</xsl:text>
+                            </a>
+                        </p>
                     </header>
                     <div>
                         <xsl:apply-templates select="flash"/>

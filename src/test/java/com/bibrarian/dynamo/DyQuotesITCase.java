@@ -49,6 +49,7 @@ public final class DyQuotesITCase {
 
     /**
      * Dynamo rule.
+     * @checkstyle VisibilityModifierCheck (5 lines)
      */
     @Rule
     public transient DynamoRule dynamo = new DynamoRule();
@@ -63,7 +64,7 @@ public final class DyQuotesITCase {
             this.dynamo.region(), new MkSttc().counters().get("cnt")
         );
         final String name = "test10";
-        final Book book = base.books().add(name, "@book {}");
+        final Book book = base.books().add(name, "@book { }");
         final Quotes quotes = base.quotes();
         final Quote quote = quotes.add(book, "hey", "5-8");
         MatcherAssert.assertThat(

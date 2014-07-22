@@ -60,6 +60,11 @@ import lombok.ToString;
 final class DyQuote implements Quote {
 
     /**
+     * Format.
+     */
+    private static final String FMT = "Q:%d";
+
+    /**
      * Region.
      */
     private final transient Region region;
@@ -97,8 +102,12 @@ final class DyQuote implements Quote {
                 "tag must contain 3..100 English letters, numbers, spaces or dashes"
             );
         }
-        new Refs(this.region).add(
-            String.format("Q:%d", this.num),
+        new Refs(this.region).put(
+            String.format(DyQuote.FMT, this.num),
+            new Tag.Simple(tag).ref()
+        );
+        new Refs(this.region).put(
+            String.format("U:%s", tag.login()),
             new Tag.Simple(tag).ref()
         );
     }
@@ -106,7 +115,7 @@ final class DyQuote implements Quote {
     @Override
     public Book book() throws IOException {
         final Iterator<String> books = new Refs(this.region).forward(
-            String.format("Q:%d", this.num),
+            String.format(DyQuote.FMT, this.num),
             Collections.singleton(Refs.withPrefix("B:"))
         ).iterator();
         if (!books.hasNext()) {
