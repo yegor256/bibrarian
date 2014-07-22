@@ -68,25 +68,26 @@
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>          Mockito.doReturn(<span class="jxr_string">"34--35"</span>).when(quote).pages();
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>          <strong class="jxr_keyword">final</strong> Book book = Mockito.mock(Book.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>          Mockito.doReturn(book).when(quote).book();
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>          Mockito.doReturn(<span class="jxr_string">"hello"</span>).when(book).name();
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>          <strong class="jxr_keyword">final</strong> Tags tags = Mockito.mock(Tags.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>          Mockito.doReturn(tags).when(quote).tags();
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>          Mockito.doReturn(
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>              Collections.singleton(<strong class="jxr_keyword">new</strong> Tag.Simple(<span class="jxr_string">"jeff"</span>, <span class="jxr_string">"works-fine"</span>))
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>          ).when(tags).iterate();
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>          MatcherAssert.assertThat(
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>              JaxbConverter.the(<strong class="jxr_keyword">new</strong> JxQuote(quote, <strong class="jxr_keyword">new</strong> UriInfoMocker().mock())),
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>              XhtmlMatchers.hasXPaths(
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>                  <span class="jxr_string">"/quote[@id='0']"</span>,
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>                  <span class="jxr_string">"/quote[text='the text']"</span>,
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>                  <span class="jxr_string">"/quote/book[name='hello']"</span>,
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>                  <span class="jxr_string">"/quote/links/link[@rel='open' and @href]"</span>,
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>                  <span class="jxr_string">"/quote/tags/tag[user='jeff' and name='works-fine']"</span>
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>              )
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>          );
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      }
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>  }
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>          Mockito.doReturn(<span class="jxr_string">"@article{test2012,year=2012}"</span>).when(book).bibitem();
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          Mockito.doReturn(<span class="jxr_string">"hello"</span>).when(book).name();
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>          <strong class="jxr_keyword">final</strong> Tags tags = Mockito.mock(Tags.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          Mockito.doReturn(tags).when(quote).tags();
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>          Mockito.doReturn(
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>              Collections.singleton(<strong class="jxr_keyword">new</strong> Tag.Simple(<span class="jxr_string">"jeff"</span>, <span class="jxr_string">"works-fine"</span>))
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>          ).when(tags).iterate();
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>          MatcherAssert.assertThat(
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>              JaxbConverter.the(<strong class="jxr_keyword">new</strong> JxQuote(quote, <strong class="jxr_keyword">new</strong> UriInfoMocker().mock())),
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>              XhtmlMatchers.hasXPaths(
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>                  <span class="jxr_string">"/quote[@id='0']"</span>,
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>                  <span class="jxr_string">"/quote[text='the text']"</span>,
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>                  <span class="jxr_string">"/quote/book[name='hello']"</span>,
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>                  <span class="jxr_string">"/quote/links/link[@rel='open' and @href]"</span>,
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>                  <span class="jxr_string">"/quote/tags/tag[user='jeff' and name='works-fine']"</span>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>              )
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>          );
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      }
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2013&#x2013;2014 <a href="http://www.bibrarian.com">Bibrarian Inc.</a>. All rights reserved.</div>

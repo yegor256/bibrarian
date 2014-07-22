@@ -71,8 +71,8 @@
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>          <strong class="jxr_keyword">final</strong> Base base = <strong class="jxr_keyword">new</strong> DyBase(
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>              <strong class="jxr_keyword">this</strong>.dynamo.region(), <strong class="jxr_keyword">new</strong> MkSttc().counters().get(<span class="jxr_string">"cnt"</span>)
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>          );
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>          <strong class="jxr_keyword">final</strong> String name = <span class="jxr_string">"test10"</span>;
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>          <strong class="jxr_keyword">final</strong> Book book = base.books().add(name, <span class="jxr_string">"@book { }"</span>);
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          <strong class="jxr_keyword">final</strong> String name = <span class="jxr_string">"test2010"</span>;
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>          <strong class="jxr_keyword">final</strong> Book book = base.books().add(String.format(<span class="jxr_string">"@book {%s }"</span>, name));
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>          <strong class="jxr_keyword">final</strong> Quotes quotes = base.quotes();
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>          <strong class="jxr_keyword">final</strong> Quote quote = quotes.add(book, <span class="jxr_string">"hey"</span>, <span class="jxr_string">"58"</span>);
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>          MatcherAssert.assertThat(
@@ -98,7 +98,7 @@
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>          <strong class="jxr_keyword">final</strong> Base base = <strong class="jxr_keyword">new</strong> DyBase(
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>              <strong class="jxr_keyword">this</strong>.dynamo.region(), <strong class="jxr_keyword">new</strong> MkSttc().counters().get(<span class="jxr_string">"ttt"</span>)
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>          );
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>          <strong class="jxr_keyword">final</strong> Book book = base.books().add(<span class="jxr_string">"west04"</span>, <span class="jxr_string">"@book {}"</span>);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>          <strong class="jxr_keyword">final</strong> Book book = base.books().add(<span class="jxr_string">"@book {west04}"</span>);
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>          <strong class="jxr_keyword">final</strong> Quotes quotes = base.quotes();
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>          quotes.add(book, <span class="jxr_string">"never give up"</span>, <span class="jxr_string">"99-101, 256-257, 315"</span>);
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>          MatcherAssert.assertThat(
