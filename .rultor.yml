@@ -1,0 +1,26 @@
+assets:
+  settings.xml: "yegor256/home#assets/bibrarian/settings.xml"
+  pubring.gpg: "yegor256/home#assets/pubring.gpg"
+  secring.gpg: "yegor256/home#assets/secring.gpg"
+
+deploy:
+  env:
+    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
+  script:
+    - "mvn clean deploy -Ppdd -Pbibrarian --settings ../settings.xml"
+
+release:
+  env:
+    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
+  script:
+    - "sudo bundle install"
+    - "mvn versions:set \"-DnewVersion=${tag}\""
+    - "git commit -am \"${tag}\""
+    - "mvn clean deploy -Pqulice -Pbibrarian --settings ../settings.xml"
+    - "mvn clean site-deploy -Psite -Prempl --settings ../settings.xml"
+
+merge:
+  env:
+    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
+  script:
+    - "mvn help:system clean install -Pqulice --settings ../settings.xml"
