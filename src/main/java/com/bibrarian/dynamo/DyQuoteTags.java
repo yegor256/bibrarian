@@ -80,7 +80,7 @@ final class DyQuoteTags implements Tags {
         return Lists.newArrayList(
             Iterables.transform(
                 new Refs(this.region).forward(
-                    String.format("Q:%d", this.num),
+                    String.format(DyQuote.FMT, this.num),
                     Collections.singleton(Refs.withPrefix("T:"))
                 ),
                 new Function<String, Tag>() {

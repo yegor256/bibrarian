@@ -55,6 +55,11 @@ import lombok.ToString;
 final class DyBook implements Book {
 
     /**
+     * Format.
+     */
+    public static final String FMT = "B:%s";
+
+    /**
      * Region.
      */
     private final transient Region region;

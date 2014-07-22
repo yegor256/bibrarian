@@ -165,11 +165,11 @@ final class DyQuotes implements Quotes {
                 .with(DyQuotes.ATTR_PAGES, DyQuotes.pages(pages))
         );
         new Refs(this.region).put(
-            String.format("Q:%08d", number),
+            String.format(DyQuote.FMT, number),
             Iterables.concat(
                 Arrays.asList(
                     DyQuotes.STUB,
-                    String.format("B:%s", book.name())
+                    String.format(DyBook.FMT, book.name())
                 ),
                 DyQuotes.words(
                     Joiner.on(' ').join(
