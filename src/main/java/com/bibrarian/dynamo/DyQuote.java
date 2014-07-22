@@ -62,7 +62,7 @@ final class DyQuote implements Quote {
     /**
      * Format.
      */
-    public static final String FMT = "Q:%d";
+    public static final String FMT = "Q:%08d";
 
     /**
      * Region.
