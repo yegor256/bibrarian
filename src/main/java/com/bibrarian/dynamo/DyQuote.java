@@ -62,7 +62,7 @@ final class DyQuote implements Quote {
     /**
      * Format.
      */
-    public static final String FMT = "Q:%08d";
+    public static final String FMT = "q:%08d";
 
     /**
      * Region.
@@ -107,7 +107,7 @@ final class DyQuote implements Quote {
             new Tag.Simple(tag).ref()
         );
         new Refs(this.region).put(
-            String.format("U:%s", tag.login()),
+            String.format("u:%s", tag.login()),
             new Tag.Simple(tag).ref()
         );
     }
@@ -116,7 +116,7 @@ final class DyQuote implements Quote {
     public Book book() {
         final Iterator<String> books = new Refs(this.region).forward(
             String.format(DyQuote.FMT, this.num),
-            Collections.singleton(Refs.withPrefix("B:"))
+            Collections.singleton(Refs.withPrefix("b:"))
         ).iterator();
         if (!books.hasNext()) {
             throw new IllegalStateException(

@@ -40,6 +40,7 @@ import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Locale;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -119,7 +120,7 @@ final class DyBooks implements Books {
         }
         this.region.table(DyBooks.TABLE).put(
             new Attributes()
-                .with(DyBooks.HASH, bib.name())
+                .with(DyBooks.HASH, bib.name().toLowerCase(Locale.ENGLISH))
                 .with(DyBooks.ATTR_BIBITEM, bib.tex())
         );
         return new DyBook(this.region, bib.name());

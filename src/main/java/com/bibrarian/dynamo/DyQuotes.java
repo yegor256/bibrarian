@@ -201,7 +201,7 @@ final class DyQuotes implements Quotes {
         return Iterables.transform(
             new Refs(this.region).reverse(
                 this.term,
-                Collections.singleton(Refs.withPrefix("Q:"))
+                Collections.singleton(Refs.withPrefix("q:"))
             ),
             new Function<String, Quote>() {
                 @Override

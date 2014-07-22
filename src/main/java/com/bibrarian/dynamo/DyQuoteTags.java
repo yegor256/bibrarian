@@ -81,7 +81,7 @@ final class DyQuoteTags implements Tags {
             Iterables.transform(
                 new Refs(this.region).forward(
                     String.format(DyQuote.FMT, this.num),
-                    Collections.singleton(Refs.withPrefix("T:"))
+                    Collections.singleton(Refs.withPrefix("t:"))
                 ),
                 new Function<String, Tag>() {
                     @Override

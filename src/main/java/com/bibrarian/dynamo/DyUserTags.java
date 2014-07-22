@@ -80,8 +80,8 @@ final class DyUserTags implements Tags {
         return Lists.newArrayList(
             Iterables.transform(
                 new Refs(this.region).forward(
-                    String.format("U:%s", this.login),
-                    Collections.singleton(Refs.withPrefix("T:"))
+                    String.format("u:%s", this.login),
+                    Collections.singleton(Refs.withPrefix("t:"))
                 ),
                 new Function<String, Tag>() {
                     @Override

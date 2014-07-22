@@ -57,7 +57,7 @@ final class DyBook implements Book {
     /**
      * Format.
      */
-    public static final String FMT = "B:%s";
+    public static final String FMT = "b:%s";
 
     /**
      * Region.
