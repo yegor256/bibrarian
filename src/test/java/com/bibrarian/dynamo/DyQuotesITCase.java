@@ -64,7 +64,7 @@ public final class DyQuotesITCase {
             this.dynamo.region(), new MkSttc().counters().get("cnt")
         );
         final String name = "test2010";
-        final Book book = base.books().add(String.format("@book {%s }", name));
+        final Book book = base.books().add(String.format("@book{%s }", name));
         final Quotes quotes = base.quotes();
         quotes.add(book, "hey", "58");
         MatcherAssert.assertThat(
@@ -91,7 +91,7 @@ public final class DyQuotesITCase {
         final Base base = new DyBase(
             this.dynamo.region(), new MkSttc().counters().get("ttt")
         );
-        final Book book = base.books().add("@book {west04}");
+        final Book book = base.books().add("@book {west2014}");
         final Quotes quotes = base.quotes();
         quotes.add(book, "never give up", "99-101, 256-257, 315");
         MatcherAssert.assertThat(
