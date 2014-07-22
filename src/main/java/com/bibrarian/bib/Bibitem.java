@@ -91,7 +91,7 @@ public final class Bibitem {
             "@%s{%s,\n  %s\n}",
             this.type(),
             this.name(),
-            Joiner.on("\n  ").join(
+            Joiner.on(",\n  ").join(
                 Iterables.transform(
                     this.tags(),
                     new Function<Map.Entry<String, String>, Object>() {
