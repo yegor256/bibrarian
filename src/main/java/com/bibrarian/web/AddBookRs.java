@@ -31,7 +31,7 @@ package com.bibrarian.web;
 
 import com.bibrarian.bib.BibSyntaxException;
 import com.bibrarian.om.Book;
-import com.bibrarian.bib.Bibitem;
+import com.bibrarian.om.Books;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
@@ -83,17 +83,22 @@ public final class AddBookRs extends BaseRs {
     @Path("/save")
     public Response add(@FormParam("bibtex") final String bibtex)
         throws IOException {
-        final Bibitem bib;
+        final Book book;
         try {
-            bib = new Bibitem(bibtex);
+            book = this.base().books().add(bibtex);
         } catch (final BibSyntaxException ex) {
             throw this.flash().redirect(
                 this.uriInfo().getBaseUriBuilder()
                     .clone().path(AddBookRs.class).build(),
                 ex
             );
+        } catch (final Books.DuplicateBookException ex) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUriBuilder()
+                    .clone().path(AddBookRs.class).build(),
+                ex
+            );
         }
-        final Book book = this.base().books().add(bib.name(), bib.tex());
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
                 .clone()

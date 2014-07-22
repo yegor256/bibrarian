@@ -47,6 +47,7 @@ import org.antlr.v4.runtime.TokenStream;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
 public final class Bibitem {
@@ -122,6 +123,7 @@ public final class Bibitem {
 
     /**
      * Get pure tags.
+     * @return Tags
      */
     private Iterable<Map.Entry<String, String>> tags() {
         return Iterables.filter(

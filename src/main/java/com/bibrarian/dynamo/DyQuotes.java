@@ -30,10 +30,10 @@
 package com.bibrarian.dynamo;
 
 import co.stateful.Counter;
+import com.bibrarian.bib.Bibitem;
 import com.bibrarian.om.Book;
 import com.bibrarian.om.Quote;
 import com.bibrarian.om.Quotes;
-import com.bibrarian.bib.Bibitem;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;

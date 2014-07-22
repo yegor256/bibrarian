@@ -30,8 +30,8 @@
 package com.bibrarian.web;
 
 import com.bibrarian.bib.BibSyntaxException;
-import com.bibrarian.om.Book;
 import com.bibrarian.bib.Bibitem;
+import com.bibrarian.om.Book;
 import com.rexsl.page.Link;
 import java.io.IOException;
 import java.util.Arrays;

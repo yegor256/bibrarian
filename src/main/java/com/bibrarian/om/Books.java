@@ -56,12 +56,11 @@ public interface Books {
 
     /**
      * Add new book.
-     * @param name Book name
      * @param bibtex Bibtex
      * @return Book created or found
      * @throws IOException If fails
      */
-    Book add(String name, String bibtex) throws IOException;
+    Book add(String bibtex) throws IOException;
 
     /**
      * When book not found.
@@ -76,6 +75,23 @@ public interface Books {
          * @param cause Cause
          */
         public BookNotFoundException(final String cause) {
+            super(cause);
+        }
+    }
+
+    /**
+     * When book already exists.
+     */
+    final class DuplicateBookException extends IOException {
+        /**
+         * Serialization marker.
+         */
+        private static final long serialVersionUID = 6540914607613240525L;
+        /**
+         * Ctor.
+         * @param cause Cause
+         */
+        public DuplicateBookException(final String cause) {
             super(cause);
         }
     }

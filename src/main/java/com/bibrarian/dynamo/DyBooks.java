@@ -29,6 +29,7 @@
  */
 package com.bibrarian.dynamo;
 
+import com.bibrarian.bib.Bibitem;
 import com.bibrarian.om.Book;
 import com.bibrarian.om.Books;
 import com.jcabi.aspects.Immutable;
@@ -99,17 +100,28 @@ final class DyBooks implements Books {
     }
 
     @Override
-    public Book add(final String name, final String bibtex) throws IOException {
-        if (!name.matches("[a-zA-Z0-9]{3,40}")) {
+    public Book add(final String bibtex) throws IOException {
+        final Bibitem bib = new Bibitem(bibtex);
+        if (!bib.name().matches("[a-zA-Z0-9]{3,40}")) {
             throw new IllegalArgumentException(
-                String.format("invalid book name [%s]", name)
+                String.format("invalid book name [%s]", bib.name())
+            );
+        }
+        final Iterator<Item> items = this.region.table(DyBooks.TABLE)
+            .frame()
+            .through(new QueryValve().withLimit(1))
+            .where(DyBooks.HASH, bib.name())
+            .iterator();
+        if (items.hasNext()) {
+            throw new Books.DuplicateBookException(
+                String.format("book [%s] already exists", bib.name())
             );
         }
         this.region.table(DyBooks.TABLE).put(
             new Attributes()
-                .with(DyBooks.HASH, name)
-                .with(DyBooks.ATTR_BIBITEM, bibtex)
+                .with(DyBooks.HASH, bib.name())
+                .with(DyBooks.ATTR_BIBITEM, bib.tex())
         );
-        return new DyBook(this.region, name);
+        return new DyBook(this.region, bib.name());
     }
 }

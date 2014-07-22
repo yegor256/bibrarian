@@ -27,40 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.bib;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import org.antlr.v4.runtime.BaseErrorListener;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
 
 /**
- * Errors.
+ * TeX processing, tests.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-final class Errors extends BaseErrorListener implements Iterable<String> {
-
-    /**
-     * Errors.
-     */
-    private final transient Collection<String> msgs = new LinkedList<String>();
-
-    // @checkstyle ParameterNumberCheck (5 lines)
-    @Override
-    public void syntaxError(final Recognizer<?, ?> recognizer,
-        final Object symbol, final int line, final int pos, final String msg,
-        final RecognitionException exc) {
-        this.msgs.add(msg);
-    }
-
-    @Override
-    public Iterator<String> iterator() {
-        return this.msgs.iterator();
-    }
-
-}
+package com.bibrarian.bib;
