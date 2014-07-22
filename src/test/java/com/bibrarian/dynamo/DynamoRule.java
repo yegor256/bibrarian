@@ -33,7 +33,8 @@ import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
 import com.jcabi.manifests.Manifests;
-import org.junit.Assume;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -58,7 +59,7 @@ final class DynamoRule implements TestRule {
      */
     public Region region() {
         final String key = Manifests.read("Bibrarian-DynamoKey");
-        Assume.assumeTrue(key.startsWith("AAAA"));
+        MatcherAssert.assertThat(key.startsWith("AAAA"), Matchers.is(true));
         return new Region.Prefixed(
             new ReRegion(
                 new Region.Simple(
