@@ -133,7 +133,10 @@ final class DyQuotes implements Quotes {
     @Override
     public Iterable<Quote> iterate() {
         return Iterables.transform(
-            new Refs(this.region).reverse("-", "Q:"),
+            new Refs(this.region).reverse(
+                "-",
+                Collections.singleton(Refs.withPrefix("Q:"))
+            ),
             new Function<String, Quote>() {
                 @Override
                 public Quote apply(final String input) {

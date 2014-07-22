@@ -29,54 +29,48 @@
  */
 package com.bibrarian.dynamo;
 
-import co.stateful.mock.MkSttc;
-import com.bibrarian.om.Base;
-import com.bibrarian.om.Book;
-import com.bibrarian.om.Quote;
-import com.bibrarian.om.Quotes;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Rule;
-import org.junit.Test;
+import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.retry.ReRegion;
+import com.jcabi.manifests.Manifests;
+import org.junit.Assume;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
 
 /**
- * Integration test for {@link DyQuotes}.
+ * Rule for unit tests.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-public final class DyQuotesITCase {
+final class DynamoRule implements TestRule {
+
+    @Override
+    public Statement apply(final Statement base, final Description description) {
+        return base;
+    }
 
     /**
-     * Dynamo rule.
+     * DynamoDB region for tests.
+     * @return Region
      */
-    @Rule
-    public transient DynamoRule dynamo = new DynamoRule();
-
-    /**
-     * DyQuotes can list quotes.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void addsAndListsQuotes() throws Exception {
-        final Base base = new DyBase(
-            this.dynamo.region(), new MkSttc().counters().get("cnt")
-        );
-        final String name = "test10";
-        final Book book = base.books().add(name, "@book {}");
-        final Quotes quotes = base.quotes();
-        final Quote quote = quotes.add(book, "hey", "5-8");
-        MatcherAssert.assertThat(
-            quotes.iterate(),
-            Matchers.hasItem(quote)
-        );
-        MatcherAssert.assertThat(
-            quote.book().name(),
-            Matchers.equalTo(name)
-        );
-        MatcherAssert.assertThat(
-            quote.book().bibitem(),
-            Matchers.notNullValue()
+    public Region region() {
+        final String key = Manifests.read("Bibrarian-DynamoKey");
+        Assume.assumeTrue(key.startsWith("AAAA"));
+        return new Region.Prefixed(
+            new ReRegion(
+                new Region.Simple(
+                    new Credentials.Direct(
+                        new Credentials.Simple(
+                            key,
+                            Manifests.read("Bibrarian-DynamoSecret")
+                        ),
+                        Integer.parseInt(System.getProperty("dynamo.port"))
+                    )
+                )
+            ),
+            "rt-"
         );
     }
 

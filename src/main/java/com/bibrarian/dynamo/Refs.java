@@ -37,6 +37,7 @@ import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Attributes;
+import com.jcabi.dynamo.Frame;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
@@ -91,6 +92,17 @@ final class Refs {
     }
 
     /**
+     * With prefix.
+     * @param prefix Prefix
+     * @return Condition
+     */
+    public static Condition withPrefix(final String prefix) {
+        return new Condition()
+            .withComparisonOperator(ComparisonOperator.BEGINS_WITH)
+            .withAttributeValueList(new AttributeValue(prefix));
+    }
+
+    /**
      * Add new reference.
      * @param left Left
      * @param right Right
@@ -120,21 +132,20 @@ final class Refs {
     /**
      * Forward search.
      * @param left Left
-     * @param prefix Prefix
+     * @param cnds Conditions
      * @return Rights
      */
-    public Iterable<String> forward(final String left, final String prefix) {
+    public Iterable<String> forward(final String left,
+        final Iterable<Condition> cnds) {
+        Frame frame = this.region.table(Refs.TABLE)
+            .frame()
+            .through(new QueryValve().withScanIndexForward(false))
+            .where(Refs.HASH, left);
+        for (final Condition cnd : cnds) {
+            frame = frame.where(Refs.RANGE, cnd);
+        }
         return Iterables.transform(
-            this.region.table(Refs.TABLE)
-                .frame()
-                .through(new QueryValve().withScanIndexForward(false))
-                .where(Refs.HASH, left)
-                .where(
-                    Refs.RANGE,
-                    new Condition()
-                        .withComparisonOperator(ComparisonOperator.BEGINS_WITH)
-                        .withAttributeValueList(new AttributeValue(prefix))
-                ),
+            frame,
             new Function<Item, String>() {
                 @Override
                 public String apply(final Item input) {
@@ -151,26 +162,25 @@ final class Refs {
     /**
      * Forward search.
      * @param right Right
-     * @param prefix Prefix
+     * @param cnds Conditions
      * @return Lefts
      */
-    public Iterable<String> reverse(final String right, final String prefix) {
+    public Iterable<String> reverse(final String right,
+        final Iterable<Condition> cnds) {
+        Frame frame = this.region.table(Refs.TABLE)
+            .frame()
+            .through(
+                new QueryValve()
+                    .withIndexName(Refs.IDX)
+                    .withConsistentRead(false)
+                    .withScanIndexForward(false)
+            )
+            .where(Refs.RANGE, right);
+        for (final Condition cnd : cnds) {
+            frame = frame.where(Refs.HASH, cnd);
+        }
         return Iterables.transform(
-            this.region.table(Refs.TABLE)
-                .frame()
-                .through(
-                    new QueryValve()
-                        .withIndexName(Refs.IDX)
-                        .withConsistentRead(false)
-                        .withScanIndexForward(false)
-                )
-                .where(Refs.RANGE, right)
-                .where(
-                    Refs.HASH,
-                    new Condition()
-                        .withComparisonOperator(ComparisonOperator.BEGINS_WITH)
-                        .withAttributeValueList(new AttributeValue(prefix))
-                ),
+            frame,
             new Function<Item, String>() {
                 @Override
                 public String apply(final Item input) {

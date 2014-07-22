@@ -86,7 +86,8 @@ final class DyQuote implements Quote {
     @Override
     public Book book() throws IOException {
         final Iterator<String> books = new Refs(this.region).forward(
-            String.format("Q:%d", this.number), "B:"
+            String.format("Q:%d", this.number),
+            Collections.singleton(Refs.withPrefix("B:"))
         ).iterator();
         if (!books.hasNext()) {
             throw new IllegalStateException(

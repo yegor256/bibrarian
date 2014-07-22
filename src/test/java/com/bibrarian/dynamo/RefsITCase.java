@@ -29,23 +29,22 @@
  */
 package com.bibrarian.dynamo;
 
-import co.stateful.mock.MkSttc;
-import com.bibrarian.om.Base;
-import com.bibrarian.om.Book;
-import com.bibrarian.om.Quote;
-import com.bibrarian.om.Quotes;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
+import com.amazonaws.services.dynamodbv2.model.Condition;
+import java.util.Arrays;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 
 /**
- * Integration test for {@link DyQuotes}.
+ * Integration test for {@link Refs}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-public final class DyQuotesITCase {
+public final class RefsITCase {
 
     /**
      * Dynamo rule.
@@ -54,29 +53,29 @@ public final class DyQuotesITCase {
     public transient DynamoRule dynamo = new DynamoRule();
 
     /**
-     * DyQuotes can list quotes.
+     * Refs can index and retrieve.
      * @throws Exception If some problem inside
      */
     @Test
-    public void addsAndListsQuotes() throws Exception {
-        final Base base = new DyBase(
-            this.dynamo.region(), new MkSttc().counters().get("cnt")
-        );
+    public void addsAndFetches() throws Exception {
+        final Refs refs = new Refs(this.dynamo.region());
         final String name = "test10";
-        final Book book = base.books().add(name, "@book {}");
-        final Quotes quotes = base.quotes();
-        final Quote quote = quotes.add(book, "hey", "5-8");
+        refs.add(name, "alpha:124");
+        refs.add(name, "alpha:899");
+        refs.add(name, "beta:600");
         MatcherAssert.assertThat(
-            quotes.iterate(),
-            Matchers.hasItem(quote)
-        );
-        MatcherAssert.assertThat(
-            quote.book().name(),
-            Matchers.equalTo(name)
-        );
-        MatcherAssert.assertThat(
-            quote.book().bibitem(),
-            Matchers.notNullValue()
+            refs.reverse(
+                name,
+                Arrays.asList(
+                    new Condition()
+                        .withComparisonOperator(ComparisonOperator.BEGINS_WITH)
+                        .withAttributeValueList(new AttributeValue("alpha:"))
+                )
+            ),
+            Matchers.allOf(
+                Matchers.<String>iterableWithSize(2),
+                Matchers.hasItem(name)
+            )
         );
     }
 
