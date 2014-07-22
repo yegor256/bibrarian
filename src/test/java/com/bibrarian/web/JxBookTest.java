@@ -32,6 +32,7 @@ package com.bibrarian.web;
 import com.bibrarian.om.Book;
 import com.jcabi.matchers.JaxbConverter;
 import com.jcabi.matchers.XhtmlMatchers;
+import com.rexsl.mock.UriInfoMocker;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -53,8 +54,11 @@ public final class JxBookTest {
         final Book book = Mockito.mock(Book.class);
         Mockito.doReturn("hello").when(book).name();
         MatcherAssert.assertThat(
-            JaxbConverter.the(new JxBook(book)),
-            XhtmlMatchers.hasXPaths("/book[name='hello']")
+            JaxbConverter.the(new JxBook(book, new UriInfoMocker().mock())),
+            XhtmlMatchers.hasXPaths(
+                "/book[name='hello']",
+                "/book/links/link[@rel='open']"
+            )
         );
     }
 

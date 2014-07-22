@@ -114,7 +114,7 @@
     <xsl:template match="flash">
         <p>
             <xsl:attribute name="class">
-                <xsl:text>flash-</xsl:text>
+                <xsl:text>flash </xsl:text>
                 <xsl:choose>
                     <xsl:when test="level = 'INFO'">
                         <xsl:text>success</xsl:text>

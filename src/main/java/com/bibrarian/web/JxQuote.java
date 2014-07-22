@@ -120,7 +120,7 @@ final class JxQuote {
      */
     @XmlElement(name = "book")
     public JxBook getBook() throws IOException {
-        return new JxBook(this.quote.book());
+        return new JxBook(this.quote.book(), this.info);
     }
 
     /**

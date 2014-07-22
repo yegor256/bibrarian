@@ -29,9 +29,17 @@
  */
 package com.bibrarian.web;
 
+import com.bibrarian.om.Quote;
+import com.bibrarian.om.Quotes;
+import com.bibrarian.om.Tag;
 import com.jcabi.aspects.Loggable;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import java.io.IOException;
+import java.util.logging.Level;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
@@ -67,22 +75,58 @@ public final class QuoteRs extends BaseRs {
     /**
      * Show it.
      * @return The JAX-RS response
+     * @throws IOException If fails
      */
     @GET
     @Path("/")
-    public Response index() {
+    public Response index() throws IOException {
         return new PageBuilder()
             .stylesheet("/xsl/quote.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(
-                new JxQuote(
-                    this.base().quotes().get(this.number),
-                    this.uriInfo()
-                )
-            )
+            .append(new JxQuote(this.quote(), this.uriInfo()))
+            .link(new Link("add-tag", "./add-tag"))
             .render()
             .build();
+    }
+
+    /**
+     * Add new tag.
+     * @throws IOException If fails
+     */
+    @POST
+    @Path("/add-tag")
+    public void tag(@FormParam("tag") final String tag) throws IOException {
+        try {
+            this.quote().tag(new Tag.Simple(this.user().name(), tag));
+        } catch (final Quote.IncorrectTagException ex) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(), ex
+            );
+        }
+        throw this.flash().redirect(
+            this.uriInfo().getBaseUriBuilder()
+                .clone()
+                .path(QuoteRs.class)
+                .build(this.number),
+            String.format("quote #%d tagged for \"%s\"", this.number, tag),
+            Level.INFO
+        );
+    }
+
+    /**
+     * Get quote.
+     * @return Quote
+     * @throws IOException If fails
+     */
+    private Quote quote() throws IOException {
+        try {
+            return this.base().quotes().get(this.number);
+        } catch (final Quotes.QuoteNotFoundException ex) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(), ex
+            );
+        }
     }
 
 }

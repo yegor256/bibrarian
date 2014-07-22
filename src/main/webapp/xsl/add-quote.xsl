@@ -49,11 +49,11 @@
                 <label for="pages">
                     <xsl:text>Pages</xsl:text>
                 </label>
-                <input name="pages" id="pages" size="45" maxlength="30"/>
+                <input name="pages" id="pages" size="10" maxlength="30"/>
                 <label for="tag">
                     <xsl:text>Tag</xsl:text>
                 </label>
-                <input name="tag" id="tag" size="65" maxlength="128"/>
+                <input name="tag" id="tag" size="35" maxlength="128"/>
                 <button type="submit">
                     <xsl:text>Add New Quote</xsl:text>
                 </button>

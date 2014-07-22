@@ -94,7 +94,7 @@ final class DyQuote implements Quote {
         if (!tag.name().matches("[ a-zA-Z0-9\\-]{3,100}")) {
             throw new Quote.IncorrectTagException(
                 // @checkstyle LineLength (1 line)
-                "tag much contain 3..100 English letters, numbers, spaces or dashes"
+                "tag must contain 3..100 English letters, numbers, spaces or dashes"
             );
         }
         new Refs(this.region).add(

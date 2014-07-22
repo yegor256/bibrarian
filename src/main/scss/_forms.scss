@@ -48,8 +48,8 @@ input, textarea {
 
 input, textarea, button {
   border: 1px solid $gray;
-  border-radius: .2 * $em;
-  padding: .5 * $em;
+  border-radius: .1 * $em;
+  padding: .2 * $em .5 * $em;
   font-size: $em;
 }
 
@@ -66,5 +66,12 @@ button {
   &:hover {
     background-color: $gray;
     color: $white;
+  }
+}
+
+fieldset.inline {
+  input, button, label {
+    display: inline;
+    margin-right: $em;
   }
 }

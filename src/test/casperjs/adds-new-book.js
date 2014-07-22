@@ -4,7 +4,7 @@ casper.test.begin(
   function (test) {
     "use strict";
     casper.start(
-      casper.cli.get("home") + '/book',
+      casper.cli.get("home") + '/add-book',
       function () {
         this.fill(
           'form',

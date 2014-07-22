@@ -30,15 +30,18 @@
 package com.bibrarian.web;
 
 import com.bibrarian.om.Quote;
+import com.bibrarian.om.Quotes;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Loggable;
+import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -56,16 +59,36 @@ import javax.ws.rs.core.Response;
 public final class HomeRs extends BaseRs {
 
     /**
+     * Term.
+     */
+    private transient String term = "";
+
+    /**
+     * Set term.
+     */
+    @QueryParam("q")
+    public void setTerm(final String trm) {
+        if (trm != null) {
+            this.term = trm;
+        }
+    }
+
+    /**
      * Show it.
      * @return The JAX-RS response
      */
     @GET
     @Path("/")
     public Response index() {
+        Quotes quotes = this.base().quotes();
+        if (!this.term.isEmpty()) {
+            quotes = quotes.refine(this.term);
+        }
         return new PageBuilder()
             .stylesheet("/xsl/home.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .append(new JaxbBundle("term", this.term))
             .link(
                 new Link(
                     "add",
@@ -79,7 +102,7 @@ public final class HomeRs extends BaseRs {
                 JaxbGroup.build(
                     Lists.newArrayList(
                         Iterables.transform(
-                            this.base().quotes().iterate(),
+                            quotes.iterate(),
                             new Function<Quote, JxQuote>() {
                                 @Override
                                 public JxQuote apply(final Quote input) {

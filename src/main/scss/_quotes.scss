@@ -49,18 +49,18 @@
   .book {
     margin-left: 2 * $em;
     margin-bottom: .5 * $em;
-    .cite {
-      font-variant: small-caps;
-      &:before {
-        content: "[";
-      }
-      &:after {
-        content: "]";
-      }
-    }
   }
   .tags {
-    list-style: none;
     margin-left: 2 * $em;
+  }
+}
+
+.abbr {
+  font-variant: small-caps;
+  &:before {
+    content: "[";
+  }
+  &:after {
+    content: "]";
   }
 }

@@ -86,7 +86,7 @@ public final class AddQuoteRs extends BaseRs {
             .build(EmptyPage.class)
             .init(this)
             .link(new Link("save", "./save"))
-            .append(new JxBook(this.book()))
+            .append(new JxBook(this.book(), this.uriInfo()))
             .render()
             .build();
     }
@@ -115,7 +115,10 @@ public final class AddQuoteRs extends BaseRs {
         }
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),
-            String.format("quote added to \"%s\"", quote.book()),
+            String.format(
+                "quote #%d added to [%s]",
+                quote.number(), quote.book().name()
+            ),
             Level.INFO
         );
     }

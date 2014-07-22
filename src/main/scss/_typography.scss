@@ -63,3 +63,7 @@ p {
 pre {
   @extend p;
 }
+
+ul, li {
+  list-style: none;
+}

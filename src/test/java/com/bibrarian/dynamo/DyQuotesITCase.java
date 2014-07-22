@@ -80,4 +80,26 @@ public final class DyQuotesITCase {
         );
     }
 
+    /**
+     * DyQuotes can find by keyword.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void findsByKeyword() throws Exception {
+        final Base base = new DyBase(
+            this.dynamo.region(), new MkSttc().counters().get("ttt")
+        );
+        final Book book = base.books().add("west04", "@book {}");
+        final Quotes quotes = base.quotes();
+        quotes.add(book, "never give up", "99");
+        MatcherAssert.assertThat(
+            quotes.refine("give").iterate(),
+            Matchers.<Quote>iterableWithSize(1)
+        );
+        MatcherAssert.assertThat(
+            quotes.refine("another").iterate(),
+            Matchers.<Quote>iterableWithSize(0)
+        );
+    }
+
 }

@@ -57,12 +57,15 @@
   }
 }
 
-.flash-success {
-  color: green;
-}
-.flash-warning {
-  color: orange;
-}
-.flash-error {
-  color: red;
+.flash {
+  text-align: center;
+  &.success {
+    color: green;
+  }
+  &.warning {
+    color: orange;
+  }
+  &.error {
+    color: red;
+  }
 }

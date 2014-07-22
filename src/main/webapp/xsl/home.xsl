@@ -38,6 +38,13 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
+        <form method="get" action="{links/link[@rel='self']/@href}"
+            style="text-align:center">
+            <fieldset class="inline">
+                <input name="q" id="q" size="40" maxlength="120"
+                    value="{term}"/>
+            </fieldset>
+        </form>
         <xsl:if test="links/link[@rel='add']">
             <p>
                 <a href="{links/link[@rel='add']/@href}">
@@ -64,8 +71,10 @@
     </xsl:template>
     <xsl:template match="quote" mode="book">
         <div class="book">
-            <span class="cite">
-                <xsl:value-of select="book/name"/>
+            <span class="abbr">
+                <a href="{book/links/link[@rel='open']/@href}">
+                    <xsl:value-of select="book/name"/>
+                </a>
             </span>
             <xsl:value-of select="book/cite"/>
             <xsl:text>, </xsl:text>

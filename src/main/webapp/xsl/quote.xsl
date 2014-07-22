@@ -46,23 +46,32 @@
             <div class="text">
                 <xsl:value-of select="text"/>
             </div>
-            <xsl:apply-templates select="." mode="book"/>
-            <xsl:if test="tags[tag]">
-                <ul class="tags">
-                    <xsl:apply-templates select="tags/tag"/>
-                </ul>
-            </xsl:if>
         </div>
-    </xsl:template>
-    <xsl:template match="quote" mode="book">
-        <div class="book">
-            <span class="cite">
-                <xsl:value-of select="book/name"/>
+        <p>
+            <span class="abbr">
+                <a href="{book/links/link[@rel='open']/@href}">
+                    <xsl:value-of select="book/name"/>
+                </a>
             </span>
             <xsl:value-of select="book/cite"/>
             <xsl:text>, </xsl:text>
             <xsl:value-of select="pages"/>
-        </div>
+        </p>
+        <xsl:if test="/page/links/link[@rel='add-tag']">
+            <form method="post" action="{/page/links/link[@rel='add-tag']/@href}">
+                <fieldset class="inline">
+                    <input name="tag" id="tag" size="35" maxlength="100"/>
+                    <button type="submit">
+                        <xsl:text>Add tag</xsl:text>
+                    </button>
+                </fieldset>
+            </form>
+        </xsl:if>
+        <xsl:if test="tags[tag]">
+            <ul>
+                <xsl:apply-templates select="tags/tag"/>
+            </ul>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="tags/tag">
         <li>

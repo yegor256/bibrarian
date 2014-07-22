@@ -31,7 +31,6 @@ package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
 import java.io.IOException;
-import java.util.Collection;
 
 /**
  * Quotes.
@@ -47,8 +46,9 @@ public interface Quotes {
      * Get by id.
      * @param number Quote number
      * @return Quote
+     * @throws IOException If fails
      */
-    Quote get(long number);
+    Quote get(long number) throws IOException;
 
     /**
      * Iterate them.
@@ -58,16 +58,10 @@ public interface Quotes {
 
     /**
      * Refine with a new term.
-     * @param term Query
+     * @param term Term
      * @return The quotes
      */
-    Quotes refine(Term term);
-
-    /**
-     * Get all terms.
-     * @return The terms
-     */
-    Collection<Term> terms();
+    Quotes refine(String term);
 
     /**
      * Add new quote.
@@ -75,7 +69,24 @@ public interface Quotes {
      * @param text Quote text
      * @param pages Pages
      * @return Quote created
+     * @throws IOException If fails
      */
     Quote add(Book book, String text, String pages) throws IOException;
 
+    /**
+     * When quote not found.
+     */
+    final class QuoteNotFoundException extends IOException {
+        /**
+         * Serialization marker.
+         */
+        private static final long serialVersionUID = 6540914607613240525L;
+        /**
+         * Ctor.
+         * @param cause Cause
+         */
+        public QuoteNotFoundException(final String cause) {
+            super(cause);
+        }
+    }
 }

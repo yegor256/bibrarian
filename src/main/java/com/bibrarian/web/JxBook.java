@@ -31,10 +31,15 @@ package com.bibrarian.web;
 
 import com.bibrarian.om.Book;
 import com.bibrarian.tex.Bibitem;
+import com.rexsl.page.Link;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -54,6 +59,11 @@ final class JxBook {
     private final transient Book book;
 
     /**
+     * Uri Info.
+     */
+    private final transient UriInfo info;
+
+    /**
      * Ctor.
      */
     JxBook() {
@@ -63,9 +73,11 @@ final class JxBook {
     /**
      * Ctor.
      * @param bok Book
+     * @param inf URI info
      */
-    JxBook(final Book bok) {
+    JxBook(final Book bok, final UriInfo inf) {
         this.book = bok;
+        this.info = inf;
     }
 
     /**
@@ -86,4 +98,23 @@ final class JxBook {
     public String getCite() throws IOException {
         return new Bibitem(this.book.bibitem()).cite();
     }
+
+    /**
+     * Its links.
+     * @return Links
+     */
+    @XmlElementWrapper(name = "links")
+    @XmlElement(name = "link")
+    public Collection<Link> getLinks() {
+        return Collections.singleton(
+            new Link(
+                "open",
+                this.info.getBaseUriBuilder().clone()
+                    .path(HomeRs.class)
+                    .queryParam("q", "{term}")
+                    .build(String.format("B:%s", this.book.name()))
+            )
+        );
+    }
+
 }

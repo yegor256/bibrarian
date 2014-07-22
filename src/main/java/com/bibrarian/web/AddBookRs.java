@@ -89,7 +89,7 @@ public final class AddBookRs extends BaseRs {
                 .clone()
                 .path(AddQuoteRs.class)
                 .build(book.name()),
-            String.format("book \"%s\" added", book.name()),
+            String.format("new book [%s] added successfully", book.name()),
             Level.INFO
         );
     }

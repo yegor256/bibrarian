@@ -33,19 +33,23 @@ import co.stateful.Counter;
 import com.bibrarian.om.Book;
 import com.bibrarian.om.Quote;
 import com.bibrarian.om.Quotes;
-import com.bibrarian.om.Term;
+import com.bibrarian.tex.Bibitem;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Attributes;
+import com.jcabi.dynamo.Conditions;
+import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Quotes in DynamoDB.
@@ -91,23 +95,34 @@ final class DyQuotes implements Quotes {
     private final transient Counter counter;
 
     /**
+     * Term to stick to.
+     */
+    private final transient String term;
+
+    /**
      * Public ctor.
      * @param reg Region
      * @param cnt Counter
      */
     DyQuotes(final Region reg, final Counter cnt) {
+        this(reg, cnt, "-");
+    }
+
+    /**
+     * Public ctor.
+     * @param reg Region
+     * @param cnt Counter
+     * @param trm Term
+     */
+    DyQuotes(final Region reg, final Counter cnt, final String trm) {
         this.region = reg;
         this.counter = cnt;
+        this.term = trm;
     }
 
     @Override
-    public Quotes refine(final Term term) {
-        return this;
-    }
-
-    @Override
-    public Collection<Term> terms() {
-        return Collections.emptyList();
+    public Quotes refine(final String trm) {
+        return new DyQuotes(this.region, this.counter, trm);
     }
 
     @Override
@@ -116,9 +131,17 @@ final class DyQuotes implements Quotes {
         final long number = this.counter.incrementAndGet(1L);
         new Refs(this.region).add(
             String.format("Q:%08d", number),
-            Arrays.asList(
-                "-",
-                String.format("B:%s", book.name())
+            Iterables.concat(
+                Arrays.asList(
+                    "-",
+                    String.format("B:%s", book.name())
+                ),
+                DyQuotes.words(
+                    String.format(
+                        "%s %s",
+                        new Bibitem(book.bibitem()).cite(), text
+                    )
+                )
             )
         );
         this.region.table(DyQuotes.TABLE).put(
@@ -131,7 +154,17 @@ final class DyQuotes implements Quotes {
     }
 
     @Override
-    public Quote get(final long number) {
+    public Quote get(final long number) throws Quotes.QuoteNotFoundException {
+        final Iterator<Item> items = this.region.table(DyQuotes.TABLE)
+            .frame()
+            .through(new QueryValve().withLimit(1))
+            .where(DyQuotes.HASH, Conditions.equalTo(number))
+            .iterator();
+        if (!items.hasNext()) {
+            throw new Quotes.QuoteNotFoundException(
+                String.format("quote #%d not found", number)
+            );
+        }
         return new DyQuote(this.region, number);
     }
 
@@ -139,17 +172,33 @@ final class DyQuotes implements Quotes {
     public Iterable<Quote> iterate() {
         return Iterables.transform(
             new Refs(this.region).reverse(
-                "-",
+                this.term,
                 Collections.singleton(Refs.withPrefix("Q:"))
             ),
             new Function<String, Quote>() {
                 @Override
                 public Quote apply(final String input) {
-                    return DyQuotes.this.get(
+                    return new DyQuote(
+                        DyQuotes.this.region,
                         Long.parseLong(input.substring(2))
                     );
                 }
             }
         );
     }
+
+    /**
+     * Fetch words from text.
+     * @param text Text
+     * @return All words found
+     */
+    private static Iterable<String> words(final String text) {
+        return Arrays.asList(
+            StringUtils.split(
+                text.replaceAll("(\\s+|^[\\P{Alnum}]+)", " "),
+                ' '
+            )
+        );
+    }
+
 }

@@ -30,11 +30,15 @@
 package com.bibrarian.web;
 
 import com.bibrarian.om.Tag;
+import com.rexsl.page.Link;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -93,6 +97,24 @@ final class JxTag {
     @XmlElement(name = "name")
     public String getName() throws IOException {
         return this.tag.name();
+    }
+
+    /**
+     * Its links.
+     * @return Links
+     */
+    @XmlElementWrapper(name = "links")
+    @XmlElement(name = "link")
+    public Collection<Link> getLinks() {
+        return Collections.singleton(
+            new Link(
+                "open",
+                this.info.getBaseUriBuilder().clone()
+                    .path(HomeRs.class)
+                    .queryParam("q", "{term}")
+                    .build(new Tag.Simple(this.tag).ref())
+            )
+        );
     }
 
 }
