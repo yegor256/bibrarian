@@ -94,7 +94,7 @@ final class DyQuotes implements Quotes {
     /**
      * Pages pattern.
      */
-    private static final Pattern PTN = Pattern.compile("\\d+(?:\\-\\d+)");
+    private static final Pattern PTN = Pattern.compile("(\\d+)(\\-\\d+)?");
 
     /**
      * Stub for search.
@@ -145,9 +145,9 @@ final class DyQuotes implements Quotes {
     @Override
     public Quote add(final Book book, final String text,
         final String pages) throws IOException {
-        if (text.trim().length() < Tv.THIRTY) {
+        if (text.trim().length() < Tv.TWENTY) {
             throw new Quotes.InvalidQuoteException(
-                "quote text can't be empty or shorter than 30 characters"
+                "quote text can't be empty or shorter than 20 characters"
             );
         }
         if (text.length() > Tv.FIVE * Tv.HUNDRED) {
@@ -156,6 +156,12 @@ final class DyQuotes implements Quotes {
             );
         }
         final long number = this.counter.incrementAndGet(1L);
+        this.region.table(DyQuotes.TABLE).put(
+            new Attributes()
+                .with(DyQuotes.HASH, number)
+                .with(DyQuotes.ATTR_TEXT, text.trim())
+                .with(DyQuotes.ATTR_PAGES, DyQuotes.pages(pages))
+        );
         new Refs(this.region).put(
             String.format("Q:%08d", number),
             Iterables.concat(
@@ -164,18 +170,13 @@ final class DyQuotes implements Quotes {
                     String.format("B:%s", book.name())
                 ),
                 DyQuotes.words(
-                    String.format(
-                        "%s %s",
-                        new Bibitem(book.bibitem()).cite(), text
+                    Joiner.on(' ').join(
+                        new Bibitem(book.bibitem()).cite(),
+                        book.name(),
+                        text
                     )
                 )
             )
-        );
-        this.region.table(DyQuotes.TABLE).put(
-            new Attributes()
-                .with(DyQuotes.HASH, number)
-                .with(DyQuotes.ATTR_TEXT, text.trim())
-                .with(DyQuotes.ATTR_PAGES, DyQuotes.pages(pages))
         );
         return new DyQuote(this.region, number);
     }
@@ -239,7 +240,11 @@ final class DyQuotes implements Quotes {
         final Matcher matcher = DyQuotes.PTN.matcher(text);
         final Collection<String> found = new LinkedList<String>();
         while (matcher.find()) {
-            found.add(matcher.group(1));
+            if (matcher.group(2) == null) {
+                found.add(String.format("p.%s", matcher.group(1)));
+            } else {
+                found.add(String.format("pp.%s", matcher.group(0)));
+            }
         }
         if (found.isEmpty()) {
             throw new Quotes.InvalidQuoteException(

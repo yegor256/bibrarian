@@ -20,10 +20,11 @@
             Release: <code>${buildNumber}</code>
         </p>
         <p>
-            Sorry, something went terribly wrong. We are already informed
-            about the problem. We'll try to fix it ASAP. In the meantime,
-            go back to the site and try again:
-            <a href="http://www.bibrarian.com">www.bibrarian.com</a>.
+            Sorry, something went terribly wrong. Please, copy
+            the text below and post it as a new issue into our
+            <a href="https://github.com/yegor256/bibrarian/issues">Github project</a>.
+            Sorry for inconvenience and thanks for your help
+            in making Bibrarian better.
         </p>
         <pre>${text}</pre>
     </body>

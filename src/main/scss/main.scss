@@ -51,6 +51,7 @@
   text-align: center;
   ul {
     @extend .inline-list;
+    margin-top: .5 * $em;
     li {
       margin: 0 .2 * $em;
     }

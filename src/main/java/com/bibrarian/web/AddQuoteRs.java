@@ -32,6 +32,7 @@ package com.bibrarian.web;
 import com.bibrarian.om.Book;
 import com.bibrarian.om.Books;
 import com.bibrarian.om.Quote;
+import com.bibrarian.om.Quotes;
 import com.bibrarian.om.Tag;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.Link;
@@ -104,14 +105,23 @@ public final class AddQuoteRs extends BaseRs {
     public Response save(@FormParam("text") final String text,
         @FormParam("pages") final String pages,
         @FormParam("tag") final String tag) throws IOException {
-        final Quote quote = this.base().quotes().add(
-            this.book(), text, pages
-        );
+        final Quote quote;
+        try {
+            quote = this.base().quotes().add(this.book(), text, pages);
+        } catch (final Quotes.InvalidQuoteException ex) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUriBuilder()
+                    .clone().path(AddQuoteRs.class).build(this.name),
+                ex
+            );
+        }
         try {
             quote.tag(new Tag.Simple(this.user().name(), tag));
         } catch (final Quote.IncorrectTagException ex) {
             throw this.flash().redirect(
-                this.uriInfo().getBaseUri(), ex
+                this.uriInfo().getBaseUriBuilder()
+                    .clone().path(AddQuoteRs.class).build(this.name),
+                ex
             );
         }
         throw this.flash().redirect(

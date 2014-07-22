@@ -100,6 +100,11 @@ final class DyBooks implements Books {
 
     @Override
     public Book add(final String name, final String bibtex) throws IOException {
+        if (!name.matches("[a-zA-Z0-9]{3,40}")) {
+            throw new IllegalArgumentException(
+                String.format("invalid book name [%s]", name)
+            );
+        }
         this.region.table(DyBooks.TABLE).put(
             new Attributes()
                 .with(DyBooks.HASH, name)

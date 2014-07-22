@@ -65,7 +65,6 @@
                             </a>
                         </div>
                         <ul>
-                            <xsl:apply-templates select="version"/>
                             <xsl:apply-templates select="identity"/>
                             <xsl:if test="not(identity)">
                                 <li>
@@ -74,17 +73,21 @@
                                     </a>
                                 </li>
                             </xsl:if>
+                            <xsl:apply-templates select="version"/>
                             <xsl:apply-templates select="millis"/>
                         </ul>
-                        <p>
-                            <a href="{links/link[@rel='add']/@href}">
-                                <xsl:text>Add New Quote</xsl:text>
-                            </a>
-                            <xsl:text>|</xsl:text>
-                            <a href="{links/link[@rel='my-tags']/@href}">
-                                <xsl:text>My Tags</xsl:text>
-                            </a>
-                        </p>
+                        <ul>
+                            <li>
+                                <a href="{links/link[@rel='add']/@href}">
+                                    <xsl:text>Add New Quote</xsl:text>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{links/link[@rel='my-tags']/@href}">
+                                    <xsl:text>My Tags</xsl:text>
+                                </a>
+                            </li>
+                        </ul>
                     </header>
                     <div>
                         <xsl:apply-templates select="flash"/>
