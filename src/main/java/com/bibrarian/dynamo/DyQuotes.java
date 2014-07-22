@@ -37,7 +37,6 @@ import com.bibrarian.om.Quotes;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
@@ -57,7 +56,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Quotes in DynamoDB.
@@ -171,13 +169,13 @@ final class DyQuotes implements Quotes {
                     DyQuotes.STUB,
                     String.format(DyBook.FMT, book.name())
                 ),
-                DyQuotes.words(
+                new Tokens(
                     Joiner.on(' ').join(
                         new Bibitem(book.bibitem()).cite(),
                         book.name(),
                         text
                     )
-                )
+                ).iterate()
             )
         );
         return new DyQuote(this.region, number);
@@ -214,24 +212,6 @@ final class DyQuotes implements Quotes {
                     );
                 }
             }
-        );
-    }
-
-    /**
-     * Fetch words from text.
-     * @param text Text
-     * @return All words found
-     */
-    private static Iterable<String> words(final String text) {
-        return Sets.newHashSet(
-            Arrays.asList(
-                StringUtils.split(
-                    text.toLowerCase(Locale.ENGLISH).replaceAll(
-                        "[^a-zA-Z]+", " "
-                    ),
-                    ' '
-                )
-            )
         );
     }
 
