@@ -39,8 +39,7 @@ tags returns [Map<String, String> map]
     :
     { $map = new HashMap<String, String>(); }
     TYPE
-    { $map.put("@", $TYPE.text.substring(1)); }
-    '{'
+    { $map.put("@", $TYPE.text); }
     NAME
     { $map.put("", $NAME.text); }
     (
@@ -50,7 +49,7 @@ tags returns [Map<String, String> map]
         tex
         { $map.put($TAG.text, $tex.ret); }
     )*
-    '}'
+    CLOSE
     EOF
     ;
 
@@ -61,19 +60,27 @@ tex returns [String ret]
     |
     QUOTED
     { $ret = $QUOTED.text; }
+    |
+    CURLED
+    { $ret = $CURLED.text; }
     ;
 
 fragment LOWCASE: 'a'..'z';
 fragment UPCASE: 'A'..'Z';
 fragment DIGIT: '0'..'9';
-TYPE: '@' LOWCASE+;
+OPEN: '{';
+CLOSE: '}';
+TYPE: '@' LOWCASE+ OPEN { this.setText(this.getText().replaceAll("[^a-z]", "")); };
 NUMBER: DIGIT+;
 NAME: LOWCASE LOWCASE LOWCASE LOWCASE* DIGIT DIGIT;
 TAG: ( LOWCASE | UPCASE )+;
-TEX: .+?;
 QUOTED:
     '"' ('\\"' | ~'"')* '"'
     { this.setText(StringUtils.strip(this.getText(), "\"")); }
+    ;
+CURLED:
+    OPEN (~'}')* CLOSE
+    { this.setText(StringUtils.strip(this.getText(), "}{")); }
     ;
 SPACE
     :

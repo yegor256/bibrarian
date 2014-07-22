@@ -29,6 +29,7 @@
  */
 package com.bibrarian.bib;
 
+import com.google.common.base.Joiner;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -47,7 +48,10 @@ public final class BibitemTest {
      */
     @Test
     public void parsesAndPrintsBibTeX() throws Exception {
-        final String tex = "@article{test14,title=\"How are you?\",year=2014}";
+        final String tex = Joiner.on(' ').join(
+            "@article{test14,\ntitle=\"How are you?\",year=2014,",
+            "publisher={Microsoft Publishing}}"
+        );
         MatcherAssert.assertThat(
             new Bibitem(tex).tex(),
             Matchers.allOf(
