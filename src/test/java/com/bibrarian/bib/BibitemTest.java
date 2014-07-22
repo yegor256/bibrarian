@@ -92,4 +92,13 @@ public final class BibitemTest {
         );
     }
 
+    /**
+     * Bibitem can parse empty entry.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void parsesEmptyEntry() throws Exception {
+        new Bibitem(new Bibitem("@book{dude2014}").tex());
+    }
+
 }

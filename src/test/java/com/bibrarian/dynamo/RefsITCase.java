@@ -61,11 +61,12 @@ public final class RefsITCase {
     public void addsAndFetches() throws Exception {
         final Refs refs = new Refs(this.dynamo.region());
         final String name = "test10";
-        refs.put(name, "alpha:124");
+        final String alpha = "alpha:124";
+        refs.put(name, alpha);
         refs.put(name, "alpha:899");
         refs.put(name, "beta:600");
         MatcherAssert.assertThat(
-            refs.reverse(
+            refs.forward(
                 name,
                 Arrays.asList(
                     new Condition()
@@ -75,7 +76,7 @@ public final class RefsITCase {
             ),
             Matchers.allOf(
                 Matchers.<String>iterableWithSize(2),
-                Matchers.hasItem(name)
+                Matchers.hasItem(alpha)
             )
         );
     }

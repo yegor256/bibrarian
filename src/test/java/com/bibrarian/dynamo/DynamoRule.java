@@ -72,7 +72,7 @@ final class DynamoRule implements TestRule {
                     )
                 )
             ),
-            "rt-"
+            "bib-"
         );
     }
 

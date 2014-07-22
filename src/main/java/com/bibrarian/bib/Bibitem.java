@@ -29,11 +29,11 @@
  */
 package com.bibrarian.bib;
 
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.immutable.ArrayMap;
 import com.jcabi.xml.XMLDocument;
 import com.jcabi.xml.XSLDocument;
@@ -92,25 +92,14 @@ public final class Bibitem {
      * @return TeX
      */
     public String tex() {
-        return String.format(
-            "@%s{%s,\n  %s\n}",
-            this.type(),
-            this.name(),
-            Joiner.on(",\n  ").join(
-                Iterables.transform(
-                    this.tags(),
-                    new Function<Map.Entry<String, String>, Object>() {
-                        @Override
-                        public Object apply(
-                            final Map.Entry<String, String> ent) {
-                            return String.format(
-                                "%s=\"%s\"", ent.getKey(), ent.getValue()
-                            );
-                        }
-                    }
-                )
-            )
-        );
+        final StringBuilder tex = new StringBuilder(Tv.HUNDRED);
+        tex.append('@').append(this.type()).append('{').append(this.name());
+        for (final Map.Entry<String, String> ent : this.tags()) {
+            tex.append(",\n")
+                .append(ent.getKey()).append("=\"")
+                .append(ent.getValue()).append('"');
+        }
+        return tex.append('\n').append('}').toString();
     }
 
     /**

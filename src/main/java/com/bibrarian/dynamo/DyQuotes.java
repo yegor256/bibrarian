@@ -37,6 +37,7 @@ import com.bibrarian.om.Quotes;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
@@ -51,6 +52,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
@@ -134,7 +136,7 @@ final class DyQuotes implements Quotes {
     DyQuotes(final Region reg, final Counter cnt, final String trm) {
         this.region = reg;
         this.counter = cnt;
-        this.term = trm;
+        this.term = trm.toLowerCase(Locale.ENGLISH);
     }
 
     @Override
@@ -221,10 +223,14 @@ final class DyQuotes implements Quotes {
      * @return All words found
      */
     private static Iterable<String> words(final String text) {
-        return Arrays.asList(
-            StringUtils.split(
-                text.replaceAll("(\\s+|^[\\P{Alnum}]+)", " "),
-                ' '
+        return Sets.newHashSet(
+            Arrays.asList(
+                StringUtils.split(
+                    text.toLowerCase(Locale.ENGLISH).replaceAll(
+                        "[^a-zA-Z]+", " "
+                    ),
+                    ' '
+                )
             )
         );
     }
