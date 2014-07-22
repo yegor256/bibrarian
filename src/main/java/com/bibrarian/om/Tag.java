@@ -30,52 +30,92 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
-import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * Books.
+ * Tag.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Books {
+public interface Tag {
 
     /**
-     * Get book by name.
-     *
-     * <p>Throws {@link com.bibrarian.om.Books.BookNotFoundException} if
-     * this book doesn't exist.
-     *
-     * @param name Name of it
-     * @return Book
-     * @throws IOException If fails
+     * Owner.
+     * @return User login
      */
-    Book get(String name) throws IOException;
+    String login();
 
     /**
-     * Add new book.
-     * @param name Book name
-     * @param bibtex Bibtex
-     * @return Book created or found
+     * Name of the tag
+     * @return Name
      */
-    Book add(String name, String bibtex) throws IOException;
+    String name();
 
     /**
-     * When book not found.
+     * Simple.
      */
-    final class BookNotFoundException extends IOException {
+    @Immutable
+    final class Simple implements Tag {
         /**
-         * Serialization marker.
+         * Pattern.
          */
-        private static final long serialVersionUID = 6540914607613240525L;
+        private static final Pattern PTN = Pattern.compile("T:([^/]+)/(.*)");
+        /**
+         * Login.
+         */
+        private final transient String user;
+        /**
+         * Name.
+         */
+        private final transient String tag;
         /**
          * Ctor.
-         * @param cause Cause
+         * @param ref Ref
          */
-        public BookNotFoundException(final String cause) {
-            super(cause);
+        public Simple(final String ref) {
+            final Matcher matcher = Tag.Simple.PTN.matcher(ref);
+            if (!matcher.matches()) {
+                throw new IllegalStateException(
+                    String.format("invalid ref: \"%s\"", ref)
+                );
+            }
+            this.user = matcher.group(1);
+            this.tag = matcher.group(2);
+        }
+        /**
+         * Ctor.
+         * @param origin Another tag
+         */
+        public Simple(final Tag origin) {
+            this(origin.login(), origin.name());
+        }
+        /**
+         * Ctor.
+         * @param login Login
+         * @param name Name
+         */
+        public Simple(final String login, final String name) {
+            this.user = login;
+            this.tag = name;
+        }
+        @Override
+        public String login() {
+            return this.user;
+        }
+        @Override
+        public String name() {
+            return this.tag;
+        }
+        /**
+         * Make ref.
+         * @return Ref
+         */
+        public String ref() {
+            return String.format("T:%s/%s", this.user, this.tag);
         }
     }
 

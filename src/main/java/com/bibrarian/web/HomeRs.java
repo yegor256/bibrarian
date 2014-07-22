@@ -30,12 +30,13 @@
 package com.bibrarian.web;
 
 import com.bibrarian.om.Quote;
-import com.bibrarian.tex.Bibitem;
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
-import java.io.IOException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -74,47 +75,26 @@ public final class HomeRs extends BaseRs {
                         .build()
                 )
             )
-            .append(this.jaxb(this.base().quotes().iterate()))
+            .append(
+                JaxbGroup.build(
+                    Lists.newArrayList(
+                        Iterables.transform(
+                            this.base().quotes().iterate(),
+                            new Function<Quote, JxQuote>() {
+                                @Override
+                                public JxQuote apply(final Quote input) {
+                                    return new JxQuote(
+                                        input, HomeRs.this.uriInfo()
+                                    );
+                                }
+                            }
+                        )
+                    ),
+                    "quotes"
+                )
+            )
             .render()
             .build();
-    }
-
-    /**
-     * Convert quotes to a JAXB element.
-     * @param quotes The list of them
-     * @return JAXB object
-     */
-    private JaxbBundle jaxb(final Iterable<Quote> quotes) {
-        return new JaxbBundle("quotes").add(
-            new JaxbBundle.Group<Quote>(quotes) {
-                @Override
-                public JaxbBundle bundle(final Quote quote) {
-                    try {
-                        return HomeRs.this.bundle(quote);
-                    } catch (final IOException ex) {
-                        throw new IllegalStateException(ex);
-                    }
-                }
-            }
-        );
-    }
-
-    /**
-     * Convert discovery to a JAXB element.
-     * @param quote The discovery
-     * @return JAXB object
-     * @throws IOException If fails
-     */
-    private JaxbBundle bundle(final Quote quote) throws IOException {
-        return new JaxbBundle("quote")
-            .add("book")
-            .add("name", quote.book().name()).up()
-            .add("cite", new Bibitem(quote.book().bibitem()).cite()).up()
-            .up()
-            .add("text", quote.text())
-            .up()
-            .add("pages", quote.pages())
-            .up();
     }
 
 }

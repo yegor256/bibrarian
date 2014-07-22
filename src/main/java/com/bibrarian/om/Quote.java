@@ -31,7 +31,6 @@ package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
 import java.io.IOException;
-import java.util.Collection;
 
 /**
  * Quote.
@@ -44,10 +43,26 @@ import java.util.Collection;
 public interface Quote {
 
     /**
+     * Its number.
+     * @return The number
+     */
+    long number();
+
+    /**
      * Tags.
      * @return Tags
      */
-    Collection<String> tags();
+    Tags tags();
+
+    /**
+     * Tag single quote.
+     *
+     * <p>Throws {@link com.bibrarian.om.Quote.IncorrectTagException} if
+     * tag is not valid.
+     *
+     * @param tag Tag to add
+     */
+    void tag(Tag tag) throws IOException;
 
     /**
      * Where was it discovered.
@@ -83,5 +98,22 @@ public interface Quote {
      * @throws IOException If fails
      */
     void pages(String pages) throws IOException;
+
+    /**
+     * When tag is wrong.
+     */
+    final class IncorrectTagException extends IOException {
+        /**
+         * Serialization marker.
+         */
+        private static final long serialVersionUID = 6540914607613240525L;
+        /**
+         * Ctor.
+         * @param cause Cause
+         */
+        public IncorrectTagException(final String cause) {
+            super(cause);
+        }
+    }
 
 }

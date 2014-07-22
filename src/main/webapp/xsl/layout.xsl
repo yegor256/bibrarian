@@ -42,7 +42,7 @@
                 <meta name="keywords" content="bibliography, quotes"/>
                 <meta name="author" content="www.bibrarian.com"/>
                 <link rel="stylesheet" type="text/css" media="all" href="/css/style.css?{version/revision}"/>
-                <link rel="icon" type="image/gif" href="//img.bibrarian.com/logo-512x512.png?{version/revision}"/>
+                <link rel="icon" type="image/gif" href="//img.bibrarian.com/logo-512x512-transparent.png?{version/revision}"/>
                 <xsl:apply-templates select="." mode="head"/>
                 <script type="text/javascript">//<![CDATA[
                     var _gaq = _gaq || [];

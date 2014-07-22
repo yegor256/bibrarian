@@ -34,8 +34,11 @@ import com.bibrarian.om.Books;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Attributes;
+import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import java.io.IOException;
+import java.util.Iterator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -81,7 +84,17 @@ final class DyBooks implements Books {
     }
 
     @Override
-    public Book get(final String name) {
+    public Book get(final String name) throws Books.BookNotFoundException {
+        final Iterator<Item> items = this.region.table(DyBooks.TABLE)
+            .frame()
+            .through(new QueryValve().withLimit(1))
+            .where(DyBooks.HASH, name)
+            .iterator();
+        if (!items.hasNext()) {
+            throw new Books.BookNotFoundException(
+                String.format("book '%s' not found", name)
+            );
+        }
         return new DyBook(this.region, name);
     }
 

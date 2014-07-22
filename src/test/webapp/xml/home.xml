@@ -69,6 +69,9 @@
                     </links>
                 </tag>
             </tags>
+            <links>
+                <link href="/xml/quote.xml" rel="open" type="text/xml"/>
+            </links>
         </quote>
         <quote>
             <text>
@@ -104,6 +107,9 @@
                     </links>
                 </tag>
             </tags>
+            <links>
+                <link href="/xml/quote.xml" rel="open" type="text/xml"/>
+            </links>
         </quote>
     </quotes>
 </page>

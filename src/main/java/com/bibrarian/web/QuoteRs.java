@@ -27,56 +27,62 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.web;
 
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
+import com.jcabi.aspects.Loggable;
+import com.rexsl.page.PageBuilder;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
 
 /**
- * Books.
+ * Home.
+ *
+ * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle MultipleStringLiterals (500 lines)
  * @since 1.0
  */
-@Immutable
-public interface Books {
+@Path("/q/{number : \\d+}")
+@Loggable(Loggable.DEBUG)
+public final class QuoteRs extends BaseRs {
 
     /**
-     * Get book by name.
-     *
-     * <p>Throws {@link com.bibrarian.om.Books.BookNotFoundException} if
-     * this book doesn't exist.
-     *
-     * @param name Name of it
-     * @return Book
-     * @throws IOException If fails
+     * Quote number.
      */
-    Book get(String name) throws IOException;
+    private transient long number;
 
     /**
-     * Add new book.
-     * @param name Book name
-     * @param bibtex Bibtex
-     * @return Book created or found
+     * Set quote number.
+     * @param num Number
      */
-    Book add(String name, String bibtex) throws IOException;
+    @PathParam("number")
+    public void setNumber(final Long num) {
+        this.number = num;
+    }
 
     /**
-     * When book not found.
+     * Show it.
+     * @return The JAX-RS response
      */
-    final class BookNotFoundException extends IOException {
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = 6540914607613240525L;
-        /**
-         * Ctor.
-         * @param cause Cause
-         */
-        public BookNotFoundException(final String cause) {
-            super(cause);
-        }
+    @GET
+    @Path("/")
+    public Response index() {
+        return new PageBuilder()
+            .stylesheet("/xsl/quote.xsl")
+            .build(EmptyPage.class)
+            .init(this)
+            .append(
+                new JxQuote(
+                    this.base().quotes().get(this.number),
+                    this.uriInfo()
+                )
+            )
+            .render()
+            .build();
     }
 
 }

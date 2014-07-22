@@ -131,6 +131,11 @@ final class DyQuotes implements Quotes {
     }
 
     @Override
+    public Quote get(final long number) {
+        return new DyQuote(this.region, number);
+    }
+
+    @Override
     public Iterable<Quote> iterate() {
         return Iterables.transform(
             new Refs(this.region).reverse(
@@ -140,8 +145,7 @@ final class DyQuotes implements Quotes {
             new Function<String, Quote>() {
                 @Override
                 public Quote apply(final String input) {
-                    return new DyQuote(
-                        DyQuotes.this.region,
+                    return DyQuotes.this.get(
                         Long.parseLong(input.substring(2))
                     );
                 }

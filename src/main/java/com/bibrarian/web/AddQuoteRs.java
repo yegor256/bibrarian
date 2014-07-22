@@ -30,7 +30,9 @@
 package com.bibrarian.web;
 
 import com.bibrarian.om.Book;
+import com.bibrarian.om.Books;
 import com.bibrarian.om.Quote;
+import com.bibrarian.om.Tag;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
@@ -53,7 +55,7 @@ import javax.ws.rs.core.Response;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @since 1.0
  */
-@Path("/quote/{name}")
+@Path("/add-quote/{name}")
 @Loggable(Loggable.DEBUG)
 public final class AddQuoteRs extends BaseRs {
 
@@ -74,10 +76,11 @@ public final class AddQuoteRs extends BaseRs {
     /**
      * Entry page.
      * @return The JAX-RS response
+     * @throws IOException If fails
      */
     @GET
     @Path("/")
-    public Response entry() {
+    public Response entry() throws IOException {
         return new PageBuilder()
             .stylesheet("/xsl/add-quote.xsl")
             .build(EmptyPage.class)
@@ -98,10 +101,18 @@ public final class AddQuoteRs extends BaseRs {
     @POST
     @Path("/save")
     public Response save(@FormParam("text") final String text,
-        @FormParam("pages") final String pages) throws IOException {
+        @FormParam("pages") final String pages,
+        @FormParam("tag") final String tag) throws IOException {
         final Quote quote = this.base().quotes().add(
             this.book(), text.trim(), pages.trim()
         );
+        try {
+            quote.tag(new Tag.Simple(this.user().name(), tag));
+        } catch (final Quote.IncorrectTagException ex) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(), ex
+            );
+        }
         throw this.flash().redirect(
             this.uriInfo().getBaseUri(),
             String.format("quote added to \"%s\"", quote.book()),
@@ -112,9 +123,16 @@ public final class AddQuoteRs extends BaseRs {
     /**
      * Get book.
      * @return Book
+     * @throws IOException If fails
      */
-    private Book book() {
-        return this.base().books().get(this.name);
+    private Book book() throws IOException {
+        try {
+            return this.base().books().get(this.name);
+        } catch (final Books.BookNotFoundException ex) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(), ex
+            );
+        }
     }
 
 }

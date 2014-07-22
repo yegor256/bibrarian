@@ -27,56 +27,72 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.web;
 
-import com.jcabi.aspects.Immutable;
+import com.bibrarian.om.Tag;
 import java.io.IOException;
+import javax.ws.rs.core.UriInfo;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Books.
+ * Jaxb Tag.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Books {
+@XmlRootElement(name = "tag")
+@XmlAccessorType(XmlAccessType.NONE)
+final class JxTag {
 
     /**
-     * Get book by name.
-     *
-     * <p>Throws {@link com.bibrarian.om.Books.BookNotFoundException} if
-     * this book doesn't exist.
-     *
-     * @param name Name of it
-     * @return Book
+     * Tag.
+     */
+    private final transient Tag tag;
+
+    /**
+     * Uri Info.
+     */
+    private final transient UriInfo info;
+
+    /**
+     * Ctor.
+     */
+    JxTag() {
+        throw new UnsupportedOperationException("#JxTag()");
+    }
+
+    /**
+     * Ctor.
+     * @param tgg Tag
+     * @param inf Info
+     */
+    JxTag(final Tag tgg, final UriInfo inf) {
+        this.tag = tgg;
+        this.info = inf;
+    }
+
+    /**
+     * Its owner.
+     * @return Owner
      * @throws IOException If fails
      */
-    Book get(String name) throws IOException;
+    @XmlElement(name = "user")
+    public String getUser() throws IOException {
+        return this.tag.login();
+    }
 
     /**
-     * Add new book.
-     * @param name Book name
-     * @param bibtex Bibtex
-     * @return Book created or found
+     * Its name.
+     * @return Name
+     * @throws IOException If fails
      */
-    Book add(String name, String bibtex) throws IOException;
-
-    /**
-     * When book not found.
-     */
-    final class BookNotFoundException extends IOException {
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = 6540914607613240525L;
-        /**
-         * Ctor.
-         * @param cause Cause
-         */
-        public BookNotFoundException(final String cause) {
-            super(cause);
-        }
+    @XmlElement(name = "name")
+    public String getName() throws IOException {
+        return this.tag.name();
     }
 
 }

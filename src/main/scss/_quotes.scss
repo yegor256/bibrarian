@@ -36,6 +36,9 @@
   .text {
     font-size: 1.6 * $em;
     margin-bottom: .5 * $em;
+    a {
+      text-decoration: none;
+    }
     &:before {
       content: "\201C";
     }

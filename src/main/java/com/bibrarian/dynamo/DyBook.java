@@ -30,6 +30,7 @@
 package com.bibrarian.dynamo;
 
 import com.bibrarian.om.Book;
+import com.bibrarian.om.Books;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.AttributeUpdates;
@@ -91,15 +92,16 @@ final class DyBook implements Book {
     /**
      * Get item.
      * @return Item
+     * @throws Books.BookNotFoundException If not found
      */
-    private Item item() {
+    private Item item() throws Books.BookNotFoundException {
         final Iterator<Item> items = this.region.table(DyBooks.TABLE)
             .frame()
             .through(new QueryValve().withLimit(1))
             .where(DyBooks.HASH, this.label)
             .iterator();
         if (!items.hasNext()) {
-            throw new IllegalStateException(
+            throw new Books.BookNotFoundException(
                 String.format("book '%s' not found", this.label)
             );
         }

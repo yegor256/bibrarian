@@ -30,6 +30,8 @@
 package com.bibrarian.web;
 
 import com.bibrarian.om.Book;
+import com.bibrarian.tex.Bibitem;
+import java.io.IOException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -78,9 +80,10 @@ final class JxBook {
     /**
      * Cite of it.
      * @return Cite
+     * @throws IOException If fails
      */
     @XmlElement(name = "cite")
-    public String getCite() {
-        return "not implemented yet";
+    public String getCite() throws IOException {
+        return new Bibitem(this.book.bibitem()).cite();
     }
 }

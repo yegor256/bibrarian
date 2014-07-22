@@ -27,56 +27,69 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.dynamo;
 
+import com.bibrarian.om.Tag;
+import com.bibrarian.om.Tags;
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
-import java.io.IOException;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Region;
+import java.util.Collection;
+import java.util.Collections;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Books.
+ * Quote tags in Dynamo.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
 @Immutable
-public interface Books {
+@Loggable(Loggable.DEBUG)
+@ToString
+@EqualsAndHashCode(of = { "region", "num" })
+final class DyQuoteTags implements Tags {
 
     /**
-     * Get book by name.
-     *
-     * <p>Throws {@link com.bibrarian.om.Books.BookNotFoundException} if
-     * this book doesn't exist.
-     *
-     * @param name Name of it
-     * @return Book
-     * @throws IOException If fails
+     * Region.
      */
-    Book get(String name) throws IOException;
+    private final transient Region region;
 
     /**
-     * Add new book.
-     * @param name Book name
-     * @param bibtex Bibtex
-     * @return Book created or found
+     * Number.
      */
-    Book add(String name, String bibtex) throws IOException;
+    private final transient long num;
 
     /**
-     * When book not found.
+     * Public ctor.
+     * @param reg Region
+     * @param number Number
      */
-    final class BookNotFoundException extends IOException {
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = 6540914607613240525L;
-        /**
-         * Ctor.
-         * @param cause Cause
-         */
-        public BookNotFoundException(final String cause) {
-            super(cause);
-        }
+    DyQuoteTags(final Region reg, final long number) {
+        this.region = reg;
+        this.num = number;
     }
 
+    @Override
+    public Collection<Tag> iterate() {
+        return Lists.newArrayList(
+            Iterables.transform(
+                new Refs(this.region).forward(
+                    String.format("Q:%d", this.num),
+                    Collections.singleton(Refs.withPrefix("T:"))
+                ),
+                new Function<String, Tag>() {
+                    @Override
+                    public Tag apply(final String input) {
+                        return new Tag.Simple(input);
+                    }
+                }
+            )
+        );
+    }
 }

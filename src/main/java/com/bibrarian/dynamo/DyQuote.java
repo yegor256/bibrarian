@@ -31,6 +31,8 @@ package com.bibrarian.dynamo;
 
 import com.bibrarian.om.Book;
 import com.bibrarian.om.Quote;
+import com.bibrarian.om.Tag;
+import com.bibrarian.om.Tags;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.AttributeUpdates;
@@ -39,7 +41,6 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import lombok.EqualsAndHashCode;
@@ -55,7 +56,7 @@ import lombok.ToString;
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(of = { "region", "number" })
+@EqualsAndHashCode(of = { "region", "num" })
 final class DyQuote implements Quote {
 
     /**
@@ -66,32 +67,51 @@ final class DyQuote implements Quote {
     /**
      * Number.
      */
-    private final transient long number;
+    private final transient long num;
 
     /**
      * Public ctor.
      * @param reg Region
-     * @param num Number
+     * @param number Number
      */
-    DyQuote(final Region reg, final long num) {
+    DyQuote(final Region reg, final long number) {
         this.region = reg;
-        this.number = num;
+        this.num = number;
     }
 
     @Override
-    public Collection<String> tags() {
-        return Collections.emptyList();
+    public long number() {
+        return this.num;
+    }
+
+    @Override
+    public Tags tags() {
+        return new DyQuoteTags(this.region, this.num);
+    }
+
+    @Override
+    public void tag(final Tag tag) throws IOException {
+        if (!tag.name().matches("[ a-zA-Z0-9\\-]{3,100}")) {
+            throw new Quote.IncorrectTagException(
+                // @checkstyle LineLength (1 line)
+                "tag much contain 3..100 English letters, numbers, spaces or dashes"
+            );
+        }
+        new Refs(this.region).add(
+            String.format("Q:%d", this.num),
+            new Tag.Simple(tag).ref()
+        );
     }
 
     @Override
     public Book book() throws IOException {
         final Iterator<String> books = new Refs(this.region).forward(
-            String.format("Q:%d", this.number),
+            String.format("Q:%d", this.num),
             Collections.singleton(Refs.withPrefix("B:"))
         ).iterator();
         if (!books.hasNext()) {
             throw new IllegalStateException(
-                String.format("book not found for quote #%d", this.number)
+                String.format("book not found for quote #%d", this.num)
             );
         }
         return new DyBook(this.region, books.next().substring(2));
@@ -133,11 +153,11 @@ final class DyQuote implements Quote {
         final Iterator<Item> items = this.region.table(DyQuotes.TABLE)
             .frame()
             .through(new QueryValve().withLimit(1))
-            .where(DyQuotes.HASH, Conditions.equalTo(this.number))
+            .where(DyQuotes.HASH, Conditions.equalTo(this.num))
             .iterator();
         if (!items.hasNext()) {
             throw new IllegalStateException(
-                String.format("quote #%d not found", this.number)
+                String.format("quote #%d not found", this.num)
             );
         }
         return items.next();

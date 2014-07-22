@@ -30,9 +30,10 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
+import java.util.Collection;
 
 /**
- * Tags.
+ * Collection of tags.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -42,10 +43,9 @@ import com.jcabi.aspects.Immutable;
 public interface Tags {
 
     /**
-     * Tag single quote.
-     * @param quote Quote to tag
-     * @param name Tag name to use
+     * List them all.
+     * @return List of them
      */
-    void add(Quote quote, String name);
+    Collection<Tag> iterate();
 
 }

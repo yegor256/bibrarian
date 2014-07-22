@@ -27,56 +27,55 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.om;
+package com.bibrarian.web;
 
-import com.jcabi.aspects.Immutable;
-import java.io.IOException;
+import com.bibrarian.om.Book;
+import com.bibrarian.om.Quote;
+import com.bibrarian.om.Tag;
+import com.bibrarian.om.Tags;
+import com.jcabi.matchers.JaxbConverter;
+import com.jcabi.matchers.XhtmlMatchers;
+import com.rexsl.mock.UriInfoMocker;
+import java.util.Collections;
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Books.
- *
+ * Test case for {@link JxQuote}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-@Immutable
-public interface Books {
+public final class JxQuoteTest {
 
     /**
-     * Get book by name.
-     *
-     * <p>Throws {@link com.bibrarian.om.Books.BookNotFoundException} if
-     * this book doesn't exist.
-     *
-     * @param name Name of it
-     * @return Book
-     * @throws IOException If fails
+     * JxQuote can be converted to XML.
+     * @throws Exception If some problem inside
      */
-    Book get(String name) throws IOException;
-
-    /**
-     * Add new book.
-     * @param name Book name
-     * @param bibtex Bibtex
-     * @return Book created or found
-     */
-    Book add(String name, String bibtex) throws IOException;
-
-    /**
-     * When book not found.
-     */
-    final class BookNotFoundException extends IOException {
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = 6540914607613240525L;
-        /**
-         * Ctor.
-         * @param cause Cause
-         */
-        public BookNotFoundException(final String cause) {
-            super(cause);
-        }
+    @Test
+    public void convertsToXml() throws Exception {
+        final Quote quote = Mockito.mock(Quote.class);
+        Mockito.doReturn("the text").when(quote).text();
+        Mockito.doReturn("34--35").when(quote).pages();
+        final Book book = Mockito.mock(Book.class);
+        Mockito.doReturn(book).when(quote).book();
+        Mockito.doReturn("hello").when(book).name();
+        final Tags tags = Mockito.mock(Tags.class);
+        Mockito.doReturn(tags).when(quote).tags();
+        Mockito.doReturn(
+            Collections.singleton(new Tag.Simple("jeff", "works-fine"))
+        ).when(tags).iterate();
+        MatcherAssert.assertThat(
+            JaxbConverter.the(new JxQuote(quote, new UriInfoMocker().mock())),
+            XhtmlMatchers.hasXPaths(
+                "/quote[@id='0']",
+                "/quote[text='the text']",
+                "/quote/book[name='hello']",
+                "/quote/links/link[@rel='open' and @href]",
+                "/quote/tags/tag[user='jeff' and name='works-fine']"
+            )
+        );
     }
 
 }

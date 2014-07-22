@@ -52,7 +52,7 @@ import javax.ws.rs.core.Response;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @since 1.0
  */
-@Path("/book")
+@Path("/add-book")
 @Loggable(Loggable.DEBUG)
 public final class AddBookRs extends BaseRs {
 

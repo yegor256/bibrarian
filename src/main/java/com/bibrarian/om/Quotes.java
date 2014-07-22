@@ -44,6 +44,13 @@ import java.util.Collection;
 public interface Quotes {
 
     /**
+     * Get by id.
+     * @param number Quote number
+     * @return Quote
+     */
+    Quote get(long number);
+
+    /**
      * Iterate them.
      * @return Quotes
      */

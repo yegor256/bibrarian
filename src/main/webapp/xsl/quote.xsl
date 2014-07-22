@@ -34,25 +34,17 @@
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template match="page" mode="head">
         <title>
-            <xsl:text>home</xsl:text>
+            <xsl:text>q:</xsl:text>
+            <xsl:value-of select="quote/@id"/>
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <xsl:if test="links/link[@rel='add']">
-            <p>
-                <a href="{links/link[@rel='add']/@href}">
-                    <xsl:text>Add New Quote</xsl:text>
-                </a>
-            </p>
-        </xsl:if>
-        <xsl:apply-templates select="quotes/quote"/>
+        <xsl:apply-templates select="quote"/>
     </xsl:template>
     <xsl:template match="quote">
         <div class="quote">
             <div class="text">
-                <a href="{links/link[@rel='open']/@href}">
-                    <xsl:value-of select="text"/>
-                </a>
+                <xsl:value-of select="text"/>
             </div>
             <xsl:apply-templates select="." mode="book"/>
             <xsl:if test="tags[tag]">

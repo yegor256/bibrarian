@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>oops...</title>
-        <link rel="icon" type="image/gif" href="//img.bibrarian.com/favicon.ico?${buildNumber}"/>
+        <link rel="icon" type="image/gif" href="//img.bibrarian.com/logo-512x512-transparent.png?${buildNumber}"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="/css/style.css"/>
     </head>
