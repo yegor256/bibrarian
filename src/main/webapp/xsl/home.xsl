@@ -38,6 +38,11 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
+        <xsl:if test="not(quotes/quote)">
+            <p>
+                <xsl:text>Nothing found, try to refine your search criteria.</xsl:text>
+            </p>
+        </xsl:if>
         <xsl:apply-templates select="quotes/quote"/>
     </xsl:template>
     <xsl:template match="quote">
