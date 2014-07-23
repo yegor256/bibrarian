@@ -38,9 +38,21 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <ul>
-            <xsl:apply-templates select="tags/tag"/>
-        </ul>
+        <xsl:if test="not(tags/tag)">
+            <p>
+                <xsl:text>You don't have any tags yet. Find quotes you like and tag them.</xsl:text>
+            </p>
+        </xsl:if>
+        <xsl:if test="tags/tag">
+            <p>
+                <xsl:text>There are </xsl:text>
+                <xsl:value-of select="count(tags/tag)"/>
+                <xsl:text> tag(s) in your account:</xsl:text>
+            </p>
+            <ul>
+                <xsl:apply-templates select="tags/tag"/>
+            </ul>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="tags/tag">
         <li>
