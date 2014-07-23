@@ -43,7 +43,7 @@
             <a href="http://www.bibtex.org/Format/">BibTeX</a>
             entry. Once created, you will be able to add
             quotes to this book. If a book is already registered,
-            find it first using the search control above, and then
+            find it first, using the search control above. Then,
             click "+quote" next to its name.
         </p>
         <form id="add-book" method="post" action="{links/link[@rel='save']/@href}">
