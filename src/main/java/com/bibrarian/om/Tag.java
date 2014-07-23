@@ -68,7 +68,7 @@ public interface Tag {
          * Pattern.
          */
         @SuppressWarnings("PMD.UnusedPrivateField")
-        private static final Pattern PTN = Pattern.compile("T:([^/]+)/(.*)");
+        private static final Pattern PTN = Pattern.compile("t:([^/]+)/(.*)");
         /**
          * Login.
          */
@@ -120,7 +120,7 @@ public interface Tag {
          * @return Ref
          */
         public String ref() {
-            return String.format("T:%s/%s", this.user, this.tag);
+            return String.format("t:%s/%s", this.user, this.tag);
         }
     }
 
