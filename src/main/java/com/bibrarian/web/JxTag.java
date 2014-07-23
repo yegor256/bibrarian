@@ -128,7 +128,7 @@ final class JxTag {
                         .path(QuoteRs.class)
                         .path(QuoteRs.class, "remove")
                         .queryParam("tag", "{t}")
-                        .build(this.quote, new Tag.Simple(this.tag).toString())
+                        .build(this.quote, this.tag.name())
                 )
             );
         }
