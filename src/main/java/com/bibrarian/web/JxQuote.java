@@ -38,7 +38,6 @@ import com.rexsl.page.Link;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -63,9 +62,9 @@ final class JxQuote {
     private final transient Quote quote;
 
     /**
-     * Uri Info.
+     * BaseRs.
      */
-    private final transient UriInfo info;
+    private final transient BaseRs base;
 
     /**
      * Ctor.
@@ -77,11 +76,11 @@ final class JxQuote {
     /**
      * Ctor.
      * @param qte Quote
-     * @param inf Info
+     * @param res BaseRs
      */
-    JxQuote(final Quote qte, final UriInfo inf) {
+    JxQuote(final Quote qte, final BaseRs res) {
         this.quote = qte;
-        this.info = inf;
+        this.base = res;
     }
 
     /**
@@ -120,7 +119,7 @@ final class JxQuote {
      */
     @XmlElement(name = "book")
     public JxBook getBook() throws IOException {
-        return new JxBook(this.quote.book(), this.info);
+        return new JxBook(this.quote.book(), this.base);
     }
 
     /**
@@ -133,7 +132,7 @@ final class JxQuote {
         return Collections.singleton(
             new Link(
                 "open",
-                this.info.getBaseUriBuilder().clone()
+                this.base.uriInfo().getBaseUriBuilder().clone()
                     .path(QuoteRs.class)
                     .build(this.quote.number())
             )
@@ -153,7 +152,7 @@ final class JxQuote {
                 new Function<Tag, JxTag>() {
                     @Override
                     public JxTag apply(final Tag input) {
-                        return new JxTag(input, JxQuote.this.info);
+                        return new JxTag(input, JxQuote.this.base);
                     }
                 }
             )

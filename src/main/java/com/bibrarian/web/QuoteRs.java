@@ -84,7 +84,7 @@ public final class QuoteRs extends BaseRs {
             .stylesheet("/xsl/quote.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new JxQuote(this.quote(), this.uriInfo()))
+            .append(new JxQuote(this.quote(), this))
             .link(new Link("add-tag", "./add-tag"))
             .render()
             .build();

@@ -35,7 +35,7 @@ import com.bibrarian.om.Tag;
 import com.bibrarian.om.Tags;
 import com.jcabi.matchers.JaxbConverter;
 import com.jcabi.matchers.XhtmlMatchers;
-import com.rexsl.mock.UriInfoMocker;
+import com.rexsl.page.mock.ResourceMocker;
 import java.util.Collections;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -68,7 +68,9 @@ public final class JxQuoteTest {
             Collections.singleton(new Tag.Simple("jeff", "works-fine"))
         ).when(tags).iterate();
         MatcherAssert.assertThat(
-            JaxbConverter.the(new JxQuote(quote, new UriInfoMocker().mock())),
+            JaxbConverter.the(
+                new JxQuote(quote, new ResourceMocker().mock(BaseRs.class))
+            ),
             XhtmlMatchers.hasXPaths(
                 "/quote[@id='0']",
                 "/quote[text='the text']",

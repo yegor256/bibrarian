@@ -88,7 +88,7 @@ public final class AddQuoteRs extends BaseRs {
             .build(EmptyPage.class)
             .init(this)
             .link(new Link("save", "./save"))
-            .append(new JxBook(this.book(), this.uriInfo()))
+            .append(new JxBook(this.book(), this))
             .render()
             .build();
     }

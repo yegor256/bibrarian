@@ -31,10 +31,8 @@ package com.bibrarian.web;
 
 import com.bibrarian.om.Tag;
 import com.rexsl.page.Link;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -58,9 +56,9 @@ final class JxTag {
     private final transient Tag tag;
 
     /**
-     * Uri Info.
+     * BaseRs.
      */
-    private final transient UriInfo info;
+    private final transient BaseRs base;
 
     /**
      * Ctor.
@@ -72,30 +70,28 @@ final class JxTag {
     /**
      * Ctor.
      * @param tgg Tag
-     * @param inf Info
+     * @param res BaseRs
      */
-    JxTag(final Tag tgg, final UriInfo inf) {
+    JxTag(final Tag tgg, final BaseRs res) {
         this.tag = tgg;
-        this.info = inf;
+        this.base = res;
     }
 
     /**
      * Its owner.
      * @return Owner
-     * @throws IOException If fails
      */
     @XmlElement(name = "user")
-    public String getUser() throws IOException {
+    public String getUser() {
         return this.tag.login();
     }
 
     /**
      * Its name.
      * @return Name
-     * @throws IOException If fails
      */
     @XmlElement(name = "name")
-    public String getName() throws IOException {
+    public String getName() {
         return this.tag.name();
     }
 
@@ -109,7 +105,7 @@ final class JxTag {
         return Collections.singleton(
             new Link(
                 "open",
-                this.info.getBaseUriBuilder().clone()
+                this.base.uriInfo().getBaseUriBuilder().clone()
                     .path(HomeRs.class)
                     .queryParam("q", "{term}")
                     .build(new Tag.Simple(this.tag).ref())

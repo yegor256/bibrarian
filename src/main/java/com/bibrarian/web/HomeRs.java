@@ -106,9 +106,7 @@ public final class HomeRs extends BaseRs {
                             new Function<Quote, JxQuote>() {
                                 @Override
                                 public JxQuote apply(final Quote input) {
-                                    return new JxQuote(
-                                        input, HomeRs.this.uriInfo()
-                                    );
+                                    return new JxQuote(input, HomeRs.this);
                                 }
                             }
                         )

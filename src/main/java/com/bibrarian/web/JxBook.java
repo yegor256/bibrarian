@@ -36,7 +36,6 @@ import com.rexsl.page.Link;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -60,9 +59,9 @@ final class JxBook {
     private final transient Book book;
 
     /**
-     * Uri Info.
+     * BaseRs.
      */
-    private final transient UriInfo info;
+    private final transient BaseRs base;
 
     /**
      * Ctor.
@@ -74,11 +73,11 @@ final class JxBook {
     /**
      * Ctor.
      * @param bok Book
-     * @param inf URI info
+     * @param res BaseRs
      */
-    JxBook(final Book bok, final UriInfo inf) {
+    JxBook(final Book bok, final BaseRs res) {
         this.book = bok;
-        this.info = inf;
+        this.base = res;
     }
 
     /**
@@ -114,14 +113,14 @@ final class JxBook {
         return Arrays.asList(
             new Link(
                 "open",
-                this.info.getBaseUriBuilder().clone()
+                this.base.uriInfo().getBaseUriBuilder().clone()
                     .path(HomeRs.class)
                     .queryParam("q", "{term}")
                     .build(String.format("B:%s", this.book.name()))
             ),
             new Link(
                 "add-quote",
-                this.info.getBaseUriBuilder().clone()
+                this.base.uriInfo().getBaseUriBuilder().clone()
                     .path(AddQuoteRs.class)
                     .build(this.book.name())
             )
