@@ -88,6 +88,12 @@
                                 </a>
                             </li>
                         </ul>
+                        <form method="get" action="{links/link[@rel='home']/@href}">
+                            <fieldset class="inline">
+                                <input name="q" id="q" size="40" maxlength="120"
+                                    value="{term}"/>
+                            </fieldset>
+                        </form>
                     </header>
                     <div>
                         <xsl:apply-templates select="flash"/>

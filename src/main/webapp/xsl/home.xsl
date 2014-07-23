@@ -38,13 +38,6 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <form method="get" action="{links/link[@rel='self']/@href}"
-            style="text-align:center">
-            <fieldset class="inline">
-                <input name="q" id="q" size="40" maxlength="120"
-                    value="{term}"/>
-            </fieldset>
-        </form>
         <xsl:apply-templates select="quotes/quote"/>
     </xsl:template>
     <xsl:template match="quote">
