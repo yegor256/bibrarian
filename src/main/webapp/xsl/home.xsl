@@ -48,7 +48,8 @@
     <xsl:template match="quote">
         <div class="quote">
             <div class="text">
-                <a href="{links/link[@rel='open']/@href}">
+                <a title="see its full page"
+                    href="{links/link[@rel='open']/@href}">
                     <xsl:value-of select="text"/>
                 </a>
             </div>
@@ -63,29 +64,31 @@
     <xsl:template match="quote" mode="book">
         <div class="book">
             <span class="abbr">
-                <a href="{book/links/link[@rel='open']/@href}">
+                <a title="find all quotes of this book"
+                    href="{book/links/link[@rel='open']/@href}">
                     <xsl:value-of select="book/name"/>
                 </a>
             </span>
             <xsl:value-of select="book/cite"/>
             <xsl:text>, </xsl:text>
             <xsl:value-of select="pages"/>
-            <xsl:text> </xsl:text>
-            <a href="{book/links/link[@rel='add-quote']/@href}">
+            <a class="opt" title="add new quote to this book"
+                href="{book/links/link[@rel='add-quote']/@href}">
                 <xsl:text>+quote</xsl:text>
             </a>
         </div>
     </xsl:template>
     <xsl:template match="tags/tag">
         <li>
-            <a href="{links/link[@rel='open']/@href}">
+            <a title="find all quotes in this tag"
+                href="{links/link[@rel='open']/@href}">
                 <xsl:value-of select="user"/>
-                <xsl:text>:</xsl:text>
+                <xsl:text>/</xsl:text>
                 <xsl:value-of select="name"/>
             </a>
             <xsl:if test="links/link[@rel='delete']">
-                <xsl:text> </xsl:text>
-                <a href="{links/link[@rel='delete']/@href}">
+                <a title="remove this tag"
+                    class="opt" href="{links/link[@rel='delete']/@href}">
                     <xsl:text>remove</xsl:text>
                 </a>
             </xsl:if>

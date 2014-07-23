@@ -57,7 +57,7 @@ casper.test.begin(
     );
     casper.then(
       function () {
-        this.click('li#localhost_interesting-quotes a');
+        this.click('li#localhost_interesting-quotes a.opt');
       }
     );
     casper.then(

@@ -77,12 +77,11 @@
         <li id="{user}_{name}">
             <a href="{links/link[@rel='open']/@href}">
                 <xsl:value-of select="user"/>
-                <xsl:text>:</xsl:text>
+                <xsl:text>/</xsl:text>
                 <xsl:value-of select="name"/>
             </a>
             <xsl:if test="links/link[@rel='delete']">
-                <xsl:text> </xsl:text>
-                <a href="{links/link[@rel='delete']/@href}">
+                <a class="opt" href="{links/link[@rel='delete']/@href}">
                     <xsl:text>remove</xsl:text>
                 </a>
             </xsl:if>
