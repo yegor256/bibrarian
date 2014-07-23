@@ -115,8 +115,8 @@
                                         </xsl:otherwise>
                                     </xsl:choose>
                                 </xsl:attribute>
+                                <xsl:value-of select="@sla"/>
                             </li>
-                            <xsl:value-of select="@sla"/>
                         </ul>
                         <ul>
                             <li>
