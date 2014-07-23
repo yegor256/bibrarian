@@ -33,6 +33,7 @@ import co.stateful.RtSttc;
 import co.stateful.Sttc;
 import co.stateful.cached.CdSttc;
 import co.stateful.retry.ReSttc;
+import com.bibrarian.cached.CdBase;
 import com.bibrarian.dynamo.DyBase;
 import com.bibrarian.om.Base;
 import com.jcabi.aspects.Cacheable;
@@ -63,9 +64,11 @@ public final class Lifespan implements ServletContextListener {
             Manifests.append(event.getServletContext());
             event.getServletContext().setAttribute(
                 Base.class.getName(),
-                new DyBase(
-                    this.dynamo(),
-                    this.sttc().counters().get("bib-quote")
+                new CdBase(
+                    new DyBase(
+                        this.dynamo(),
+                        this.sttc().counters().get("bib-quote")
+                    )
                 )
             );
         } catch (final IOException ex) {
