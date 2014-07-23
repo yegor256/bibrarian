@@ -33,9 +33,10 @@ import com.bibrarian.bib.BibSyntaxException;
 import com.bibrarian.bib.Bibitem;
 import com.bibrarian.om.Book;
 import com.rexsl.page.Link;
+import com.rexsl.page.auth.Identity;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -110,21 +111,27 @@ final class JxBook {
     @XmlElementWrapper(name = "links")
     @XmlElement(name = "link")
     public Collection<Link> getLinks() {
-        return Arrays.asList(
+        final Collection<Link> links = new LinkedList<Link>();
+        links.add(
             new Link(
                 "open",
                 this.base.uriInfo().getBaseUriBuilder().clone()
                     .path(HomeRs.class)
                     .queryParam("q", "{term}")
                     .build(String.format("B:%s", this.book.name()))
-            ),
-            new Link(
-                "add-quote",
-                this.base.uriInfo().getBaseUriBuilder().clone()
-                    .path(AddQuoteRs.class)
-                    .build(this.book.name())
             )
         );
+        if (!this.base.auth().identity().equals(Identity.ANONYMOUS)) {
+            links.add(
+                new Link(
+                    "add-quote",
+                    this.base.uriInfo().getBaseUriBuilder().clone()
+                        .path(AddQuoteRs.class)
+                        .build(this.book.name())
+                )
+            );
+        }
+        return links;
     }
 
 }

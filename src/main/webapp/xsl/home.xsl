@@ -72,10 +72,12 @@
             <xsl:value-of select="book/cite"/>
             <xsl:text>, </xsl:text>
             <xsl:value-of select="pages"/>
-            <a class="opt" title="add new quote to this book"
-                href="{book/links/link[@rel='add-quote']/@href}">
-                <xsl:text>+quote</xsl:text>
-            </a>
+            <xsl:if test="book/links/link[@rel='add-quote']">
+                <a class="opt" title="add new quote to this book"
+                    href="{book/links/link[@rel='add-quote']/@href}">
+                    <xsl:text>+quote</xsl:text>
+                </a>
+            </xsl:if>
         </div>
     </xsl:template>
     <xsl:template match="tags/tag">
