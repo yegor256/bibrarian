@@ -29,6 +29,8 @@
  */
 package com.bibrarian.dynamo;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import java.io.IOException;
 import java.io.StringReader;
@@ -83,6 +85,14 @@ final class Tokens {
         }
         stream.end();
         stream.close();
-        return tokens;
+        return Iterables.filter(
+            tokens,
+            new Predicate<String>() {
+                @Override
+                public boolean apply(final String input) {
+                    return input.length() > 2;
+                }
+            }
+        );
     }
 }
