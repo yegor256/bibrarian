@@ -32,7 +32,9 @@ package com.bibrarian.dynamo;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.jcabi.dynamo.Conditions;
 import java.util.Arrays;
+import java.util.Collections;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Rule;
@@ -78,6 +80,31 @@ public final class RefsITCase {
                 Matchers.<String>iterableWithSize(2),
                 Matchers.hasItem(alpha)
             )
+        );
+    }
+
+    /**
+     * Refs can index and remove.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void indexesAndRemoves() throws Exception {
+        final Refs refs = new Refs(this.dynamo.region());
+        final String left = "left:10";
+        final String right = "right:33";
+        refs.put(left, right);
+        MatcherAssert.assertThat(
+            refs.forward(
+                left, Collections.singleton(Conditions.equalTo(right))
+            ),
+            Matchers.<String>iterableWithSize(1)
+        );
+        refs.remove(left, Collections.singleton(Conditions.equalTo(right)));
+        MatcherAssert.assertThat(
+            refs.forward(
+                left, Collections.singleton(Conditions.equalTo(right))
+            ),
+            Matchers.<String>iterableWithSize(0)
         );
     }
 
