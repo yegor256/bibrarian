@@ -69,7 +69,7 @@
                             <xsl:if test="not(identity)">
                                 <li>
                                     <a href="{links/link[@rel='rexsl:github']/@href}">
-                                        <xsl:text>login</xsl:text>
+                                        <xsl:text>login via Github</xsl:text>
                                     </a>
                                 </li>
                             </xsl:if>
