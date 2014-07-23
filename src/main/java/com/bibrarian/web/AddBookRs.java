@@ -64,6 +64,7 @@ public final class AddBookRs extends BaseRs {
     @GET
     @Path("/")
     public Response first() {
+        this.user();
         return new PageBuilder()
             .stylesheet("/xsl/add-book.xsl")
             .build(EmptyPage.class)
@@ -83,6 +84,7 @@ public final class AddBookRs extends BaseRs {
     @Path("/save")
     public Response add(@FormParam("bibtex") final String bibtex)
         throws IOException {
+        this.user();
         final Book book;
         try {
             book = this.base().books().add(bibtex);
