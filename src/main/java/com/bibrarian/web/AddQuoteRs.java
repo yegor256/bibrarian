@@ -82,7 +82,6 @@ public final class AddQuoteRs extends BaseRs {
     @GET
     @Path("/")
     public Response entry() throws IOException {
-        this.user();
         return new PageBuilder()
             .stylesheet("/xsl/add-quote.xsl")
             .build(EmptyPage.class)
@@ -106,7 +105,6 @@ public final class AddQuoteRs extends BaseRs {
     public Response save(@FormParam("text") final String text,
         @FormParam("pages") final String pages,
         @FormParam("tag") final String tag) throws IOException {
-        this.user();
         final Quote quote;
         try {
             quote = this.base().quotes().add(this.book(), text, pages);
