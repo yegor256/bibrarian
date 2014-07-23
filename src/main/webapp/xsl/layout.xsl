@@ -101,6 +101,22 @@
                         <ul>
                             <xsl:apply-templates select="version"/>
                             <xsl:apply-templates select="millis"/>
+                            <li title="server load average">
+                                <xsl:attribute name="class">
+                                    <xsl:choose>
+                                        <xsl:when test="@sla &gt; 6">
+                                            <xsl:text>error</xsl:text>
+                                        </xsl:when>
+                                        <xsl:when test="@sla &gt; 3">
+                                            <xsl:text>warning</xsl:text>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:text>inherit</xsl:text>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:attribute>
+                            </li>
+                            <xsl:value-of select="@sla"/>
                         </ul>
                         <ul>
                             <li>
@@ -119,7 +135,20 @@
     </xsl:template>
     <xsl:template match="page/millis">
         <xsl:variable name="msec" select="number(.)"/>
-        <li>
+        <li title="page load time">
+            <xsl:attribute name="class">
+                <xsl:choose>
+                    <xsl:when test="$msec &gt; 5000">
+                        <xsl:text>error</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="$msec &gt; 1000">
+                        <xsl:text>warning</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>inherit</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:attribute>
             <xsl:choose>
                 <xsl:when test="$msec &gt; 1000">
                     <xsl:value-of select="format-number($msec div 1000, '0.0')"/>
