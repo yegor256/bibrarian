@@ -48,6 +48,9 @@
         </p>
         <form id="add-book" method="post" action="{links/link[@rel='save']/@href}">
             <fieldset>
+                <label for="tag">
+                    <xsl:text>BibTeX entry</xsl:text>
+                </label>
                 <textarea name="bibtex" id="bibtex" style="height:10em;">
                     <xsl:text> </xsl:text>
                 </textarea>
