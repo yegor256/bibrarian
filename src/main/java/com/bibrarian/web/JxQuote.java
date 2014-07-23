@@ -152,7 +152,10 @@ final class JxQuote {
                 new Function<Tag, JxTag>() {
                     @Override
                     public JxTag apply(final Tag input) {
-                        return new JxTag(input, JxQuote.this.base);
+                        return new JxTag(
+                            input, JxQuote.this.quote.number(),
+                            JxQuote.this.base
+                        );
                     }
                 }
             )

@@ -36,6 +36,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Region;
 import java.util.Collection;
 import java.util.Collections;
@@ -89,6 +90,16 @@ final class DyQuoteTags implements Tags {
                         return new Tag.Simple(input);
                     }
                 }
+            )
+        );
+    }
+
+    @Override
+    public void remove(final Tag tag) {
+        new Refs(this.region).remove(
+            String.format(DyQuote.FMT, this.num),
+            Collections.singleton(
+                Conditions.equalTo(new Tag.Simple(tag).ref())
             )
         );
     }

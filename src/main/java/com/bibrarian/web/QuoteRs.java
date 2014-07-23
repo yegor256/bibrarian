@@ -42,6 +42,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -111,6 +112,32 @@ public final class QuoteRs extends BaseRs {
                 .path(QuoteRs.class)
                 .build(this.number),
             String.format("quote #%d tagged for \"%s\"", this.number, tag),
+            Level.INFO
+        );
+    }
+
+    /**
+     * Delete existing tag.
+     * @param tag Tag to add
+     * @throws IOException If fails
+     * @since 1.2
+     */
+    @GET
+    @Path("/del")
+    public void remove(@QueryParam("tag") final String tag) throws IOException {
+        try {
+            this.quote().tags().remove(new Tag.Simple(this.user().name(), tag));
+        } catch (final Quote.IncorrectTagException ex) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(), ex
+            );
+        }
+        throw this.flash().redirect(
+            this.uriInfo().getBaseUriBuilder()
+                .clone()
+                .path(QuoteRs.class)
+                .build(this.number),
+            String.format("tag \"%s\" removed at quote #%d", tag, this.number),
             Level.INFO
         );
     }

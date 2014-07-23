@@ -33,7 +33,6 @@ import com.jcabi.aspects.Immutable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Tag.
@@ -62,7 +61,6 @@ public interface Tag {
      */
     @Immutable
     @EqualsAndHashCode(of = { "user", "tag" })
-    @ToString
     final class Simple implements Tag {
         /**
          * Pattern.
@@ -106,6 +104,10 @@ public interface Tag {
         public Simple(final String login, final String name) {
             this.user = login;
             this.tag = name;
+        }
+        @Override
+        public String toString() {
+            return String.format("%s/%s", this.user, this.tag);
         }
         @Override
         public String login() {

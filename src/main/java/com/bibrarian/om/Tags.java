@@ -30,6 +30,7 @@
 package com.bibrarian.om;
 
 import com.jcabi.aspects.Immutable;
+import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -47,5 +48,13 @@ public interface Tags {
      * @return List of them
      */
     Collection<Tag> iterate();
+
+    /**
+     * Remove single tag.
+     * @param tag Tag to remove
+     * @throws java.io.IOException If fails
+     * @since 1.2
+     */
+    void remove(Tag tag) throws IOException;
 
 }

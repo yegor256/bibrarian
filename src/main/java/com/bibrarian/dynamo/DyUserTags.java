@@ -92,4 +92,9 @@ final class DyUserTags implements Tags {
             )
         );
     }
+
+    @Override
+    public void remove(final Tag tag) {
+        throw new UnsupportedOperationException("#remove()");
+    }
 }

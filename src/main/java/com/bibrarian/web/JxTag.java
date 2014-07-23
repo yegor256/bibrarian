@@ -32,7 +32,7 @@ package com.bibrarian.web;
 import com.bibrarian.om.Tag;
 import com.rexsl.page.Link;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.LinkedList;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -56,6 +56,11 @@ final class JxTag {
     private final transient Tag tag;
 
     /**
+     * Quote we're in.
+     */
+    private final transient long quote;
+
+    /**
      * BaseRs.
      */
     private final transient BaseRs base;
@@ -70,10 +75,12 @@ final class JxTag {
     /**
      * Ctor.
      * @param tgg Tag
+     * @param qte Quote
      * @param res BaseRs
      */
-    JxTag(final Tag tgg, final BaseRs res) {
+    JxTag(final Tag tgg, final long qte, final BaseRs res) {
         this.tag = tgg;
+        this.quote = qte;
         this.base = res;
     }
 
@@ -102,7 +109,8 @@ final class JxTag {
     @XmlElementWrapper(name = "links")
     @XmlElement(name = "link")
     public Collection<Link> getLinks() {
-        return Collections.singleton(
+        final Collection<Link> links = new LinkedList<Link>();
+        links.add(
             new Link(
                 "open",
                 this.base.uriInfo().getBaseUriBuilder().clone()
@@ -111,6 +119,20 @@ final class JxTag {
                     .build(new Tag.Simple(this.tag).ref())
             )
         );
+        if (this.base.auth().identity().name().equals(this.tag.login())
+            && this.quote > 0L) {
+            links.add(
+                new Link(
+                    "delete",
+                    this.base.uriInfo().getBaseUriBuilder().clone()
+                        .path(QuoteRs.class)
+                        .path(QuoteRs.class, "remove")
+                        .queryParam("tag", "{t}")
+                        .build(this.quote, new Tag.Simple(this.tag).toString())
+                )
+            );
+        }
+        return links;
     }
 
 }

@@ -33,6 +33,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.google.common.base.Function;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -192,6 +193,23 @@ final class Refs {
                 }
             }
         );
+    }
+
+    /**
+     * Remove.
+     * @param left Left
+     * @param cnds Conditions
+     * @since 1.2
+     */
+    public void remove(final String left, final Iterable<Condition> cnds) {
+        Frame frame = this.region.table(Refs.TABLE)
+            .frame()
+            .through(new QueryValve().withScanIndexForward(false))
+            .where(Refs.HASH, left);
+        for (final Condition cnd : cnds) {
+            frame = frame.where(Refs.RANGE, cnd);
+        }
+        Iterables.removeIf(frame, Predicates.alwaysTrue());
     }
 
 }

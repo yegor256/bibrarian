@@ -75,7 +75,7 @@ public final class TagsRs extends BaseRs {
                             new Function<Tag, JxTag>() {
                                 @Override
                                 public JxTag apply(final Tag tag) {
-                                    return new JxTag(tag, TagsRs.this);
+                                    return new JxTag(tag, 0L, TagsRs.this);
                                 }
                             }
                         )
