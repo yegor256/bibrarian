@@ -43,17 +43,19 @@
                 <label for="text">
                     <xsl:text>Text</xsl:text>
                 </label>
-                <textarea name="text" id="text">
+                <textarea name="text" id="text" style="height:6em;">
                     <xsl:text> </xsl:text>
                 </textarea>
                 <label for="pages">
                     <xsl:text>Pages</xsl:text>
                 </label>
-                <input name="pages" id="pages" size="10" maxlength="30"/>
+                <input name="pages" id="pages" size="20" maxlength="30"
+                    placeholder="e.g. 13 or 45-46"/>
                 <label for="tag">
                     <xsl:text>Tag</xsl:text>
                 </label>
-                <input name="tag" id="tag" size="35" maxlength="128"/>
+                <input name="tag" id="tag" size="40" maxlength="128"
+                    placeholder="e.g. object-oriented-programming"/>
                 <button type="submit">
                     <xsl:text>Add New Quote</xsl:text>
                 </button>

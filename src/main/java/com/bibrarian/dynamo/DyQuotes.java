@@ -47,13 +47,9 @@ import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -90,11 +86,6 @@ final class DyQuotes implements Quotes {
      * Pages of the quote.
      */
     public static final String ATTR_PAGES = "pages";
-
-    /**
-     * Pages pattern.
-     */
-    private static final Pattern PTN = Pattern.compile("(\\d+)(\\-\\d+)?");
 
     /**
      * Stub for search.
@@ -160,7 +151,7 @@ final class DyQuotes implements Quotes {
             new Attributes()
                 .with(DyQuotes.HASH, number)
                 .with(DyQuotes.ATTR_TEXT, text.trim())
-                .with(DyQuotes.ATTR_PAGES, DyQuotes.pages(pages))
+                .with(DyQuotes.ATTR_PAGES, new Pages(pages).normalized())
         );
         new Refs(this.region).put(
             String.format(DyQuote.FMT, number),
@@ -213,36 +204,6 @@ final class DyQuotes implements Quotes {
                 }
             }
         );
-    }
-
-    /**
-     * Normalize pages.
-     * @param text Text
-     * @return Pages in "pp.34-38" or "p.56, p.78" format
-     * @throws Quotes.InvalidQuoteException If can't parse
-     */
-    private static String pages(final CharSequence text)
-        throws Quotes.InvalidQuoteException {
-        final Matcher matcher = DyQuotes.PTN.matcher(text);
-        final Collection<String> found = new LinkedList<String>();
-        while (matcher.find()) {
-            if (matcher.group(2) == null) {
-                found.add(String.format("p.%s", matcher.group(1)));
-            } else {
-                found.add(String.format("pp.%s", matcher.group(0)));
-            }
-        }
-        if (found.isEmpty()) {
-            throw new Quotes.InvalidQuoteException(
-                "at least one page should be referenced"
-            );
-        }
-        if (found.size() > Tv.FIVE) {
-            throw new Quotes.InvalidQuoteException(
-                "too many page references, maximum is five"
-            );
-        }
-        return Joiner.on(" and ").join(found);
     }
 
 }

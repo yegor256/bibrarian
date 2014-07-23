@@ -73,8 +73,6 @@
                                     </a>
                                 </li>
                             </xsl:if>
-                            <xsl:apply-templates select="version"/>
-                            <xsl:apply-templates select="millis"/>
                         </ul>
                         <ul>
                             <li>
@@ -91,14 +89,30 @@
                         <form method="get" action="{links/link[@rel='home']/@href}">
                             <fieldset class="inline">
                                 <input name="q" id="q" size="40" maxlength="120"
-                                    value="{term}"/>
+                                    value="{term}" placeholder="search by keyword..."/>
                             </fieldset>
                         </form>
                     </header>
-                    <div>
+                    <div class="main">
                         <xsl:apply-templates select="flash"/>
                         <xsl:apply-templates select="." mode="body"/>
                     </div>
+                    <footer class="foot">
+                        <ul>
+                            <xsl:apply-templates select="version"/>
+                            <xsl:apply-templates select="millis"/>
+                        </ul>
+                        <ul>
+                            <li>
+                                <xsl:text>made by</xsl:text>
+                                <br/>
+                                <a href="http://www.teamed.io">
+                                    <img src="//img.teamed.io/logo.svg"
+                                        style="width:80px;height:16px;" alt="teamed.io logo"/>
+                                </a>
+                            </li>
+                        </ul>
+                    </footer>
                 </div>
             </body>
         </html>

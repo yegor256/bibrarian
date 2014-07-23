@@ -31,10 +31,6 @@
 @import "defs";
 @import "fonts";
 
-form {
-  @extend p;
-}
-
 label, input, textarea, button {
   display: block;
   margin: .5 * $em 0;

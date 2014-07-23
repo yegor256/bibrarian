@@ -37,6 +37,9 @@
 .wrapper {
   margin: 2 * $em auto;
   width: $width;
+  @media all and (max-width: $width) {
+    width: 100%;
+  }
 }
 
 .inline-list {
@@ -47,7 +50,7 @@
   }
 }
 
-.head {
+.head, .foot {
   text-align: center;
   ul {
     @extend .inline-list;
@@ -56,6 +59,17 @@
       margin: 0 .2 * $em;
     }
   }
+  form {
+    margin-top: .5 * $em;
+  }
+}
+
+.foot {
+  font-size: 0.9 * $em;
+}
+
+.main {
+  min-height: 20 * $em;
 }
 
 .flash {
