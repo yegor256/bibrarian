@@ -60,7 +60,8 @@
         <xsl:if test="/page/links/link[@rel='add-tag']">
             <form id="add-tag" method="post" action="{/page/links/link[@rel='add-tag']/@href}">
                 <fieldset class="inline">
-                    <input name="tag" id="tag" size="35" maxlength="100"/>
+                    <input name="tag" id="tag" size="35" maxlength="100" autocomplete="off"
+                        placeholder="e.g. priceless-quotes"/>
                     <button type="submit">
                         <xsl:text>Add tag</xsl:text>
                     </button>

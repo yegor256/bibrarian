@@ -52,12 +52,13 @@
                     <xsl:text>Pages</xsl:text>
                 </label>
                 <input name="pages" id="pages" size="20" maxlength="30"
-                    placeholder="e.g. 13 or 45-46"/>
+                    placeholder="e.g. 13 or 45-46" autocomplete="off"/>
                 <label for="tag">
                     <xsl:text>Tag</xsl:text>
                 </label>
                 <input name="tag" id="tag" size="40" maxlength="128"
-                    placeholder="e.g. object-oriented-programming"/>
+                    placeholder="e.g. object-oriented-programming"
+                    autocomplete="off"/>
                 <button type="submit">
                     <xsl:text>Add New Quote</xsl:text>
                 </button>
