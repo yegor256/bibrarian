@@ -58,7 +58,7 @@
             <xsl:value-of select="pages"/>
         </p>
         <xsl:if test="/page/links/link[@rel='add-tag']">
-            <form method="post" action="{/page/links/link[@rel='add-tag']/@href}">
+            <form id="add-tag" method="post" action="{/page/links/link[@rel='add-tag']/@href}">
                 <fieldset class="inline">
                     <input name="tag" id="tag" size="35" maxlength="100"/>
                     <button type="submit">
@@ -74,12 +74,18 @@
         </xsl:if>
     </xsl:template>
     <xsl:template match="tags/tag">
-        <li>
+        <li id="{user}_{name}">
             <a href="{links/link[@rel='open']/@href}">
                 <xsl:value-of select="user"/>
                 <xsl:text>:</xsl:text>
                 <xsl:value-of select="name"/>
             </a>
+            <xsl:if test="links/link[@rel='delete']">
+                <xsl:text> </xsl:text>
+                <a href="{links/link[@rel='delete']/@href}">
+                    <xsl:text>remove</xsl:text>
+                </a>
+            </xsl:if>
         </li>
     </xsl:template>
 </xsl:stylesheet>

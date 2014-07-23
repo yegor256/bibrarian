@@ -127,7 +127,10 @@ public final class AddQuoteRs extends BaseRs {
             );
         }
         throw this.flash().redirect(
-            this.uriInfo().getBaseUri(),
+            this.uriInfo().getBaseUriBuilder()
+                .clone()
+                .path(QuoteRs.class)
+                .build(quote.number()),
             String.format(
                 "quote #%d added to [%s]",
                 quote.number(), quote.book().name()

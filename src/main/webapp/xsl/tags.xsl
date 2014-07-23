@@ -55,7 +55,7 @@
         </xsl:if>
     </xsl:template>
     <xsl:template match="tags/tag">
-        <li>
+        <li id="{name}">
             <a href="{links/link[@rel='open']/@href}">
                 <xsl:value-of select="name"/>
             </a>

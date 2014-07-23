@@ -83,6 +83,12 @@
                 <xsl:text>:</xsl:text>
                 <xsl:value-of select="name"/>
             </a>
+            <xsl:if test="links/link[@rel='delete']">
+                <xsl:text> </xsl:text>
+                <a href="{links/link[@rel='delete']/@href}">
+                    <xsl:text>remove</xsl:text>
+                </a>
+            </xsl:if>
         </li>
     </xsl:template>
 </xsl:stylesheet>
