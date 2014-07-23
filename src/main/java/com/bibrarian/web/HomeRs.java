@@ -35,9 +35,11 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.PageBuilder;
+import java.util.logging.Level;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -70,6 +72,13 @@ public final class HomeRs extends BaseRs {
     public void setTerm(final String trm) {
         if (trm != null) {
             this.term = trm;
+        }
+        if (this.term.length() > Tv.HUNDRED) {
+            throw this.flash().redirect(
+                this.uriInfo().getBaseUri(),
+                "search query text is too long",
+                Level.SEVERE
+            );
         }
     }
 
