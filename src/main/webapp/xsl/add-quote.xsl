@@ -38,10 +38,12 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
-        <form method="post" action="{links/link[@rel='save']/@href}">
+        <xsl:apply-templates select="book"/>
+        <form id="add-quote" method="post"
+            action="{links/link[@rel='save']/@href}">
             <fieldset>
                 <label for="text">
-                    <xsl:text>Text</xsl:text>
+                    <xsl:text>Original text</xsl:text>
                 </label>
                 <textarea name="text" id="text" style="height:6em;">
                     <xsl:text> </xsl:text>
@@ -61,5 +63,15 @@
                 </button>
             </fieldset>
         </form>
+    </xsl:template>
+    <xsl:template match="book">
+        <p>
+            <span class="abbr">
+                <a href="{book/links/link[@rel='open']/@href}">
+                    <xsl:value-of select="name"/>
+                </a>
+            </span>
+            <xsl:value-of select="cite"/>
+        </p>
     </xsl:template>
 </xsl:stylesheet>

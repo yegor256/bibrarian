@@ -46,7 +46,7 @@
             find it first using the search control above, and then
             click "+quote" next to its name.
         </p>
-        <form method="post" action="{links/link[@rel='save']/@href}">
+        <form id="add-book" method="post" action="{links/link[@rel='save']/@href}">
             <fieldset>
                 <textarea name="bibtex" id="bibtex" style="height:10em;">
                     <xsl:text> </xsl:text>

@@ -7,9 +7,9 @@ casper.test.begin(
       casper.cli.get("home") + '/add-book',
       function () {
         this.fill(
-          'form',
+          'form#add-book',
           {
-            'bibtex': '@book { title: "Hello" }'
+            'bibtex': '@book{west2014, title="Hello" }'
           },
           true
         );

@@ -57,6 +57,7 @@
 
 .abbr {
   font-variant: small-caps;
+  margin-right: .5 * $em;
   &:before {
     content: "[";
   }

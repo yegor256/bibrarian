@@ -136,9 +136,9 @@ final class DyQuotes implements Quotes {
     @Override
     public Quote add(final Book book, final String text,
         final String pages) throws IOException {
-        if (text.trim().length() < Tv.TWENTY) {
+        if (text.trim().length() < Tv.TEN) {
             throw new Quotes.InvalidQuoteException(
-                "quote text can't be empty or shorter than 20 characters"
+                "quote text can't be empty or shorter than 10 characters"
             );
         }
         if (text.length() > Tv.FIVE * Tv.HUNDRED) {

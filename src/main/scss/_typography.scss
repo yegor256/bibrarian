@@ -56,14 +56,6 @@ a, a:visited {
   }
 }
 
-p {
-  margin: 2 * $em 0;
-}
-
-pre {
-  @extend p;
-}
-
 ul, li {
   list-style: none;
 }
