@@ -74,18 +74,20 @@
                                 </li>
                             </xsl:if>
                         </ul>
-                        <ul>
-                            <li>
-                                <a href="{links/link[@rel='add']/@href}">
-                                    <xsl:text>Add New Quote</xsl:text>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{links/link[@rel='my-tags']/@href}">
-                                    <xsl:text>My Tags</xsl:text>
-                                </a>
-                            </li>
-                        </ul>
+                        <xsl:if test="identity">
+                            <ul>
+                                <li>
+                                    <a href="{links/link[@rel='add']/@href}">
+                                        <xsl:text>Add New Quote</xsl:text>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{links/link[@rel='my-tags']/@href}">
+                                        <xsl:text>My Tags</xsl:text>
+                                    </a>
+                                </li>
+                            </ul>
+                        </xsl:if>
                         <form id="search" method="get" action="{links/link[@rel='home']/@href}">
                             <fieldset class="inline">
                                 <input name="q" id="q" size="40" maxlength="120"
