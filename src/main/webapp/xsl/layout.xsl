@@ -123,11 +123,8 @@
                         </ul>
                         <ul>
                             <li>
-                                <xsl:text>made by</xsl:text>
-                                <br/>
                                 <a href="http://www.teamed.io">
-                                    <img src="//img.teamed.io/logo.svg"
-                                        style="width:80px;height:16px;" alt="teamed.io logo"/>
+                                    <img src="//img.teamed.io/btn.svg" alt="teamed.io logo"/>
                                 </a>
                             </li>
                         </ul>
