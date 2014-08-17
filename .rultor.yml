@@ -2,24 +2,29 @@ assets:
   settings.xml: "yegor256/home#assets/bibrarian/settings.xml"
   pubring.gpg: "yegor256/home#assets/pubring.gpg"
   secring.gpg: "yegor256/home#assets/secring.gpg"
+  s3cfg: "yegor256/home#assets/s3cfg"
+
+env:
+  MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
+
+install:
+  - "sudo gem install pdd"
 
 deploy:
-  env:
-    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script:
-    - "mvn clean deploy -Ppdd -Pbibrarian --settings ../settings.xml"
+    - "mvn clean deploy -Pbibrarian --settings ../settings.xml"
+    - "mvn clean"
+    - "pdd --source=$(pwd) --verbose --file=bibrarian.xml"
+    - "s3cmd --no-progress put bibrarian.xml --config=../s3cfg s3://pdd.teamed.io/bibrarian.xml"
 
 release:
-  env:
-    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script:
     - "mvn versions:set \"-DnewVersion=${tag}\""
     - "git commit -am \"${tag}\""
     - "mvn clean deploy -Pqulice -Pbibrarian --settings ../settings.xml"
-    - "mvn clean site-deploy -Psite -Prempl --settings ../settings.xml"
+    - "mvn clean site-deploy -Psite --settings ../settings.xml"
 
 merge:
-  env:
-    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script:
     - "mvn help:system clean install -Pqulice --settings ../settings.xml"
+    - "pdd --source=$(pwd) --verbose --file=/dev/null"
