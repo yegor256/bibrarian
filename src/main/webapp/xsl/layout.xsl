@@ -193,6 +193,7 @@
     </xsl:template>
     <xsl:template match="identity">
         <li>
+            <xsl:text>@</xsl:text>
             <xsl:value-of select="name"/>
         </li>
         <li>
