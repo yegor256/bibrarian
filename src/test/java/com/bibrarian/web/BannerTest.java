@@ -66,7 +66,9 @@ public final class BannerTest {
         Mockito.doReturn("pp.3-5").when(quote).pages();
         Mockito.doReturn("@book{test2012,year=2012}").when(book).bibitem();
         final byte[] png = new Banner(quote).png();
-        FileUtils.writeByteArrayToFile(new File("/code/temp/img.png"), png);
+        if (new File("/code/temp").exists()) {
+            FileUtils.writeByteArrayToFile(new File("/code/temp/img.png"), png);
+        }
     }
 
 }
