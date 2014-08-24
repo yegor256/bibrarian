@@ -39,6 +39,7 @@ import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.PageBuilder;
+import java.io.IOException;
 import java.util.logging.Level;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -85,15 +86,16 @@ public final class HomeRs extends BaseRs {
     /**
      * Show it.
      * @return The JAX-RS response
+     * @throws IOException If fails
      */
     @GET
     @Path("/")
-    public Response index() {
+    public Response index() throws IOException {
         Quotes quotes = this.base().quotes();
         if (!this.term.isEmpty()) {
             quotes = quotes.refine(this.term);
         }
-        return new PageBuilder()
+        EmptyPage page = new PageBuilder()
             .stylesheet("/xsl/home.xsl")
             .build(EmptyPage.class)
             .init(this)
@@ -113,9 +115,13 @@ public final class HomeRs extends BaseRs {
                     ),
                     "quotes"
                 )
-            )
-            .render()
-            .build();
+            );
+        if (this.term.matches("B:[a-z]\\d{4}")) {
+            page = page.append(
+                new JxBook(this.base().books().get(this.term), this)
+            );
+        }
+        return page.render().build();
     }
 
 }

@@ -33,6 +33,7 @@
 
 .quote {
   @extend p;
+  margin: 2 * $em 0;
   .text {
     font-size: 1.7 * $em;
     margin-bottom: .5 * $em;
@@ -69,4 +70,9 @@
 
 .opt {
   margin-left: .5 * $em;
+}
+
+.book-header {
+  text-align: center;
+  font-size: 1.4 * $em;
 }

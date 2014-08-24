@@ -43,6 +43,7 @@
                 <xsl:text>Nothing found, try to refine your search criteria.</xsl:text>
             </p>
         </xsl:if>
+        <xsl:apply-templates select="book"/>
         <xsl:apply-templates select="quotes/quote"/>
     </xsl:template>
     <xsl:template match="quote">
@@ -96,5 +97,16 @@
                 </a>
             </xsl:if>
         </li>
+    </xsl:template>
+    <xsl:template match="book">
+        <p class="book-header">
+            <xsl:value-of select="cite"/>
+            <xsl:if test="links/link[@rel='add-quote']">
+                <a class="opt" title="add new quote to this book"
+                    href="{book/links/link[@rel='add-quote']/@href}">
+                    <xsl:text>+quote</xsl:text>
+                </a>
+            </xsl:if>
+        </p>
     </xsl:template>
 </xsl:stylesheet>

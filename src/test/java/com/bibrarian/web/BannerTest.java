@@ -58,8 +58,6 @@ public final class BannerTest {
         Mockito.doReturn(
             Joiner.on(' ').join(
                 "Testing is a destructive, even sadistic,",
-                " process, which explains why most people find it difficult,",
-                " and testing is a destructive, even sadistic,",
                 " process, which explains why most people find it difficult"
             )
         ).when(quote).text();

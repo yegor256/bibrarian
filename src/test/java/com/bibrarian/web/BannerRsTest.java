@@ -62,6 +62,7 @@ public final class BannerRsTest {
         final Quote quote = Mockito.mock(Quote.class);
         Mockito.doReturn(quote).when(quotes).get(1L);
         final Book book = Mockito.mock(Book.class);
+        Mockito.doReturn("Myers2012").when(book).name();
         Mockito.doReturn(book).when(quote).book();
         Mockito.doReturn(
             Joiner.on(' ').join(

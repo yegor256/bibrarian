@@ -68,7 +68,7 @@
     <xsl:template match="book">
         <p>
             <span class="abbr">
-                <a href="{book/links/link[@rel='open']/@href}">
+                <a href="{links/link[@rel='open']/@href}">
                     <xsl:value-of select="name"/>
                 </a>
             </span>
