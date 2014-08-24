@@ -1,0 +1,139 @@
+/**
+ * Copyright (c) 2013-2014, bibrarian.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met: 1) Redistributions of source code must retain the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer. 2) Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3) Neither the name of the bibrarian.com nor
+ * the names of its contributors may be used to endorse or promote
+ * products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.bibrarian.web;
+
+import com.bibrarian.om.Quote;
+import com.jcabi.aspects.Tv;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import javax.imageio.ImageIO;
+import javax.ws.rs.core.CacheControl;
+
+/**
+ * Banner.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 1.7
+ */
+final class Banner {
+
+    /**
+     * Width.
+     */
+    private static final int WIDTH = 1600;
+
+    /**
+     * Height.
+     */
+    private static final int HEIGHT = 790;
+
+    /**
+     * Padding.
+     */
+    private static final int PADDING = 50;
+
+    /**
+     * Main font.
+     */
+    private static final Font FONT = new Font(
+        "TimesRoman", Font.PLAIN, 100
+    );
+
+    /**
+     * Quote.
+     */
+    private final transient Quote quote;
+
+    /**
+     * Ctor.
+     * @param qte Quote
+     */
+    Banner(final Quote qte) {
+        this.quote = qte;
+    }
+
+    /**
+     * Create PNG.
+     * @return The PNG
+     * @throws IOException If fails
+     */
+    public byte[] png() throws IOException {
+        final BufferedImage img = new BufferedImage(
+            Banner.WIDTH, Banner.HEIGHT, BufferedImage.TYPE_INT_RGB
+        );
+        final Graphics graph = img.getGraphics();
+        graph.setColor(Color.WHITE);
+        graph.fillRect(0, 0, img.getWidth(), img.getHeight());
+        graph.setColor(Color.BLACK);
+        graph.setFont(Banner.FONT);
+        final FontMetrics metrics = graph.getFontMetrics();
+        final List<String> lines = new LinkedList<String>();
+        final StringBuilder line = new StringBuilder(Tv.THOUSAND);
+        for (final String word : this.quote.text().split(" ")) {
+            final String ext = String.format("%s %s", line, word);
+            if (metrics.stringWidth(ext) > Banner.WIDTH) {
+                lines.add(line.toString().trim());
+                line.setLength(0);
+                line.append(word);
+            } else {
+                line.append(' ').append(word);
+            }
+        }
+        lines.add(line.toString());
+        for (int idx = 0; idx < lines.size(); ++idx) {
+            graph.drawString(
+                lines.get(idx), Banner.PADDING,
+                Banner.PADDING + (idx + 1) * metrics.getHeight()
+            );
+        }
+        final String book = String.format("[%s]", this.quote.book().name());
+        graph.drawString(
+            book,
+            Banner.WIDTH - Banner.PADDING - metrics.stringWidth(book),
+            Banner.HEIGHT - Banner.PADDING
+        );
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(img, "png", baos);
+        final CacheControl cache = new CacheControl();
+        cache.setMaxAge((int) TimeUnit.HOURS.toSeconds(1L));
+        cache.setPrivate(false);
+        return baos.toByteArray();
+    }
+
+}
