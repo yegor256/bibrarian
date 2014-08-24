@@ -47,6 +47,11 @@
                 <xsl:value-of select="text"/>
             </div>
         </div>
+        <xsl:if test="links/link[@rel='edit']">
+            <a href="{links/link[@rel='edit']}" class="opt">
+                <xsl:text>edit</xsl:text>
+            </a>
+        </xsl:if>
         <p>
             <span class="abbr">
                 <a href="{book/links/link[@rel='open']/@href}">
@@ -57,8 +62,8 @@
             <xsl:text>, </xsl:text>
             <xsl:value-of select="pages"/>
         </p>
-        <xsl:if test="/page/links/link[@rel='add-tag']">
-            <form id="add-tag" method="post" action="{/page/links/link[@rel='add-tag']/@href}">
+        <xsl:if test="links/link[@rel='add-tag']">
+            <form id="add-tag" method="post" action="{links/link[@rel='add-tag']/@href}">
                 <fieldset class="inline">
                     <input name="tag" id="tag" size="35" maxlength="100" autocomplete="off"
                         placeholder="e.g. priceless-quotes"/>

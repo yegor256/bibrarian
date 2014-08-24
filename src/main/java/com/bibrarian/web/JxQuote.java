@@ -35,9 +35,10 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.rexsl.page.Link;
+import com.rexsl.page.auth.Identity;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.LinkedList;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -129,7 +130,8 @@ final class JxQuote {
     @XmlElementWrapper(name = "links")
     @XmlElement(name = "link")
     public Collection<Link> getLinks() {
-        return Collections.singleton(
+        final Collection<Link> links = new LinkedList<Link>();
+        links.add(
             new Link(
                 "open",
                 this.base.uriInfo().getBaseUriBuilder().clone()
@@ -137,6 +139,26 @@ final class JxQuote {
                     .build(this.quote.number())
             )
         );
+        if (!this.base.auth().identity().equals(Identity.ANONYMOUS)) {
+            links.add(
+                new Link(
+                    "edit",
+                    this.base.uriInfo().getBaseUriBuilder().clone()
+                        .path(EditQuoteRs.class)
+                        .build(this.quote.number())
+                )
+            );
+            links.add(
+                new Link(
+                    "add-tag",
+                    this.base.uriInfo().getBaseUriBuilder().clone()
+                        .path(QuoteRs.class)
+                        .path(QuoteRs.class, "tag")
+                        .build(this.quote.number())
+                )
+            );
+        }
+        return links;
     }
 
     /**

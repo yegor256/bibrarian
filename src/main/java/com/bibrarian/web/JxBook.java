@@ -130,6 +130,14 @@ final class JxBook {
                         .build(this.book.name())
                 )
             );
+            links.add(
+                new Link(
+                    "edit",
+                    this.base.uriInfo().getBaseUriBuilder().clone()
+                        .path(EditBookRs.class)
+                        .build(this.book.name())
+                )
+            );
         }
         return links;
     }

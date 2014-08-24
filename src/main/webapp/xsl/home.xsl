@@ -107,7 +107,7 @@
                     <xsl:text>+quote</xsl:text>
                 </a>
             </xsl:if>
-            <xsl:if test="links/link[@rel='edit-book']">
+            <xsl:if test="links/link[@rel='edit']">
                 <a class="opt" title="edit BibTeX entry of the book"
                     href="{links/link[@rel='edit-book']/@href}">
                     <xsl:text>edit</xsl:text>

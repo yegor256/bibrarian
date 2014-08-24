@@ -33,9 +33,7 @@ import com.bibrarian.om.Quote;
 import com.bibrarian.om.Quotes;
 import com.bibrarian.om.Tag;
 import com.jcabi.aspects.Loggable;
-import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
-import com.rexsl.page.auth.Identity;
 import java.io.IOException;
 import java.util.logging.Level;
 import javax.ws.rs.FormParam;
@@ -82,15 +80,12 @@ public final class QuoteRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() throws IOException {
-        EmptyPage page = new PageBuilder()
+        return new PageBuilder()
             .stylesheet("/xsl/quote.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new JxQuote(this.quote(), this));
-        if (!this.auth().identity().equals(Identity.ANONYMOUS)) {
-            page = page.link(new Link("add-tag", "./add-tag"));
-        }
-        return page.render().build();
+            .append(new JxQuote(this.quote(), this))
+            .render().build();
     }
 
     /**
