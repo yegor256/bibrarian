@@ -51,7 +51,7 @@ import javax.ws.rs.core.Response;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @since 1.7
  */
-@Path("/v/{number : \\d+}.svg")
+@Path("/v/{number : \\d+}.png")
 @Loggable(Loggable.DEBUG)
 public final class BannerRs extends BaseRs {
 
