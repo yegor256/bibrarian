@@ -87,7 +87,9 @@ public final class SitemapRs extends BaseRs {
                     .build(quote.number())
             )
             .append("</loc><lastmod>")
-            .append(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()))
+            .append(
+                DateFormatUtils.ISO_DATE_TIME_ZONE_FORMAT.format(new Date())
+            )
             .append("</lastmod></url>")
             .toString();
     }
