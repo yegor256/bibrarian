@@ -123,8 +123,9 @@ public final class EditBookRs extends BaseRs {
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
                 .clone()
-                .path(AddQuoteRs.class)
-                .build(book.name()),
+                .path(HomeRs.class)
+                .queryParam("q", "{q}")
+                .build(String.format("B:%s", book.name())),
             String.format("book [%s] updated successfully", book.name()),
             Level.INFO
         );
