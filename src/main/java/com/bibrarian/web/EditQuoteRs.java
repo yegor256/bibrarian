@@ -29,9 +29,8 @@
  */
 package com.bibrarian.web;
 
-import com.bibrarian.bib.BibSyntaxException;
-import com.bibrarian.om.Book;
-import com.bibrarian.om.Books;
+import com.bibrarian.om.Quote;
+import com.bibrarian.om.Quotes;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
@@ -46,31 +45,31 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
- * Edit book.
+ * Edit quote.
  *
  * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle MultipleStringLiterals (500 lines)
- * @since 1.8
+ * @since 1.9
  */
-@Path("/edit-book/{name : [a-z]+\\d{4}}")
+@Path("/edit-quote/{number : \\d+}")
 @Loggable(Loggable.DEBUG)
-public final class EditBookRs extends BaseRs {
+public final class EditQuoteRs extends BaseRs {
 
     /**
-     * Book name.
+     * Quote number.
      */
-    private transient String name;
+    private transient long number;
 
     /**
-     * Set book name.
-     * @param txt Name of the book
+     * Set quote number.
+     * @param num Number
      */
-    @PathParam("name")
-    public void setName(final String txt) {
-        this.name = txt;
+    @PathParam("number")
+    public void setNumber(final Long num) {
+        this.number = num;
     }
 
     /**
@@ -80,45 +79,46 @@ public final class EditBookRs extends BaseRs {
      */
     @GET
     @Path("/")
-    public Response first() throws IOException {
-        final Book book = this.base().books().get(this.name);
+    public Response entry() throws IOException {
+        final Quote quote = this.base().quotes().get(this.number);
         return new PageBuilder()
-            .stylesheet("/xsl/edit-book.xsl")
+            .stylesheet("/xsl/edit-quote.xsl")
             .build(EmptyPage.class)
             .init(this)
-            .append(new JaxbBundle("name", book.name()))
-            .append(new JaxbBundle("bibitem", book.bibitem()))
             .link(new Link("save", "./save"))
+            .append(new JaxbBundle("number", Long.toString(this.number)))
+            .append(new JaxbBundle("text", quote.text()))
+            .append(new JaxbBundle("pages", quote.pages()))
+            .append(new JxBook(quote.book(), this))
             .render()
             .build();
     }
 
     /**
-     * Safe.
-     * @param bibtex Bibtex
+     * Save.
+     * @param text Text of quote
+     * @param pages Pages
      * @return The JAX-RS response
      * @throws IOException If fails
      */
     @POST
     @Path("/save")
-    public Response save(@FormParam("bibtex") final String bibtex)
-        throws IOException {
-        final Book book;
+    public Response save(@FormParam("text") final String text,
+        @FormParam("pages") final String pages) throws IOException {
+        final Quote quote;
         try {
-            book = this.base().books().get(this.name);
-        } catch (final BibSyntaxException ex) {
-            throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
-        } catch (final Books.DuplicateBookException ex) {
+            quote = this.base().quotes().get(this.number);
+        } catch (final Quotes.InvalidQuoteException ex) {
             throw this.flash().redirect(this.uriInfo().getBaseUri(), ex);
         }
-        book.bibitem(bibtex);
+        quote.text(text);
+        quote.pages(pages);
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
                 .clone()
-                .path(HomeRs.class)
-                .queryParam("q", "{q}")
-                .build(String.format("B:%s", book.name())),
-            String.format("book [%s] updated successfully", book.name()),
+                .path(QuoteRs.class)
+                .build(quote.number()),
+            String.format("quote #%d updated successfully", quote.number()),
             Level.INFO
         );
     }
