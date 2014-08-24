@@ -109,7 +109,7 @@
             </xsl:if>
             <xsl:if test="links/link[@rel='edit']">
                 <a class="opt" title="edit BibTeX entry of the book"
-                    href="{links/link[@rel='edit-book']/@href}">
+                    href="{links/link[@rel='edit']/@href}">
                     <xsl:text>edit</xsl:text>
                 </a>
             </xsl:if>
