@@ -43,6 +43,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -201,7 +202,9 @@ final class Banner {
         try {
             cmu = Font.createFont(
                 Font.TRUETYPE_FONT,
-                Banner.class.getResourceAsStream("cmunbx.ttf")
+                new URL(
+                    "http://img.bibrarian.com/fonts/cmunbx.ttf"
+                ).openStream()
             );
         } catch (final FontFormatException ex) {
             throw new IllegalStateException(ex);
