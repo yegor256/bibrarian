@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import javax.ws.rs.core.CacheControl;
@@ -115,7 +116,9 @@ final class Banner {
             );
         }
         graph.setFont(Banner.font().deriveFont(Banner.CITE_FONT));
-        final String book = String.format("[%s]", this.quote.book().name());
+        final String book = String.format(
+            "[%s]", this.quote.book().name().toUpperCase(Locale.ENGLISH)
+        );
         graph.drawString(
             book,
             Banner.WIDTH - Banner.PADDING
