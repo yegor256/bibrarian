@@ -66,20 +66,18 @@
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>          Mockito.doReturn(
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>              Joiner.on(' ').join(
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>                  <span class="jxr_string">"Testing is a destructive, even sadistic,"</span>,
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>                  <span class="jxr_string">" process, which explains why most people find it difficult,"</span>,
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>                  <span class="jxr_string">" and testing is a destructive, even sadistic,"</span>,
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>                  <span class="jxr_string">" process, which explains why most people find it difficult"</span>
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>              )
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>          ).when(quote).text();
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>          Mockito.doReturn(<span class="jxr_string">"pp.3-5"</span>).when(quote).pages();
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>          Mockito.doReturn(<span class="jxr_string">"@book{test2012,year=2012}"</span>).when(book).bibitem();
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>          <strong class="jxr_keyword">final</strong> byte[] png = <strong class="jxr_keyword">new</strong> Banner(quote).png();
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>          <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">new</strong> File(<span class="jxr_string">"/code/temp"</span>).exists()) {
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>              FileUtils.writeByteArrayToFile(<strong class="jxr_keyword">new</strong> File(<span class="jxr_string">"/code/temp/img.png"</span>), png);
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>          }
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      }
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  }
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>                  <span class="jxr_string">" process, which explains why most people find it difficult"</span>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>              )
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>          ).when(quote).text();
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          Mockito.doReturn(<span class="jxr_string">"pp.3-5"</span>).when(quote).pages();
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>          Mockito.doReturn(<span class="jxr_string">"@book{test2012,year=2012}"</span>).when(book).bibitem();
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          <strong class="jxr_keyword">final</strong> byte[] png = <strong class="jxr_keyword">new</strong> Banner(quote).png();
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>          <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">new</strong> File(<span class="jxr_string">"/code/temp"</span>).exists()) {
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>              FileUtils.writeByteArrayToFile(<strong class="jxr_keyword">new</strong> File(<span class="jxr_string">"/code/temp/img.png"</span>), png);
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>          }
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      }
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2013&#x2013;2014 <a href="http://www.bibrarian.com">Bibrarian Inc.</a>. All rights reserved.</div>
