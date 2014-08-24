@@ -65,6 +65,7 @@
 }
 
 .foot {
+  @include monospace;
   font-size: 0.9 * $em;
 }
 

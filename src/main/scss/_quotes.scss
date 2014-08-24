@@ -34,8 +34,9 @@
 .quote {
   @extend p;
   .text {
-    font-size: 1.6 * $em;
+    font-size: 1.7 * $em;
     margin-bottom: .5 * $em;
+    font-weight: bold;
     a {
       text-decoration: none;
     }
