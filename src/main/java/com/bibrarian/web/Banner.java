@@ -75,6 +75,16 @@ final class Banner {
     private static final int PADDING = 50;
 
     /**
+     * Font size.
+     */
+    private static final float FONT_SIZE = 100.0f;
+
+    /**
+     * Cite font size.
+     */
+    private static final float CITE_FONT = 50.0f;
+
+    /**
      * Quote.
      */
     private final transient Quote quote;
@@ -104,7 +114,7 @@ final class Banner {
                 Banner.PADDING + (idx + 1) * graph.getFontMetrics().getHeight()
             );
         }
-        graph.setFont(Banner.font().deriveFont(70f));
+        graph.setFont(Banner.font().deriveFont(Banner.CITE_FONT));
         final String book = String.format("[%s]", this.quote.book().name());
         graph.drawString(
             book,
@@ -163,6 +173,7 @@ final class Banner {
                 break;
             }
             final Font font = graph.getFont();
+            // @checkstyle MagicNumber (1 line)
             graph.setFont(font.deriveFont(0.9f * (float) font.getSize()));
         }
         return lines;
@@ -211,7 +222,7 @@ final class Banner {
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
-        return cmu.deriveFont(100f);
+        return cmu.deriveFont(Banner.FONT_SIZE);
     }
 
 }
