@@ -40,6 +40,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -94,15 +95,7 @@ final class Banner {
         final BufferedImage img = new BufferedImage(
             Banner.WIDTH, Banner.HEIGHT, BufferedImage.TYPE_INT_RGB
         );
-        final Graphics2D graph = Graphics2D.class.cast(img.getGraphics());
-        graph.setFont(Banner.font());
-        graph.setRenderingHint(
-            RenderingHints.KEY_TEXT_ANTIALIASING,
-            RenderingHints.VALUE_TEXT_ANTIALIAS_ON
-        );
-        graph.setColor(Color.WHITE);
-        graph.fillRect(0, 0, img.getWidth(), img.getHeight());
-        graph.setColor(Color.BLACK);
+        final Graphics graph = Banner.graphics(img);
         final List<String> lines = this.compact(graph);
         for (int idx = 0; idx < lines.size(); ++idx) {
             graph.drawString(
@@ -118,6 +111,34 @@ final class Banner {
                 - graph.getFontMetrics().stringWidth(book),
             Banner.HEIGHT - Banner.PADDING
         );
+        return Banner.bytes(img);
+    }
+
+    /**
+     * Get Graph from image.
+     * @param img Image
+     * @return Graph
+     */
+    private static Graphics2D graphics(final BufferedImage img) {
+        final Graphics2D graph = Graphics2D.class.cast(img.getGraphics());
+        graph.setFont(Banner.font());
+        graph.setRenderingHint(
+            RenderingHints.KEY_TEXT_ANTIALIASING,
+            RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+        );
+        graph.setColor(Color.WHITE);
+        graph.fillRect(0, 0, img.getWidth(), img.getHeight());
+        graph.setColor(Color.BLACK);
+        return graph;
+    }
+
+    /**
+     * Make bytes from Graph.
+     * @param img Image
+     * @return Bytes
+     * @throws IOException If fails
+     */
+    private static byte[] bytes(final RenderedImage img) throws IOException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(img, "png", baos);
         final CacheControl cache = new CacheControl();
