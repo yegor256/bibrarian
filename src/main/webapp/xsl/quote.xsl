@@ -48,7 +48,7 @@
             </div>
         </div>
         <xsl:if test="links/link[@rel='edit']">
-            <a href="{links/link[@rel='edit']}" class="opt">
+            <a href="{links/link[@rel='edit']/@href}" class="opt">
                 <xsl:text>edit</xsl:text>
             </a>
         </xsl:if>
