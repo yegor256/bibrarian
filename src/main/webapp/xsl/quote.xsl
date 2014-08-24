@@ -42,8 +42,8 @@
         <xsl:apply-templates select="quote"/>
     </xsl:template>
     <xsl:template match="quote">
-        <div class="quote">
-            <div class="text">
+        <div class="quote" itemscope="" itemtype="http://schema.org/CreativeWork">
+            <div class="text" itemprop="text">
                 <xsl:value-of select="text"/>
             </div>
         </div>
@@ -52,7 +52,7 @@
                 <xsl:text>edit</xsl:text>
             </a>
         </xsl:if>
-        <p>
+        <p itemprop="author">
             <span class="abbr">
                 <a href="{book/links/link[@rel='open']/@href}">
                     <xsl:value-of select="book/name"/>

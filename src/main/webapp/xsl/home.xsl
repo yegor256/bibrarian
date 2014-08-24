@@ -47,8 +47,8 @@
         <xsl:apply-templates select="quotes/quote"/>
     </xsl:template>
     <xsl:template match="quote">
-        <div class="quote">
-            <div class="text">
+        <div class="quote" itemscope="" itemtype="http://schema.org/CreativeWork">
+            <div class="text" itemprop="text">
                 <a title="see its full page"
                     href="{links/link[@rel='open']/@href}">
                     <xsl:value-of select="text"/>
@@ -63,7 +63,7 @@
         </div>
     </xsl:template>
     <xsl:template match="quote" mode="book">
-        <div class="book">
+        <div class="book" itemprop="author">
             <span class="abbr">
                 <a title="find all quotes of this book"
                     href="{book/links/link[@rel='open']/@href}">
