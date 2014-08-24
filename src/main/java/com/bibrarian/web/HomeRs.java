@@ -119,7 +119,7 @@ public final class HomeRs extends BaseRs {
                 )
             );
         if (this.term.matches("B:[a-z]+\\d{4}")) {
-            final Book book = this.base().books().get(this.term);
+            final Book book = this.base().books().get(this.term.substring(2));
             page = page
                 .append(new JxBook(book, this))
                 .append(new JaxbBundle("bibitem"))
