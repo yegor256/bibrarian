@@ -39,7 +39,6 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.JaxbGroup;
-import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -122,16 +121,7 @@ public final class HomeRs extends BaseRs {
             final Book book = this.base().books().get(this.term.substring(2));
             page = page
                 .append(new JxBook(book, this))
-                .append(new JaxbBundle("bibitem"))
-                .link(
-                    new Link(
-                        "edit-book",
-                        this.uriInfo().getBaseUriBuilder()
-                            .clone()
-                            .path(EditBookRs.class)
-                            .build(book.name())
-                    )
-                );
+                .append(new JaxbBundle("bibitem"));
         }
         return page.render().build();
     }
