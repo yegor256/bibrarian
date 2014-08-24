@@ -90,6 +90,7 @@
             </a>
             <xsl:if test="links/link[@rel='delete']">
                 <a title="remove this tag"
+                    onclick="return confirm('Are you sure you want to delete this tag?');"
                     class="opt" href="{links/link[@rel='delete']/@href}">
                     <xsl:text>remove</xsl:text>
                 </a>
