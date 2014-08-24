@@ -30,11 +30,15 @@
 package com.bibrarian.web;
 
 import com.bibrarian.om.Quote;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Tv;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -69,13 +73,6 @@ final class Banner {
     private static final int PADDING = 50;
 
     /**
-     * Main font.
-     */
-    private static final Font FONT = new Font(
-        "TimesRoman", Font.PLAIN, 100
-    );
-
-    /**
      * Quote.
      */
     private final transient Quote quote;
@@ -97,35 +94,28 @@ final class Banner {
         final BufferedImage img = new BufferedImage(
             Banner.WIDTH, Banner.HEIGHT, BufferedImage.TYPE_INT_RGB
         );
-        final Graphics graph = img.getGraphics();
+        final Graphics2D graph = Graphics2D.class.cast(img.getGraphics());
+        graph.setFont(Banner.font());
+        graph.setRenderingHint(
+            RenderingHints.KEY_TEXT_ANTIALIASING,
+            RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+        );
         graph.setColor(Color.WHITE);
         graph.fillRect(0, 0, img.getWidth(), img.getHeight());
         graph.setColor(Color.BLACK);
-        graph.setFont(Banner.FONT);
-        final FontMetrics metrics = graph.getFontMetrics();
-        final List<String> lines = new LinkedList<String>();
-        final StringBuilder line = new StringBuilder(Tv.THOUSAND);
-        for (final String word : this.quote.text().split(" ")) {
-            final String ext = String.format("%s %s", line, word);
-            if (metrics.stringWidth(ext) > Banner.WIDTH) {
-                lines.add(line.toString().trim());
-                line.setLength(0);
-                line.append(word);
-            } else {
-                line.append(' ').append(word);
-            }
-        }
-        lines.add(line.toString());
+        final List<String> lines = this.compact(graph);
         for (int idx = 0; idx < lines.size(); ++idx) {
             graph.drawString(
                 lines.get(idx), Banner.PADDING,
-                Banner.PADDING + (idx + 1) * metrics.getHeight()
+                Banner.PADDING + (idx + 1) * graph.getFontMetrics().getHeight()
             );
         }
+        graph.setFont(Banner.font().deriveFont(70f));
         final String book = String.format("[%s]", this.quote.book().name());
         graph.drawString(
             book,
-            Banner.WIDTH - Banner.PADDING - metrics.stringWidth(book),
+            Banner.WIDTH - Banner.PADDING
+                - graph.getFontMetrics().stringWidth(book),
             Banner.HEIGHT - Banner.PADDING
         );
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -134,6 +124,70 @@ final class Banner {
         cache.setMaxAge((int) TimeUnit.HOURS.toSeconds(1L));
         cache.setPrivate(false);
         return baos.toByteArray();
+    }
+
+    /**
+     * Compact lines.
+     * @param graph Graph
+     * @return Lines
+     * @throws IOException If fails
+     */
+    private List<String> compact(final Graphics graph) throws IOException {
+        List<String> lines;
+        while (true) {
+            lines = this.lines(graph);
+            final int height = graph.getFontMetrics().getHeight();
+            if (lines.size() * height < Banner.HEIGHT - (Banner.PADDING << 2)) {
+                break;
+            }
+            final Font font = graph.getFont();
+            graph.setFont(font.deriveFont(0.9f * (float) font.getSize()));
+        }
+        return lines;
+    }
+
+    /**
+     * Make lines.
+     * @param graph Graph
+     * @return Lines
+     * @throws IOException If fails
+     */
+    private List<String> lines(final Graphics graph) throws IOException {
+        final FontMetrics metrics = graph.getFontMetrics();
+        final List<String> lines = new LinkedList<String>();
+        final StringBuilder line = new StringBuilder(Tv.THOUSAND);
+        for (final String word : this.quote.text().split(" ")) {
+            final String ext = String.format("%s %s", line, word);
+            if (metrics.stringWidth(ext) > Banner.WIDTH - Banner.PADDING) {
+                lines.add(line.toString().trim());
+                line.setLength(0);
+                line.append(word);
+            } else {
+                line.append(' ').append(word);
+            }
+        }
+        lines.add(line.toString());
+        return lines;
+    }
+
+    /**
+     * Make font.
+     * @return Font
+     */
+    @Cacheable(forever = true)
+    private static Font font() {
+        final Font cmu;
+        try {
+            cmu = Font.createFont(
+                Font.TRUETYPE_FONT,
+                Banner.class.getResourceAsStream("cmunbx.ttf")
+            );
+        } catch (final FontFormatException ex) {
+            throw new IllegalStateException(ex);
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+        return cmu.deriveFont(100f);
     }
 
 }
