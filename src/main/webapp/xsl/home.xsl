@@ -103,8 +103,14 @@
             <xsl:value-of select="cite"/>
             <xsl:if test="links/link[@rel='add-quote']">
                 <a class="opt" title="add new quote to this book"
-                    href="{book/links/link[@rel='add-quote']/@href}">
+                    href="{links/link[@rel='add-quote']/@href}">
                     <xsl:text>+quote</xsl:text>
+                </a>
+            </xsl:if>
+            <xsl:if test="links/link[@rel='edit-book']">
+                <a class="opt" title="edit BibTeX entry of the book"
+                    href="{links/link[@rel='edit-book']/@href}">
+                    <xsl:text>edit</xsl:text>
                 </a>
             </xsl:if>
         </p>
