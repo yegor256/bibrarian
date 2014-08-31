@@ -39,6 +39,26 @@
         </title>
     </xsl:template>
     <xsl:template match="page" mode="body">
+        <div class="social">
+            <nav role="navigation">
+                <a href="{links/link[@rel='share-facebook']/@href}"
+                    title="" class="button">
+                    <span class="ico">circlefacebook</span>
+                </a>
+                <a href="{links/link[@rel='share-twitter']/@href}"
+                    title="Share on Twitter" class="button">
+                    <span class="ico">circletwitterbird</span>
+                </a>
+                <a href="{links/link[@rel='share-google']/@href}"
+                    title="Share on Google+" class="button">
+                    <span class="ico">circlegoogleplus</span>
+                </a>
+                <a href="{links/link[@rel='share-linkedin']/@href}"
+                    title="Share on LinkedIn" class="button">
+                    <span class="ico">circlelinkedin</span>
+                </a>
+            </nav>
+        </div>
         <xsl:apply-templates select="quote"/>
     </xsl:template>
     <xsl:template match="quote">

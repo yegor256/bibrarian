@@ -33,6 +33,7 @@ import com.bibrarian.om.Quote;
 import com.bibrarian.om.Quotes;
 import com.bibrarian.om.Tag;
 import com.jcabi.aspects.Loggable;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -43,6 +44,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * Home.
@@ -84,6 +86,47 @@ public final class QuoteRs extends BaseRs {
             .stylesheet("/xsl/quote.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .link(
+                new Link(
+                    "share-facebook",
+                    UriBuilder
+                        .fromUri("http://www.facebook.com/sharer/sharer.php")
+                        .queryParam("u", "{u1}")
+                        .build(this.uriInfo().getRequestUri())
+                )
+            )
+            .link(
+                new Link(
+                    "share-twitter",
+                    UriBuilder.fromUri("https://twitter.com/share")
+                        .queryParam("url", "{u2}")
+                        .queryParam("text", "see {txt}")
+                        .build(
+                            this.uriInfo().getRequestUri(),
+                            this.uriInfo().getBaseUriBuilder()
+                                .clone()
+                                .path(BannerRs.class)
+                                .build(this.number)
+                                .toASCIIString()
+                        )
+                )
+            )
+            .link(
+                new Link(
+                    "share-google",
+                    UriBuilder.fromUri("https://plus.google.com/share")
+                        .queryParam("url", "{u3}")
+                        .build(this.uriInfo().getRequestUri())
+                )
+            )
+            .link(
+                new Link(
+                    "share-linkedin",
+                    UriBuilder.fromUri("https://www.linkedin.com/cws/share")
+                        .queryParam("url", "{u4}")
+                        .build(this.uriInfo().getRequestUri())
+                )
+            )
             .append(new JxQuote(this.quote(), this))
             .render().build();
     }

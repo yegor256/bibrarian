@@ -217,7 +217,7 @@ final class Banner {
             cmu = Font.createFont(
                 Font.TRUETYPE_FONT,
                 new URL(
-                    "http://img.bibrarian.com/fonts/cmunbx.ttf"
+                    "http://img.bibrarian.com/fonts/cm/cmunbx.ttf"
                 ).openStream()
             );
         } catch (final FontFormatException ex) {

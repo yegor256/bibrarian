@@ -27,29 +27,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.web;
 
-import com.jcabi.aspects.Loggable;
-import com.rexsl.page.BasePage;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
+@font-face {
+  font-family: 'Mono Social Icons Font';
+  src: url('//img.bibrarian.com/fonts/mono-social/MonoSocialIconsFont-1.10.eot');
+  src: url('//img.bibrarian.com/fonts/mono-social/MonoSocialIconsFont-1.10.eot?#iefix') format('embedded-opentype'),
+    url('//img.bibrarian.com/fonts/mono-social/MonoSocialIconsFont-1.10.woff') format('woff'),
+    url('//img.bibrarian.com/fonts/mono-social/MonoSocialIconsFont-1.10.ttf') format('truetype'),
+    url('//img.bibrarian.com/fonts/mono-social/MonoSocialIconsFont-1.10.svg#MonoSocialIconsFont') format('svg');
+  src: url('//img.bibrarian.com/fonts/mono-social/MonoSocialIconsFont-1.10.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
-/**
- * Empty RESTful page.
- *
- * <p>All other JAXB pages are inherited from this class, in runtime,
- * by means of {@link com.rexsl.page.PageBuilder}.
- *
- * <p>The class is mutable and NOT thread-safe.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- */
-@XmlRootElement(name = "page")
-@XmlAccessorType(XmlAccessType.NONE)
-@XmlSeeAlso(JxQuote.class)
-@Loggable(Loggable.DEBUG)
-public class EmptyPage extends BasePage<EmptyPage, BaseRs> {
+.ico, a.ico:before {
+  font-family: 'Mono Social Icons Font';
+  -webkit-text-rendering: optimizeLegibility;
+  -moz-text-rendering: optimizeLegibility;
+  -ms-text-rendering: optimizeLegibility;
+  -o-text-rendering: optimizeLegibility;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -ms-font-smoothing: antialiased;
+  -o-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+}
+
+a.ico:before {
+  content: attr(title);
+  margin-right: 0.3em;
+  font-size: 130%;
 }

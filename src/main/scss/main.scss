@@ -80,3 +80,11 @@
 .flash {
   text-align: center;
 }
+
+.social {
+  text-align: center;
+  a {
+    margin-right: .2 * $em;
+    margin-left: .2 * $em;
+  }
+}
