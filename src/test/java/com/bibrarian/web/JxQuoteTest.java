@@ -29,17 +29,13 @@
  */
 package com.bibrarian.web;
 
-import com.bibrarian.om.Book;
 import com.bibrarian.om.Quote;
-import com.bibrarian.om.Tag;
-import com.bibrarian.om.Tags;
+import com.bibrarian.om.mock.MkQuote;
 import com.jcabi.matchers.JaxbConverter;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rexsl.page.mock.ResourceMocker;
-import java.util.Collections;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
  * Test case for {@link JxQuote}.
@@ -55,20 +51,7 @@ public final class JxQuoteTest {
      */
     @Test
     public void convertsToXml() throws Exception {
-        final Quote quote = Mockito.mock(Quote.class);
-        Mockito.doReturn("the text").when(quote).text();
-        Mockito.doReturn("34--35").when(quote).pages();
-        final Book book = Mockito.mock(Book.class);
-        Mockito.doReturn(book).when(quote).book();
-        Mockito.doReturn(
-            "@article{test2012,year=2012,author=\"Jeff\"}"
-        ).when(book).bibitem();
-        Mockito.doReturn("hello").when(book).name();
-        final Tags tags = Mockito.mock(Tags.class);
-        Mockito.doReturn(tags).when(quote).tags();
-        Mockito.doReturn(
-            Collections.singleton(new Tag.Simple("jeff", "works-fine"))
-        ).when(tags).iterate();
+        final Quote quote = new MkQuote();
         MatcherAssert.assertThat(
             JaxbConverter.the(
                 new JxQuote(quote, new ResourceMocker().mock(BaseRs.class))

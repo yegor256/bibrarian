@@ -29,13 +29,11 @@
  */
 package com.bibrarian.web;
 
-import com.bibrarian.om.Book;
 import com.bibrarian.om.Quote;
-import com.google.common.base.Joiner;
+import com.bibrarian.om.mock.MkQuote;
 import java.io.File;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
  * Test case for {@link Banner}.
@@ -51,18 +49,7 @@ public final class BannerTest {
      */
     @Test
     public void rendersPng() throws Exception {
-        final Quote quote = Mockito.mock(Quote.class);
-        final Book book = Mockito.mock(Book.class);
-        Mockito.doReturn(book).when(quote).book();
-        Mockito.doReturn("Myers2012").when(book).name();
-        Mockito.doReturn(
-            Joiner.on(' ').join(
-                "Testing is a destructive, even sadistic,",
-                " process, which explains why most people find it difficult"
-            )
-        ).when(quote).text();
-        Mockito.doReturn("pp.3-5").when(quote).pages();
-        Mockito.doReturn("@book{test2012,year=2012}").when(book).bibitem();
+        final Quote quote = new MkQuote();
         final byte[] png = new Banner(quote).png();
         if (new File("/code/temp").exists()) {
             FileUtils.writeByteArrayToFile(new File("/code/temp/img.png"), png);

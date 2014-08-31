@@ -32,10 +32,15 @@ package com.bibrarian.web;
 import com.bibrarian.om.Quote;
 import com.bibrarian.om.Quotes;
 import com.bibrarian.om.Tag;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.http.Request;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.XmlResponse;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import java.io.IOException;
+import java.net.URI;
 import java.util.logging.Level;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -43,6 +48,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
@@ -82,10 +89,15 @@ public final class QuoteRs extends BaseRs {
     @GET
     @Path("/")
     public Response index() throws IOException {
+        final URI uri = this.uriInfo().getBaseUriBuilder()
+            .clone()
+            .path(BannerRs.class)
+            .build(this.number);
         return new PageBuilder()
             .stylesheet("/xsl/quote.xsl")
             .build(EmptyPage.class)
             .init(this)
+            .link(new Link("twitpic", new Twitpic(this.quote()).upload()))
             .link(
                 new Link(
                     "share-facebook",
@@ -101,14 +113,7 @@ public final class QuoteRs extends BaseRs {
                     UriBuilder.fromUri("https://twitter.com/share")
                         .queryParam("url", "{u2}")
                         .queryParam("text", "see {txt}")
-                        .build(
-                            this.uriInfo().getRequestUri(),
-                            this.uriInfo().getBaseUriBuilder()
-                                .clone()
-                                .path(BannerRs.class)
-                                .build(this.number)
-                                .toASCIIString()
-                        )
+                        .build(this.uriInfo().getRequestUri(), uri)
                 )
             )
             .link(
@@ -195,6 +200,30 @@ public final class QuoteRs extends BaseRs {
                 this.uriInfo().getBaseUri(), ex
             );
         }
+    }
+
+    /**
+     * Upload to twitpic.
+     * @return URI
+     * @throws IOException If fails
+     */
+    @Cacheable(forever = true)
+    private static String twitpic() throws IOException {
+        return new JdkRequest("http://twitpic.com/api/upload")
+            .method(Request.POST)
+            .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML)
+            .uri()
+            .queryParam("username", "")
+            .queryParam("password", "")
+            .queryParam(
+                "media", "test"
+            )
+            .back()
+            .fetch()
+            .as(XmlResponse.class)
+            .xml()
+            .xpath("/url/text()")
+            .get(0);
     }
 
 }

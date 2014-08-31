@@ -30,16 +30,13 @@
 package com.bibrarian.web;
 
 import com.bibrarian.om.Base;
-import com.bibrarian.om.Book;
 import com.bibrarian.om.Quote;
 import com.bibrarian.om.Quotes;
-import com.bibrarian.om.Tags;
-import com.google.common.base.Joiner;
+import com.bibrarian.om.mock.MkQuote;
 import com.jcabi.matchers.JaxbConverter;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rexsl.mock.MkServletContext;
 import com.rexsl.page.mock.ResourceMocker;
-import java.util.Collections;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -61,24 +58,8 @@ public final class QuoteRsTest {
         final Base base = Mockito.mock(Base.class);
         final Quotes quotes = Mockito.mock(Quotes.class);
         Mockito.doReturn(quotes).when(base).quotes();
-        final Quote quote = Mockito.mock(Quote.class);
+        final Quote quote = new MkQuote();
         Mockito.doReturn(quote).when(quotes).get(1L);
-        final Tags tags = Mockito.mock(Tags.class);
-        Mockito.doReturn(tags).when(quote).tags();
-        Mockito.doReturn(Collections.emptyList()).when(tags).iterate();
-        final Book book = Mockito.mock(Book.class);
-        Mockito.doReturn("Myers2012").when(book).name();
-        Mockito.doReturn(book).when(quote).book();
-        Mockito.doReturn(
-            Joiner.on(' ').join(
-                "Testing is a destructive, even sadistic,",
-                " process, which explains why most people find it difficult"
-            )
-        ).when(quote).text();
-        Mockito.doReturn("pp.3-5").when(quote).pages();
-        Mockito.doReturn(
-            "@book{test2012,year=2012,author=\"John Smith\"}"
-        ).when(book).bibitem();
         final QuoteRs home = new ResourceMocker().mock(QuoteRs.class);
         home.setServletContext(
             new MkServletContext().withAttr(Base.class.getName(), base)

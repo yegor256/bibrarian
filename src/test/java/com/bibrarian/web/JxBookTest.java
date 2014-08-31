@@ -30,12 +30,12 @@
 package com.bibrarian.web;
 
 import com.bibrarian.om.Book;
+import com.bibrarian.om.mock.MkBook;
 import com.jcabi.matchers.JaxbConverter;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.rexsl.page.mock.ResourceMocker;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
  * Test case for {@link JxBook}.
@@ -51,11 +51,7 @@ public final class JxBookTest {
      */
     @Test
     public void convertsToXml() throws Exception {
-        final Book book = Mockito.mock(Book.class);
-        Mockito.doReturn("hello").when(book).name();
-        Mockito.doReturn(
-            "@article{test2014,author=\"How are you?\"}"
-        ).when(book).bibitem();
+        final Book book = new MkBook();
         MatcherAssert.assertThat(
             JaxbConverter.the(
                 new JxBook(book, new ResourceMocker().mock(BaseRs.class))

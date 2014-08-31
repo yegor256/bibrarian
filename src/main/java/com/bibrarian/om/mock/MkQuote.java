@@ -27,48 +27,64 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.web;
+package com.bibrarian.om.mock;
 
-import com.bibrarian.om.Base;
+import com.bibrarian.om.Book;
 import com.bibrarian.om.Quote;
-import com.bibrarian.om.Quotes;
-import com.bibrarian.om.mock.MkQuote;
-import com.rexsl.mock.MkServletContext;
-import java.io.InputStream;
-import org.apache.commons.io.IOUtils;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.bibrarian.om.Tag;
+import com.bibrarian.om.Tags;
+import com.google.common.base.Joiner;
+import java.io.IOException;
 
 /**
- * Test case for {@link BannerRs}.
+ * Mock of {@link Quote}.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.7
+ * @since 1.12
  */
-public final class BannerRsTest {
+public final class MkQuote implements Quote {
 
-    /**
-     * SvgRs can render an SVG.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void rendersSvg() throws Exception {
-        final Base base = Mockito.mock(Base.class);
-        final Quotes quotes = Mockito.mock(Quotes.class);
-        Mockito.doReturn(quotes).when(base).quotes();
-        final Quote quote = new MkQuote();
-        Mockito.doReturn(quote).when(quotes).get(1L);
-        final BannerRs home = new BannerRs();
-        home.setServletContext(
-            new MkServletContext().withAttr(Base.class.getName(), base)
-        );
-        home.setNumber(1L);
-        final byte[] png = IOUtils.toByteArray(
-            InputStream.class.cast(home.index().getEntity())
-        );
-        MatcherAssert.assertThat(png, Matchers.notNullValue());
+    @Override
+    public long number() {
+        return 1L;
     }
 
+    @Override
+    public Tags tags() {
+        return new MkTags();
+    }
+
+    @Override
+    public void tag(final Tag tag) throws IOException {
+        throw new UnsupportedOperationException("#tag()");
+    }
+
+    @Override
+    public Book book() throws IOException {
+        return new MkBook();
+    }
+
+    @Override
+    public String text() throws IOException {
+        return Joiner.on(' ').join(
+            "Testing is a destructive, even sadistic,",
+            " process, which explains why most people find it difficult"
+        );
+    }
+
+    @Override
+    public void text(final String text) throws IOException {
+        throw new UnsupportedOperationException("#text()");
+    }
+
+    @Override
+    public String pages() throws IOException {
+        return "p.5";
+    }
+
+    @Override
+    public void pages(final String pages) throws IOException {
+        throw new UnsupportedOperationException("#pages()");
+    }
 }

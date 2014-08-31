@@ -29,46 +29,64 @@
  */
 package com.bibrarian.web;
 
-import com.bibrarian.om.Base;
 import com.bibrarian.om.Quote;
-import com.bibrarian.om.Quotes;
-import com.bibrarian.om.mock.MkQuote;
-import com.rexsl.mock.MkServletContext;
-import java.io.InputStream;
-import org.apache.commons.io.IOUtils;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.jcabi.aspects.Cacheable;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import twitter4j.TwitterException;
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
+import twitter4j.media.ImageUpload;
+import twitter4j.media.ImageUploadFactory;
+import twitter4j.media.MediaProvider;
 
 /**
- * Test case for {@link BannerRs}.
+ * Twitpic.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 1.7
+ * @checkstyle MultipleStringLiterals (500 lines)
+ * @since 1.12
  */
-public final class BannerRsTest {
+final class Twitpic {
 
     /**
-     * SvgRs can render an SVG.
-     * @throws Exception If some problem inside
+     * Quote.
      */
-    @Test
-    public void rendersSvg() throws Exception {
-        final Base base = Mockito.mock(Base.class);
-        final Quotes quotes = Mockito.mock(Quotes.class);
-        Mockito.doReturn(quotes).when(base).quotes();
-        final Quote quote = new MkQuote();
-        Mockito.doReturn(quote).when(quotes).get(1L);
-        final BannerRs home = new BannerRs();
-        home.setServletContext(
-            new MkServletContext().withAttr(Base.class.getName(), base)
-        );
-        home.setNumber(1L);
-        final byte[] png = IOUtils.toByteArray(
-            InputStream.class.cast(home.index().getEntity())
-        );
-        MatcherAssert.assertThat(png, Matchers.notNullValue());
+    private final transient Quote quote;
+
+    /**
+     * Ctor.
+     * @param qte Quote
+     */
+    Twitpic(final Quote qte) {
+        this.quote = qte;
+    }
+
+    /**
+     * Upload to twitpic.
+     * @return URI
+     * @throws IOException If fails
+     */
+    @Cacheable(forever = true)
+    public String upload() throws IOException {
+        final Configuration conf = new ConfigurationBuilder()
+            .setMediaProviderAPIKey("d73bec4b19a0394cc0c60751d1c72840")
+            .setOAuthConsumerKey("XMVeJt6kLyil9XFAJVxirKfkG")
+            .setOAuthConsumerSecret("QreJTRbYTcxZSWHIBICd2AxqA1bUetREhJfGJVn4wCEwmL6RaU")
+            .setOAuthAccessToken("225097272-55Go7UfWX2MoTT9eariSfApnyrePyVVsxVjagsf6")
+            .setOAuthAccessTokenSecret("On7uFSLlOcliUpVrVGXSY52sCSGSDXzdW1dpMEy3TpMrp")
+            .build();
+        final ImageUpload upload = new ImageUploadFactory(conf)
+            .getInstance(MediaProvider.TWITPIC);
+        try {
+            return upload.upload(
+                String.format("quote-%d.png", this.quote.number()),
+                new ByteArrayInputStream(new Banner(this.quote).png())
+            );
+        } catch (final TwitterException ex) {
+            throw new IOException(ex);
+        }
     }
 
 }
