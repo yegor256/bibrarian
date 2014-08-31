@@ -34,10 +34,12 @@ import com.bibrarian.om.Book;
 import com.bibrarian.om.Books;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
+import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Locale;
@@ -103,6 +105,9 @@ final class DyBooks implements Books {
     @Override
     public Book add(final String bibtex) throws IOException {
         final Bibitem bib = new Bibitem(bibtex);
+        if (bib.author().length() < Tv.FIVE) {
+            throw new IllegalArgumentException("author name is too short");
+        }
         if (!bib.name().matches("[a-zA-Z0-9]{3,40}")) {
             throw new IllegalArgumentException(
                 String.format("invalid book name [%s]", bib.name())
@@ -123,6 +128,7 @@ final class DyBooks implements Books {
                 .with(DyBooks.HASH, bib.name().toLowerCase(Locale.ENGLISH))
                 .with(DyBooks.ATTR_BIBITEM, bib.tex())
         );
+        Logger.info(this, "book [%s] added", bib.name());
         return new DyBook(this.region, bib.name());
     }
 }

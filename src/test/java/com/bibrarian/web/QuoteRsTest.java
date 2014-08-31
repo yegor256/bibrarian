@@ -76,7 +76,9 @@ public final class QuoteRsTest {
             )
         ).when(quote).text();
         Mockito.doReturn("pp.3-5").when(quote).pages();
-        Mockito.doReturn("@book{test2012,year=2012}").when(book).bibitem();
+        Mockito.doReturn(
+            "@book{test2012,year=2012,author=\"John Smith\"}"
+        ).when(book).bibitem();
         final QuoteRs home = new ResourceMocker().mock(QuoteRs.class);
         home.setServletContext(
             new MkServletContext().withAttr(Base.class.getName(), base)

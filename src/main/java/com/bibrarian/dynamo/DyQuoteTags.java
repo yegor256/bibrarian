@@ -38,6 +38,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Region;
+import com.jcabi.log.Logger;
 import java.util.Collection;
 import java.util.Collections;
 import lombok.EqualsAndHashCode;
@@ -102,5 +103,6 @@ final class DyQuoteTags implements Tags {
                 Conditions.equalTo(new Tag.Simple(tag).ref())
             )
         );
+        Logger.info(this, "tag %s removed from #%d", tag.name(), this.num);
     }
 }

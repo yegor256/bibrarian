@@ -33,10 +33,9 @@
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template match="page" mode="head">
-        <title>
-            <xsl:text>q:</xsl:text>
-            <xsl:value-of select="quote/@id"/>
-        </title>
+        <title><xsl:value-of select="quote/book/author"/></title>
+        <meta name="description" content="{quote/text}"/>
+        <meta name="keywords" content="{quote/text}"/>
     </xsl:template>
     <xsl:template match="page" mode="body">
         <div class="social">

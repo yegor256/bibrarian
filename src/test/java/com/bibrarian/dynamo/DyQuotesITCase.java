@@ -64,11 +64,13 @@ public final class DyQuotesITCase {
             this.dynamo.region(), new MkSttc().counters().get("cnt")
         );
         final String name = "alpha2010";
-        final Book book = base.books().add(String.format("@book{%s }", name));
+        final Book book = base.books().add(
+            String.format("@book{%s, author=\"Jeffrey\" }", name)
+        );
         final Quotes quotes = base.quotes();
-        quotes.add(book, "hey, how are you doing there, Walter?", "58");
+        quotes.add(book, "hey, how are you doing there, JavaDude?", "58");
         MatcherAssert.assertThat(
-            quotes.refine("walter").iterate(),
+            quotes.refine("javadude").iterate(),
             Matchers.<Quote>iterableWithSize(1)
         );
         final Quote quote = quotes.iterate().iterator().next();
@@ -91,7 +93,9 @@ public final class DyQuotesITCase {
         final Base base = new DyBase(
             this.dynamo.region(), new MkSttc().counters().get("ttt")
         );
-        final Book book = base.books().add("@book{best2014}");
+        final Book book = base.books().add(
+            "@book{best2014, author=\"Walter\"}"
+        );
         final Quotes quotes = base.quotes();
         quotes.add(
             book, "never give up and never think about bad things, Bobby",

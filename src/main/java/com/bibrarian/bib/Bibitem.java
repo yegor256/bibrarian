@@ -76,7 +76,11 @@ public final class Bibitem {
      * @return Type
      */
     public String type() {
-        return this.map.get("@");
+        final String type =  this.map.get("@");
+        if (type == null) {
+            throw new IllegalStateException("type of bibitem is not defined");
+        }
+        return type;
     }
 
     /**
@@ -84,7 +88,23 @@ public final class Bibitem {
      * @return Name
      */
     public String name() {
-        return this.map.get("");
+        final String name = this.map.get("");
+        if (name == null) {
+            throw new IllegalStateException("name of bibitem is not defined");
+        }
+        return name;
+    }
+
+    /**
+     * Author.
+     * @return Name of the author
+     */
+    public String author() {
+        final String author = this.map.get("author");
+        if (author == null) {
+            throw new IllegalStateException("author of bibitem is not defined");
+        }
+        return author;
     }
 
     /**

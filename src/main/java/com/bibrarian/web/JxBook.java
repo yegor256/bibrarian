@@ -65,6 +65,11 @@ final class JxBook {
     private final transient BaseRs base;
 
     /**
+     * Bibitem.
+     */
+    private final transient Bibitem bibitem;
+
+    /**
      * Ctor.
      */
     JxBook() {
@@ -75,10 +80,16 @@ final class JxBook {
      * Ctor.
      * @param bok Book
      * @param res BaseRs
+     * @throws IOException If fails
      */
-    JxBook(final Book bok, final BaseRs res) {
+    JxBook(final Book bok, final BaseRs res) throws IOException {
         this.book = bok;
         this.base = res;
+        try {
+            this.bibitem = new Bibitem(this.book.bibitem());
+        } catch (final BibSyntaxException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
@@ -91,17 +102,21 @@ final class JxBook {
     }
 
     /**
+     * Author of it.
+     * @return Name
+     */
+    @XmlElement(name = "author")
+    public String getAuthor() {
+        return this.bibitem.author();
+    }
+
+    /**
      * Cite of it.
      * @return Cite
-     * @throws IOException If fails
      */
     @XmlElement(name = "cite")
-    public String getCite() throws IOException {
-        try {
-            return new Bibitem(this.book.bibitem()).cite();
-        } catch (final BibSyntaxException ex) {
-            throw new IllegalStateException(ex);
-        }
+    public String getCite() {
+        return this.bibitem.cite();
     }
 
     /**

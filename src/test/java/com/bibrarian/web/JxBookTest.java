@@ -53,7 +53,9 @@ public final class JxBookTest {
     public void convertsToXml() throws Exception {
         final Book book = Mockito.mock(Book.class);
         Mockito.doReturn("hello").when(book).name();
-        Mockito.doReturn("@article{test2014}").when(book).bibitem();
+        Mockito.doReturn(
+            "@article{test2014,author=\"How are you?\"}"
+        ).when(book).bibitem();
         MatcherAssert.assertThat(
             JaxbConverter.the(
                 new JxBook(book, new ResourceMocker().mock(BaseRs.class))

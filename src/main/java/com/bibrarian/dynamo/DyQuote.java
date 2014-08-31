@@ -40,6 +40,7 @@ import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
+import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
@@ -109,6 +110,7 @@ final class DyQuote implements Quote {
             String.format("u:%s", tag.login()),
             new Tag.Simple(tag).ref()
         );
+        Logger.info(this, "quote #%d tagged for %s", this.num, tag.name());
     }
 
     @Override
@@ -137,6 +139,7 @@ final class DyQuote implements Quote {
                 DyQuotes.ATTR_TEXT, text
             )
         );
+        Logger.info(this, "text changed at quote #%d", this.num);
     }
 
     @Override
@@ -151,6 +154,7 @@ final class DyQuote implements Quote {
                 DyQuotes.ATTR_PAGES, pages
             )
         );
+        Logger.info(this, "pages changed at quote #%d", this.num);
     }
 
     /**

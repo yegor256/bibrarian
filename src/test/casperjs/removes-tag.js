@@ -9,7 +9,7 @@ casper.test.begin(
         this.fill(
           'form#add-book',
           {
-            'bibtex': '@book{life2011, title="Hello, world!" }'
+            'bibtex': '@book{life2011, title="Hello, world!", author="Jeffrey" }'
           },
           true
         );

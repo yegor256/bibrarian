@@ -45,6 +45,7 @@ import com.jcabi.dynamo.Conditions;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
+import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -169,6 +170,7 @@ final class DyQuotes implements Quotes {
                 ).iterate()
             )
         );
+        Logger.info(this, "quote #%d created", number);
         return new DyQuote(this.region, number);
     }
 

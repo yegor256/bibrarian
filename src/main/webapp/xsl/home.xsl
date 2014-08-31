@@ -33,9 +33,9 @@
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template match="page" mode="head">
-        <title>
-            <xsl:text>home</xsl:text>
-        </title>
+        <title><xsl:text>bibrarian</xsl:text></title>
+        <meta name="description" content="Scientific Quotes Organized Right"/>
+        <meta name="keywords" content="quotes"/>
     </xsl:template>
     <xsl:template match="page" mode="body">
         <xsl:if test="not(quotes/quote)">

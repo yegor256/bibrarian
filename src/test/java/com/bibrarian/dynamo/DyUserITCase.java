@@ -64,7 +64,9 @@ public final class DyUserITCase {
         final Base base = new DyBase(
             this.dynamo.region(), new MkSttc().counters().get("ttt")
         );
-        final Book book = base.books().add("@book{abcdef2014}");
+        final Book book = base.books().add(
+            "@book{abcdef2014,author=\"Jeffrey\"}"
+        );
         final Quotes quotes = base.quotes();
         final Quote quote = quotes.add(
             book, "never give up and never get sad", "99"
