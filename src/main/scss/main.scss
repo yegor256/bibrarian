@@ -85,6 +85,8 @@
 .social {
   text-align: center;
   a {
+    text-decoration: none;
+    font-size: 2 * $em;
     margin-right: .2 * $em;
     margin-left: .2 * $em;
   }
