@@ -86,10 +86,10 @@ public final class Lifespan implements ServletContextListener {
      * @return Region
      */
     private Region dynamo() {
-        final String key = Manifests.read("Bibrarian-DynamoKey");
+        final String key = Manifests.read("Bib-DynamoKey");
         Credentials creds = new Credentials.Simple(
             key,
-            Manifests.read("Bibrarian-DynamoSecret")
+            Manifests.read("Bib-DynamoSecret")
         );
         if (key.startsWith("AAAAA")) {
             final int port = Integer.parseInt(
@@ -113,8 +113,8 @@ public final class Lifespan implements ServletContextListener {
         return new CdSttc(
             new ReSttc(
                 RtSttc.make(
-                    URN.create(Manifests.read("Bibrarian-SttcUrn")),
-                    Manifests.read("Bibrarian-SttcToken")
+                    URN.create(Manifests.read("Bib-SttcUrn")),
+                    Manifests.read("Bib-SttcToken")
                 )
             )
         );

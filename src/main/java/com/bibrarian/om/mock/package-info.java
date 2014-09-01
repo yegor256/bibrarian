@@ -27,30 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.bibrarian.web;
-
-import com.bibrarian.om.mock.MkQuote;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
 
 /**
- * Test case for {@link Twitpic}.
+ * Mock objects.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.12
  */
-public final class TwitpicTest {
-
-    /**
-     * Twitpic can upload to twitpic.
-     * @throws Exception If some problem inside
-     */
-    @Test
-    public void uploadsToTwitpic() throws Exception {
-        final Twitpic twitpic = new Twitpic(new MkQuote());
-        final String uri = twitpic.upload();
-        MatcherAssert.assertThat(uri, Matchers.notNullValue());
-    }
-
-}
+package com.bibrarian.om.mock;

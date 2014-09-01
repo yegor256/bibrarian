@@ -57,7 +57,7 @@ public final class JxBookTest {
                 new JxBook(book, new ResourceMocker().mock(BaseRs.class))
             ),
             XhtmlMatchers.hasXPaths(
-                "/book[name='hello']",
+                String.format("/book[name='%s']", book.name()),
                 "/book/links/link[@rel='open']"
             )
         );

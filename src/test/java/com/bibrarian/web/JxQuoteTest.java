@@ -57,9 +57,9 @@ public final class JxQuoteTest {
                 new JxQuote(quote, new ResourceMocker().mock(BaseRs.class))
             ),
             XhtmlMatchers.hasXPaths(
-                "/quote[@id='0']",
-                "/quote[text='the text']",
-                "/quote/book[name='hello']",
+                String.format("/quote[@id='%d']", quote.number()),
+                String.format("/quote[text='%s']", quote.text()),
+                String.format("/quote/book[name='%s']", quote.book().name()),
                 "/quote/links/link[@rel='open' and @href]",
                 "/quote/tags/tag[user='jeff' and name='works-fine']"
             )

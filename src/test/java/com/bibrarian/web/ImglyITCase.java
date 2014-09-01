@@ -29,64 +29,28 @@
  */
 package com.bibrarian.web;
 
-import com.bibrarian.om.Quote;
-import com.jcabi.aspects.Cacheable;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import twitter4j.TwitterException;
-import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
-import twitter4j.media.ImageUpload;
-import twitter4j.media.ImageUploadFactory;
-import twitter4j.media.MediaProvider;
+import com.bibrarian.om.mock.MkQuote;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Twitpic.
- *
+ * Test case for {@link Imgly}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle MultipleStringLiterals (500 lines)
  * @since 1.12
  */
-final class Twitpic {
+public final class ImglyITCase {
 
     /**
-     * Quote.
+     * Imgly can upload to img.ly.
+     * @throws Exception If some problem inside
      */
-    private final transient Quote quote;
-
-    /**
-     * Ctor.
-     * @param qte Quote
-     */
-    Twitpic(final Quote qte) {
-        this.quote = qte;
-    }
-
-    /**
-     * Upload to twitpic.
-     * @return URI
-     * @throws IOException If fails
-     */
-    @Cacheable(forever = true)
-    public String upload() throws IOException {
-        final Configuration conf = new ConfigurationBuilder()
-            .setMediaProviderAPIKey("d73bec4b19a0394cc0c60751d1c72840")
-            .setOAuthConsumerKey("XMVeJt6kLyil9XFAJVxirKfkG")
-            .setOAuthConsumerSecret("QreJTRbYTcxZSWHIBICd2AxqA1bUetREhJfGJVn4wCEwmL6RaU")
-            .setOAuthAccessToken("225097272-55Go7UfWX2MoTT9eariSfApnyrePyVVsxVjagsf6")
-            .setOAuthAccessTokenSecret("On7uFSLlOcliUpVrVGXSY52sCSGSDXzdW1dpMEy3TpMrp")
-            .build();
-        final ImageUpload upload = new ImageUploadFactory(conf)
-            .getInstance(MediaProvider.TWITPIC);
-        try {
-            return upload.upload(
-                String.format("quote-%d.png", this.quote.number()),
-                new ByteArrayInputStream(new Banner(this.quote).png())
-            );
-        } catch (final TwitterException ex) {
-            throw new IOException(ex);
-        }
+    @Test
+    public void uploadsToTwitpic() throws Exception {
+        final Imgly imgly = new Imgly(new MkQuote());
+        final String uri = imgly.uri();
+        MatcherAssert.assertThat(uri, Matchers.notNullValue());
     }
 
 }

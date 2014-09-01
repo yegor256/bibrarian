@@ -73,10 +73,10 @@ public class BaseRs extends BaseResource {
     @Inset.Runtime
     public final Inset insetVersion() {
         return new VersionInset(
-            Manifests.read("Bibrarian-Version"),
+            Manifests.read("Bib-Version"),
             // @checkstyle MultipleStringLiterals (1 line)
-            Manifests.read("Bibrarian-Revision"),
-            Manifests.read("Bibrarian-Date")
+            Manifests.read("Bib-Revision"),
+            Manifests.read("Bib-Date")
         );
     }
 
@@ -147,9 +147,9 @@ public class BaseRs extends BaseResource {
     @Inset.Runtime
     public final AuthInset auth() {
         // @checkstyle LineLength (3 lines)
-        final AuthInset auth = new AuthInset(this, Manifests.read("Bibrarian-SecurityKey"))
-            .with(new Github(this, Manifests.read("Bibrarian-GithubId"), Manifests.read("Bibrarian-GithubSecret")));
-        if (Manifests.read("Bibrarian-DynamoKey").startsWith("AAAA")) {
+        final AuthInset auth = new AuthInset(this, Manifests.read("Bib-SecurityKey"))
+            .with(new Github(this, Manifests.read("Bib-GithubId"), Manifests.read("Bib-GithubSecret")));
+        if (Manifests.read("Bib-DynamoKey").startsWith("AAAA")) {
             auth.with(
                 new Provider.Always(
                     new Identity.Simple(

@@ -58,7 +58,7 @@ final class DynamoRule implements TestRule {
      * @return Region
      */
     public Region region() {
-        final String key = Manifests.read("Bibrarian-DynamoKey");
+        final String key = Manifests.read("Bib-DynamoKey");
         MatcherAssert.assertThat(key.startsWith("AAAA"), Matchers.is(true));
         return new Region.Prefixed(
             new ReRegion(
@@ -66,7 +66,7 @@ final class DynamoRule implements TestRule {
                     new Credentials.Direct(
                         new Credentials.Simple(
                             key,
-                            Manifests.read("Bibrarian-DynamoSecret")
+                            Manifests.read("Bib-DynamoSecret")
                         ),
                         Integer.parseInt(System.getProperty("dynamo.port"))
                     )

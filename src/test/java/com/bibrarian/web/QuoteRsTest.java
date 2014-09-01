@@ -68,8 +68,8 @@ public final class QuoteRsTest {
         MatcherAssert.assertThat(
             JaxbConverter.the(home.index().getEntity()),
             XhtmlMatchers.hasXPaths(
-                "/page/quote[pages='pp.3-5']",
-                "/page/quote[starts-with(text,'Testing is a')]",
+                String.format("/page/quote[pages='%s']", quote.pages()),
+                String.format("/page/quote[text='%s']", quote.text()),
                 "/page/quote/book/cite",
                 "/page/quote/book/name",
                 "/page/quote/book/links/link[@rel='open']",
