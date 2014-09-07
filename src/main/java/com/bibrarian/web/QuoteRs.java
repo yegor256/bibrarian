@@ -29,6 +29,7 @@
  */
 package com.bibrarian.web;
 
+import com.bibrarian.bib.Bibitem;
 import com.bibrarian.om.Quote;
 import com.bibrarian.om.Quotes;
 import com.bibrarian.om.Tag;
@@ -100,10 +101,11 @@ public final class QuoteRs extends BaseRs {
                     "share-twitter",
                     UriBuilder.fromUri("https://twitter.com/share")
                         .queryParam("url", "{u2}")
-                        .queryParam("text", "{txt} #quote")
+                        .queryParam("text", "{txt} \u2014 {author} #quote")
                         .build(
                             this.uriInfo().getRequestUri(),
-                            new Imgly(this.quote()).uri()
+                            this.quote().text(),
+                            new Bibitem(this.quote().book().bibitem()).author()
                         )
                 )
             )
