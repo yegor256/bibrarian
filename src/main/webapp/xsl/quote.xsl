@@ -36,6 +36,29 @@
         <title><xsl:value-of select="quote/book/author"/></title>
         <meta name="description" content="{quote/text}"/>
         <meta name="keywords" content="{quote/text}"/>
+        <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1-rc1.min.js">
+            <xsl:text> </xsl:text>
+        </script>
+        <script type="text/javascript">
+            //<![CDATA[
+            $(
+                function () {
+                    $('.button').click(
+                        function (event) {
+                            event.preventDefault();
+                            var $this = $(this);
+                            window.open(
+                                $this.attr('href'),
+                                $this.attr('title'),
+                                'width=640,height=300'
+                            );
+                        }
+                    );
+                }
+            );
+            //
+            ]]>
+        </script>
     </xsl:template>
     <xsl:template match="page" mode="body">
         <div class="social">
