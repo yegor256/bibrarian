@@ -35,8 +35,10 @@ import com.bibrarian.om.Quote;
 import com.bibrarian.om.Quotes;
 import com.bibrarian.om.Tag;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.manifests.Manifests;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import javax.ws.rs.FormParam;
@@ -45,6 +47,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import twitter4j.StatusUpdate;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
 
 /**
  * Add quote.
@@ -54,11 +61,17 @@ import javax.ws.rs.core.Response;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle MultipleStringLiterals (500 lines)
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @since 1.0
  */
 @Path("/add-quote/{name}")
 @Loggable(Loggable.DEBUG)
 public final class AddQuoteRs extends BaseRs {
+
+    /**
+     * Twitter key.
+     */
+    private static final String KEY = Manifests.read("Bib-TwitterKey");
 
     /**
      * Book name.
@@ -124,6 +137,7 @@ public final class AddQuoteRs extends BaseRs {
                 ex
             );
         }
+        this.tweet(quote);
         throw this.flash().redirect(
             this.uriInfo().getBaseUriBuilder()
                 .clone()
@@ -135,6 +149,46 @@ public final class AddQuoteRs extends BaseRs {
             ),
             Level.INFO
         );
+    }
+
+    /**
+     * Tweet about it.
+     * @param quote Quote to tweet
+     * @throws IOException If fails
+     * @since 1.13
+     */
+    private void tweet(final Quote quote) throws IOException {
+        if (!"test".equals(AddQuoteRs.KEY)) {
+            final TwitterFactory factory = new TwitterFactory();
+            final Twitter twitter = factory.getInstance();
+            twitter.setOAuthConsumer(
+                AddQuoteRs.KEY, Manifests.read("Bib-TwitterSecret")
+            );
+            twitter.setOAuthAccessToken(
+                new AccessToken(
+                    Manifests.read("Bib-TwitterToken"),
+                    Manifests.read("Bib-TwitterTsecret")
+                )
+            );
+            final StatusUpdate update = new StatusUpdate(
+                String.format(
+                    "#quote %s",
+                    this.uriInfo().getBaseUriBuilder().clone()
+                        .path(QuoteRs.class)
+                        .path(QuoteRs.class, "index")
+                        .build(quote.number())
+                )
+            );
+            update.media(
+                "image",
+                new ByteArrayInputStream(new Banner(quote).png())
+            );
+            try {
+                twitter.updateStatus(update);
+            } catch (final TwitterException ex) {
+                throw new IOException(ex);
+            }
+        }
     }
 
     /**
