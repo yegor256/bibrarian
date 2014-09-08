@@ -33,7 +33,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.google.common.base.Function;
-import com.google.common.base.Predicates;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -42,6 +42,7 @@ import com.jcabi.dynamo.Frame;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.QueryValve;
 import com.jcabi.dynamo.Region;
+import com.jcabi.log.Logger;
 import java.io.IOException;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -115,6 +116,7 @@ final class Refs {
                 .with(Refs.HASH, left)
                 .with(Refs.RANGE, right)
         );
+        Logger.info(this, "ref [%s]->[%s] added", left, right);
     }
 
     /**
@@ -209,7 +211,24 @@ final class Refs {
         for (final Condition cnd : cnds) {
             frame = frame.where(Refs.RANGE, cnd);
         }
-        Iterables.removeIf(frame, Predicates.alwaysTrue());
+        Iterables.removeIf(
+            frame,
+            new Predicate<Item>() {
+                @Override
+                public boolean apply(final Item item) {
+                    try {
+                        Logger.info(
+                            this, "ref [%s]->[%s] removed",
+                            item.get(Refs.HASH).getS(),
+                            item.get(Refs.RANGE).getS()
+                        );
+                    } catch (final IOException ex) {
+                        throw new IllegalStateException(ex);
+                    }
+                    return true;
+                }
+            }
+        );
     }
 
 }

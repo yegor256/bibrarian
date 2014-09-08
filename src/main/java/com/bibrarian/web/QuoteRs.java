@@ -181,6 +181,22 @@ public final class QuoteRs extends BaseRs {
     }
 
     /**
+     * Delete the entire quote.
+     * @throws IOException If fails
+     * @since 1.14
+     */
+    @GET
+    @Path("/delete")
+    public void delete() throws IOException {
+        this.base().quotes().delete(this.number);
+        throw this.flash().redirect(
+            this.uriInfo().getBaseUri(),
+            String.format("quote \"%d\" removed", this.number),
+            Level.INFO
+        );
+    }
+
+    /**
      * Get quote.
      * @return Quote
      * @throws IOException If fails

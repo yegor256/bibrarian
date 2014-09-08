@@ -35,6 +35,7 @@ import com.jcabi.aspects.Immutable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -86,7 +87,7 @@ final class Tokens {
         stream.end();
         stream.close();
         return Iterables.filter(
-            tokens,
+            new HashSet<String>(tokens),
             new Predicate<String>() {
                 @Override
                 public boolean apply(final String input) {

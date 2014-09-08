@@ -73,6 +73,13 @@ public final class CdQuotes implements Quotes {
     }
 
     @Override
+    @Cacheable.FlushAfter
+    public void delete(final long number) throws IOException {
+        this.origin.delete(number);
+    }
+
+    @Override
+    @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
     public Iterable<Quote> iterate() {
         return Iterables.transform(
             this.origin.iterate(),

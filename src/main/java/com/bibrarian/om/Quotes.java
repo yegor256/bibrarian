@@ -51,6 +51,14 @@ public interface Quotes {
     Quote get(long number) throws IOException;
 
     /**
+     * Delete by id.
+     * @param number Quote number
+     * @throws IOException If fails
+     * @since 1.14
+     */
+    void delete(long number) throws IOException;
+
+    /**
      * Iterate them.
      * @return Quotes
      */

@@ -90,9 +90,15 @@
             </div>
         </div>
         <xsl:if test="links/link[@rel='edit']">
-            <a href="{links/link[@rel='edit']/@href}" class="opt">
-                <xsl:text>edit</xsl:text>
-            </a>
+            <p>
+                <a href="{links/link[@rel='edit']/@href}" class="opt">
+                    <xsl:text>edit</xsl:text>
+                </a>
+                <xsl:text> | </xsl:text>
+                <a href="{links/link[@rel='delete']/@href}" class="opt">
+                    <xsl:text>delete</xsl:text>
+                </a>
+            </p>
         </xsl:if>
         <p itemprop="author">
             <span class="abbr">

@@ -30,12 +30,14 @@
 package com.bibrarian.dynamo;
 
 import co.stateful.Counter;
+import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.bibrarian.bib.Bibitem;
 import com.bibrarian.om.Book;
 import com.bibrarian.om.Quote;
 import com.bibrarian.om.Quotes;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -65,7 +67,7 @@ import lombok.ToString;
 @Immutable
 @Loggable(Loggable.DEBUG)
 @ToString
-@EqualsAndHashCode(of = { "region", "counter" })
+@EqualsAndHashCode(of = { "region", "counter", "term" })
 final class DyQuotes implements Quotes {
 
     /**
@@ -187,6 +189,34 @@ final class DyQuotes implements Quotes {
             );
         }
         return new DyQuote(this.region, number);
+    }
+
+    @Override
+    public void delete(final long number) throws IOException {
+        Iterables.removeIf(
+            this.region.table(DyQuotes.TABLE)
+                .frame()
+                .through(new QueryValve().withLimit(1))
+                .where(DyQuotes.HASH, Conditions.equalTo(number)),
+            new Predicate<Item>() {
+                @Override
+                public boolean apply(final Item item) {
+                    try {
+                        Logger.info(
+                            this, "quote #%s deleted",
+                            item.get(DyQuotes.HASH).getN()
+                        );
+                    } catch (final IOException ex) {
+                        throw new IllegalStateException(ex);
+                    }
+                    return true;
+                }
+            }
+        );
+        new Refs(this.region).remove(
+            String.format(DyQuote.FMT, number),
+            Collections.<Condition>emptyList()
+        );
     }
 
     @Override

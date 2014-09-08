@@ -111,4 +111,33 @@ public final class DyQuotesITCase {
         );
     }
 
+    /**
+     * DyQuotes can delete a quote.
+     * @throws Exception If some problem inside
+     * @since 1.14
+     */
+    @Test
+    public void deletesQuote() throws Exception {
+        final Base base = new DyBase(
+            this.dynamo.region(), new MkSttc().counters().get("tf8")
+        );
+        final String name = "walter2007";
+        final Book book = base.books().add(
+            String.format("@book{%s, author=\"Walter Sobchak\"}", name)
+        );
+        final Quotes quotes = base.quotes();
+        final Quote quote = quotes.add(
+            book, "never give up, never ever", "99-103"
+        );
+        MatcherAssert.assertThat(
+            quotes.refine(name).iterate(),
+            Matchers.<Quote>iterableWithSize(1)
+        );
+        quotes.delete(quote.number());
+        MatcherAssert.assertThat(
+            quotes.refine(name).iterate(),
+            Matchers.<Quote>iterableWithSize(0)
+        );
+    }
+
 }

@@ -52,6 +52,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
  */
 @XmlRootElement(name = "quote")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -145,6 +146,15 @@ final class JxQuote {
                     "edit",
                     this.base.uriInfo().getBaseUriBuilder().clone()
                         .path(EditQuoteRs.class)
+                        .build(this.quote.number())
+                )
+            );
+            links.add(
+                new Link(
+                    "delete",
+                    this.base.uriInfo().getBaseUriBuilder().clone()
+                        .path(QuoteRs.class)
+                        .path(QuoteRs.class, "delete")
                         .build(this.quote.number())
                 )
             );
