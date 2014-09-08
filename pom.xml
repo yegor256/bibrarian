@@ -39,7 +39,7 @@
     </parent>
     <groupId>com.bibrarian</groupId>
     <artifactId>bibrarian</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.15</version>
     <packaging>war</packaging>
     <name>bibrarian</name>
     <description>Quotes Organized</description>
