@@ -93,6 +93,32 @@ public final class BibitemTest {
     }
 
     /**
+     * Bibitem can parse multiple authors.
+     * @throws Exception If some problem inside
+     */
+    @Test
+    public void parsesMultipleAuthors() throws Exception {
+        MatcherAssert.assertThat(
+            new Bibitem(
+                Joiner.on(' ').join(
+                    "@article{test2006,\ntitle=\"Good Article\",\nyear=2013,",
+                    "author={Jeff Lebowski and Walter Sobchak}}"
+                )
+            ).author(),
+            Matchers.equalTo("Jeff Lebowski et al.")
+        );
+        MatcherAssert.assertThat(
+            new Bibitem(
+                Joiner.on(' ').join(
+                    "@article{test2002,\ntitle=\"Good Article\",\nyear=2013,",
+                    "author={Walter Sobchak}}"
+                )
+            ).author(),
+            Matchers.equalTo("Walter Sobchak")
+        );
+    }
+
+    /**
      * Bibitem can parse empty entry.
      * @throws Exception If some problem inside
      */

@@ -100,9 +100,16 @@ public final class Bibitem {
      * @return Name of the author
      */
     public String author() {
-        final String author = this.map.get("author");
-        if (author == null) {
+        final String authors = this.map.get("author");
+        if (authors == null) {
             throw new IllegalStateException("author of bibitem is not defined");
+        }
+        final String[] parts = authors.split(",|and");
+        final String author;
+        if (parts.length > 1) {
+            author = String.format("%s et al.", parts[0].trim());
+        } else {
+            author = parts[0].trim();
         }
         return author;
     }

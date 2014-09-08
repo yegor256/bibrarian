@@ -29,6 +29,7 @@
  */
 package com.bibrarian.web;
 
+import com.bibrarian.bib.Bibitem;
 import com.bibrarian.om.Quote;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Tv;
@@ -46,7 +47,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import javax.ws.rs.core.CacheControl;
@@ -78,12 +78,12 @@ final class Banner {
     /**
      * Font size.
      */
-    private static final float FONT_SIZE = 100.0f;
+    private static final float MAIN_FONT = 100.0f;
 
     /**
-     * Cite font size.
+     * Author font size.
      */
-    private static final float CITE_FONT = 50.0f;
+    private static final float AUTHOR_FONT = 50.0f;
 
     /**
      * Quote.
@@ -115,14 +115,12 @@ final class Banner {
                 Banner.PADDING + (idx + 1) * graph.getFontMetrics().getHeight()
             );
         }
-        graph.setFont(Banner.font().deriveFont(Banner.CITE_FONT));
-        final String book = String.format(
-            "[%s]", this.quote.book().name().toUpperCase(Locale.ENGLISH)
-        );
+        graph.setFont(Banner.font().deriveFont(Banner.AUTHOR_FONT));
+        final String author = new Bibitem(this.quote.book().bibitem()).author();
         graph.drawString(
-            book,
+            author,
             Banner.WIDTH - Banner.PADDING
-                - graph.getFontMetrics().stringWidth(book),
+                - graph.getFontMetrics().stringWidth(author),
             Banner.HEIGHT - Banner.PADDING
         );
         return Banner.bytes(img);
@@ -225,7 +223,7 @@ final class Banner {
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
-        return cmu.deriveFont(Banner.FONT_SIZE);
+        return cmu.deriveFont(Banner.MAIN_FONT);
     }
 
 }
