@@ -29,6 +29,7 @@
  */
 package com.bibrarian.web;
 
+import com.bibrarian.bib.Bibitem;
 import com.bibrarian.om.Book;
 import com.bibrarian.om.Books;
 import com.bibrarian.om.Quote;
@@ -172,7 +173,8 @@ public final class AddQuoteRs extends BaseRs {
             );
             final StatusUpdate update = new StatusUpdate(
                 String.format(
-                    "#quote %s",
+                    "#quote of %s %s",
+                    new Bibitem(quote.book().bibitem()).author(),
                     this.uriInfo().getBaseUriBuilder().clone()
                         .path(QuoteRs.class)
                         .path(QuoteRs.class, "index")
