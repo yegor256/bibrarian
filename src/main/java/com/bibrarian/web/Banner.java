@@ -63,27 +63,27 @@ final class Banner {
     /**
      * Width.
      */
-    private static final int WIDTH = 1600;
+    private static final int WIDTH = 1024;
 
     /**
      * Height.
      */
-    private static final int HEIGHT = 790;
+    private static final int HEIGHT = 512;
 
     /**
      * Padding.
      */
-    private static final int PADDING = 50;
+    private static final int PADDING = 35;
 
     /**
      * Font size.
      */
-    private static final float MAIN_FONT = 100.0f;
+    private static final float MAIN_FONT = 80.0f;
 
     /**
      * Author font size.
      */
-    private static final float AUTHOR_FONT = 50.0f;
+    private static final float AUTHOR_FONT = 35.0f;
 
     /**
      * Quote.
