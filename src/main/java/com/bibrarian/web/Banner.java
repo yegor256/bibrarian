@@ -71,9 +71,14 @@ final class Banner {
     private static final int HEIGHT = 512;
 
     /**
-     * Padding.
+     * Horizontal padding.
      */
-    private static final int PADDING = 35;
+    private static final int H_PADDING = 100;
+
+    /**
+     * Vertical padding.
+     */
+    private static final int V_PADDING = 35;
 
     /**
      * Font size.
@@ -111,17 +116,17 @@ final class Banner {
         final List<String> lines = this.compact(graph);
         for (int idx = 0; idx < lines.size(); ++idx) {
             graph.drawString(
-                lines.get(idx), Banner.PADDING,
-                Banner.PADDING + (idx + 1) * graph.getFontMetrics().getHeight()
+                lines.get(idx), Banner.H_PADDING,
+                Banner.V_PADDING + (idx + 1) * graph.getFontMetrics().getHeight()
             );
         }
         graph.setFont(Banner.font().deriveFont(Banner.AUTHOR_FONT));
         final String author = new Bibitem(this.quote.book().bibitem()).author();
         graph.drawString(
             author,
-            Banner.WIDTH - Banner.PADDING
+            Banner.WIDTH - Banner.H_PADDING
                 - graph.getFontMetrics().stringWidth(author),
-            Banner.HEIGHT - Banner.PADDING
+            Banner.HEIGHT - Banner.V_PADDING
         );
         return Banner.bytes(img);
     }
@@ -167,10 +172,11 @@ final class Banner {
      */
     private List<String> compact(final Graphics graph) throws IOException {
         List<String> lines;
+        final int max = Banner.HEIGHT - (Banner.V_PADDING << 2);
         while (true) {
             lines = this.lines(graph);
             final int height = graph.getFontMetrics().getHeight();
-            if (lines.size() * height < Banner.HEIGHT - (Banner.PADDING << 2)) {
+            if (lines.size() * height < max) {
                 break;
             }
             final Font font = graph.getFont();
@@ -192,7 +198,7 @@ final class Banner {
         final StringBuilder line = new StringBuilder(Tv.THOUSAND);
         for (final String word : this.quote.text().split(" ")) {
             final String ext = String.format("%s %s", line, word);
-            if (metrics.stringWidth(ext) > Banner.WIDTH - Banner.PADDING) {
+            if (metrics.stringWidth(ext) > Banner.WIDTH - Banner.H_PADDING) {
                 lines.add(line.toString().trim());
                 line.setLength(0);
                 line.append(word);
