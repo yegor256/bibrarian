@@ -117,7 +117,8 @@ final class Banner {
         for (int idx = 0; idx < lines.size(); ++idx) {
             graph.drawString(
                 lines.get(idx), Banner.H_PADDING,
-                Banner.V_PADDING + (idx + 1) * graph.getFontMetrics().getHeight()
+                Banner.V_PADDING
+                    + (idx + 1) * graph.getFontMetrics().getHeight()
             );
         }
         graph.setFont(Banner.font().deriveFont(Banner.AUTHOR_FONT));
