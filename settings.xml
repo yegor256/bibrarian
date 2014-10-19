@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<settings>
+  <profiles>
+    <profile>
+      <id>bibrarian</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <syslogHost>logs.papertrailapp.com:32235</syslogHost>
+        <github.id>d08b8cba6edf3e9a0117</github.id>
+        <github.secret>4e5d4e083f4bad6ceda6740048967516f5adacb9</github.secret>
+        <security.key>-(0L=-*7jHYs77&amp;89Po489*7</security.key>
+        <dynamo.key>AKIAIO54QWS3SAFM5ACQ</dynamo.key>
+        <dynamo.secret>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</dynamo.secret>
+        <dynamo.prefix>bib-</dynamo.prefix>
+        <sttc.urn>urn:github:526301</sttc.urn>
+        <sttc.token>6BFB-3E35-528B-9EE0</sttc.token>
+        <twitter.key>UerGhjMQzDBV6MzxmmeADQHBZ</twitter.key>
+        <twitter.secret>towStC2Use3bl8MxD8yY2WAezmZu4hF8VXFxSkJN0zh3kfdnXy</twitter.secret>
+        <twitter.token>2741805278-XuNi1OAUmx0fNNW8lB0xyAHcwoAhy7K1sfV2HMX</twitter.token>
+        <twitter.tsecret>970nxFDewRbhLMdwgM5qdivxNkf7tOVZZokuv66nLWeEA</twitter.tsecret>
+      </properties>
+    </profile>
+  </profiles>
+  <servers>
+    <server>
+      <id>github</id>
+      <username>yegor256</username>
+      <password>3rbWq3FN</password>
+    </server>
+  </servers>
+</settings>
