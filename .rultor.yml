@@ -23,7 +23,7 @@ release:
   script: |
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
-    mvn clean package -Pqulice -Pbibrarian --errors --batch-mode
+    mvn clean package -Pqulice --errors --batch-mode
     git remote add heroku git@heroku.com:bibrarian.git
     mkdir ~/.ssh
     mv ../id_rsa ../id_rsa.pub ~/.ssh

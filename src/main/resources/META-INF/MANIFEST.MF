@@ -2,7 +2,7 @@ Bib-GithubId: ${github.id}
 Bib-GithubSecret: ${github.secret}
 Bib-SecurityKey: ${security.key}
 Bib-Version: ${project.version}
-Bib-Revision: ${buildNumber}
+Bib-Revision: BUILD
 Bib-Date: ${buildDate}
 Bib-DynamoKey: ${dynamo.key}
 Bib-DynamoSecret: ${dynamo.secret}
