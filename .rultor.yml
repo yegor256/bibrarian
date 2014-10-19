@@ -23,7 +23,6 @@ release:
   script: |
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
-    cp ../settings.xml settings.xml
     mvn clean package -Pqulice -Pbibrarian --errors --batch-mode
     git remote add heroku git@heroku.com:bibrarian.git
     mkdir ~/.ssh
@@ -36,6 +35,7 @@ release:
     git add src/main/resources/META-INF/MANIFEST.MF
     git add src/main/resources/log4j.properties
     git commit -m 'build number set'
+    cp ../settings.xml settings.xml
     git add settings.xml
     git commit -m 'settings.xml'
     git fetch --unshallow
