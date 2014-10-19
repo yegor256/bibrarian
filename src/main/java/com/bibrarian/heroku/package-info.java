@@ -29,10 +29,10 @@
  */
 
 /**
- * Object model.
+ * Heroku.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 1.0
  */
-package com.bibrarian.om;
+package com.bibrarian.heroku;
