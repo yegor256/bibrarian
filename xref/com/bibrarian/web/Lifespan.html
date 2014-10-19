@@ -94,10 +94,10 @@
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">     * @return Region</em>
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>      <strong class="jxr_keyword">private</strong> Region dynamo() {
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>          <strong class="jxr_keyword">final</strong> String key = Manifests.read(<span class="jxr_string">"Bibrarian-DynamoKey"</span>);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          <strong class="jxr_keyword">final</strong> String key = Manifests.read(<span class="jxr_string">"Bib-DynamoKey"</span>);
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>          Credentials creds = <strong class="jxr_keyword">new</strong> Credentials.Simple(
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>              key,
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>              Manifests.read(<span class="jxr_string">"Bibrarian-DynamoSecret"</span>)
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>              Manifests.read(<span class="jxr_string">"Bib-DynamoSecret"</span>)
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>          );
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>          <strong class="jxr_keyword">if</strong> (key.startsWith(<span class="jxr_string">"AAAAA"</span>)) {
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>              <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> port = Integer.parseInt(
@@ -121,8 +121,8 @@
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> CdSttc(
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>             <strong class="jxr_keyword">new</strong> ReSttc(
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>                 RtSttc.make(
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>                     URN.create(Manifests.read(<span class="jxr_string">"Bibrarian-SttcUrn"</span>)),
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>                     Manifests.read(<span class="jxr_string">"Bibrarian-SttcToken"</span>)
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>                     URN.create(Manifests.read(<span class="jxr_string">"Bib-SttcUrn"</span>)),
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>                     Manifests.read(<span class="jxr_string">"Bib-SttcToken"</span>)
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>                 )
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>             )
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>         );
