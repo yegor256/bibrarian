@@ -35,7 +35,7 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.28</version>
+        <version>0.29</version>
     </parent>
     <groupId>com.bibrarian</groupId>
     <artifactId>bibrarian</artifactId>
@@ -684,6 +684,55 @@
                                 <dynamo.port>${dynamodblocal.port}</dynamo.port>
                             </systemPropertyVariables>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>heroku</id>
+            <activation>
+                <file><exists>pom.xml</exists></file>
+            </activation>
+            <properties>
+                <tomcat.version>7.0.34</tomcat.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-core</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-logging-juli</artifactId>
+                    <version>${tomcat.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-jasper</artifactId>
+                    <version>${tomcat.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <finalName>bibraian</finalName>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <archive>
+                                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                                    </archive>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
