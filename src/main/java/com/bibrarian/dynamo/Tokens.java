@@ -41,7 +41,6 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.util.Version;
 
 /**
  * Tokens in a text.
@@ -72,7 +71,7 @@ final class Tokens {
      * @throws IOException If fails
      */
     public Iterable<String> iterate() throws IOException {
-        final Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_4_9);
+        final Analyzer analyzer = new StandardAnalyzer();
         final TokenStream stream = analyzer.tokenStream(
             null, new StringReader(this.text)
         );

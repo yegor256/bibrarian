@@ -3,7 +3,5 @@ env:
   global:
     - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g"
     - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g"
-before_install:
-  - unset GEM_PATH
-script: 
+script:
   - mvn clean install -Pqulice --batch-mode --errors

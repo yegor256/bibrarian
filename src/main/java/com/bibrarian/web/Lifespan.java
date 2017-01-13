@@ -43,6 +43,7 @@ import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
+import com.jcabi.manifests.ServletMfs;
 import com.jcabi.urn.URN;
 import java.io.IOException;
 import javax.servlet.ServletContextEvent;
@@ -61,7 +62,7 @@ public final class Lifespan implements ServletContextListener {
     @Override
     public void contextInitialized(final ServletContextEvent event) {
         try {
-            Manifests.append(event.getServletContext());
+            Manifests.DEFAULT.append(new ServletMfs(event.getServletContext()));
             event.getServletContext().setAttribute(
                 Base.class.getName(),
                 new CdBase(
