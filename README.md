@@ -1,6 +1,6 @@
 <img src="http://img.bibrarian.com/logo.svg" width="64px" height="64px"/>
 
-[![Made By Teamed.io](http://img.teamed.io/btn.svg)](http://www.teamed.io)
+[![Managed by Zerocracy](http://www.zerocracy.com/badge.svg)](http://www.zerocracy.com)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/bibrarian)](http://www.rultor.com/p/yegor256/bibrarian)
 
 [![Build Status](https://travis-ci.org/yegor256/bibrarian.svg?branch=master)](https://travis-ci.org/yegor256/bibrarian)
