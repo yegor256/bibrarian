@@ -1,3 +1,5 @@
+readers:
+  - "urn:github:526301"
 assets:
   settings.xml: "zerocracy/home#assets/bibrarian/settings.xml"
   pubring.gpg: "zerocracy/home#assets/pubring.gpg"
@@ -5,20 +7,16 @@ assets:
   id_rsa: "zerocracy/home#assets/heroku-key"
   id_rsa.pub: "zerocracy/home#assets/heroku-key.pub"
   s3cfg: "zerocracy/home#assets/s3cfg"
-
 env:
   MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
-
 install:
   - "sudo gem install pdd"
-
 deploy:
   script: |
     mvn clean deploy -Pbibrarian --settings ../settings.xml
     mvn clean
     pdd --source=$(pwd) --verbose --file=bibrarian.xml
     s3cmd --no-progress put bibrarian.xml --config=../s3cfg s3://pdd.teamed.io/bibrarian.xml
-
 release:
   script: |
     mvn versions:set "-DnewVersion=${tag}"
@@ -43,7 +41,6 @@ release:
     git reset HEAD~1
     curl -f --connect-timeout 15 --retry 5 --retry-delay 30 http://www.bibrarian.com
     mvn clean site-deploy -Psite --errors --settings ../settings.xml --batch-mode
-
 merge:
   script: |
     mvn help:system clean install -Pqulice --settings ../settings.xml
