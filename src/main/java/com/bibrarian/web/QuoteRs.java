@@ -111,14 +111,6 @@ public final class QuoteRs extends BaseRs {
             )
             .link(
                 new Link(
-                    "share-google",
-                    UriBuilder.fromUri("https://plus.google.com/share")
-                        .queryParam("url", "{u3}")
-                        .build(this.uriInfo().getRequestUri())
-                )
-            )
-            .link(
-                new Link(
                     "share-linkedin",
                     UriBuilder.fromUri("https://www.linkedin.com/cws/share")
                         .queryParam("url", "{u4}")
