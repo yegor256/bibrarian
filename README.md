@@ -5,10 +5,10 @@
 There are a few URLs in the `redirects.yml` file, which you
 can use as such:
 
-[https://jttu.net/yegor256]
+https://jttu.net/yegor256
 
 This link will be redirected to (click it to try):
 
-[https://www.yegor256.com/about-me.html]
+https://www.yegor256.com/about-me.html
 
 Because this is how it's configured in the `redirects.yml`.
