@@ -18,6 +18,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+set -e
+
 self=$(dirname "$0")
 yaml=$1
 target=$2
@@ -41,7 +43,7 @@ echo "Git head SHA: ${head}"
     echo '</body></html>'
 ) > "${target}/index.html"
 
-pairs=$(yq eval '. | to_entries [] | "\(.key) \(.value)"' "${yaml}")
+pairs=$(yq '. | to_entries [] | "\(.key) \(.value)"' "${yaml}")
 echo "Theare are $(echo "${pairs}" | wc -l | xargs) pairs in ${yaml}"
 while IFS= read -r pair; do
     key=$(echo "${pair}" | cut -f1 -d' ')
