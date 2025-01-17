@@ -37,12 +37,25 @@ mkdir -p "${target}"
 head=$(git rev-parse --short HEAD)
 echo "Git head SHA: ${head}"
 cat > "${target}/index.html" <<EOT
-<html><body>
-<p>This is a static URL redirector.</p>
-<p>Sources are in GitHub, in the <a href="https://github.com/yegor256/jttu">yegor256/jttu</a> repo.</p>
-<p>SHA: <tt>${head}</tt>.</p>
-<p>Updated: <tt>$(date)</tt>.</p>
-</body></html>
+<!DOCTYPE html>
+<html lang='en-US'>
+<head>
+    <title>jttu.net</title>
+    <meta name="description"></a>
+    <style>
+        p { font-family: sans-serif; font-size: 16pt; }
+        section { margin: 1em; }
+    </style>
+</head>
+<body>
+    <section>
+        <p>This is a static URL redirector and shortener.</p>
+        <p>The sources are in GitHub, in the <a href="https://github.com/yegor256/jttu">yegor256/jttu</a> repo.</p>
+        <p>SHA: <tt>${head}</tt>.</p>
+        <p>Updated: <tt>$(date)</tt>.</p>
+    </section>
+</body>
+</html>
 EOT
 
 pairs=$(yq '. | to_entries [] | "\(.key) \(.value)"' "${yaml}")
@@ -55,15 +68,16 @@ while IFS= read -r pair; do
     <!DOCTYPE html>
     <html lang='en-US'>
     <head>
-        <meta charset='utf-8'><title>Redirecting&hellip;</title>
-        <link rel='canonical' href='${href}'>
+        <meta charset='utf-8'/>
+        <meta http-equiv='refresh' content='0; url=${href}'/>
+        <meta name="robots" content="noindex"/>
+        <link rel='canonical' href='${href}'/>
         <script>location='${href}'</script>
-        <meta http-equiv='refresh' content='0; url=${href}'>
-        <meta name="robots" content="noindex">
+        <title>Redirecting&hellip;</title>
     </head>
     <body>
-        <h1>Redirecting&hellip;</h1>
-        <a href='${href}'>Click here if you are not redirected.</a>
+        <p>Redirecting&hellip;</p>
+        <p><a href='${href}'>Click here</a> if you are not redirected.</p>
     </body>
     </html>
 EOT
