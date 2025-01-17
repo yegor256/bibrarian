@@ -20,8 +20,8 @@ Feel free to add your links.
 
 On each Git push to the `master` branch, [GitHub Actions] job starts
 `generate.sh`, a Bash script. It parses the [YAML] file,
-finds all short names and full names
-of the URLs, and generates one HTML files per each link, like
+finds all short names with their corresponding URLs,
+and then generates one HTML files per each link, like
 [this one][yegor256.html], for example.
 
 Then, the job commits all
