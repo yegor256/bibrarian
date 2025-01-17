@@ -14,3 +14,5 @@ https://www.yegor256.com/about-me.html
 Because this is how it's configured in the `redirects.yml`.
 
 Feel free to add your links.
+
+JTTU stands for the "jump to the URL."
