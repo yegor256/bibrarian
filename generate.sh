@@ -36,12 +36,13 @@ yq --version
 mkdir -p "${target}"
 head=$(git rev-parse --short HEAD)
 echo "Git head SHA: ${head}"
-(
-    echo '<html><body>'
-    echo '<p>Hello, world!</p>'
-    echo "<p>SHA: <tt>${head}</tt>.</p>"
-    echo '</body></html>'
-) > "${target}/index.html"
+cat > "${target}/index.html" <<EOT
+<html><body>
+<p>This is a static URL redirector.</p>
+<p>Sources are in GitHub, in the <a href="https://github.com/yegor256/jttu">yegor256/jttu</a> repo.</p>
+<p>SHA: <tt>${head}</tt>.</p>
+</body></html>
+EOT
 
 pairs=$(yq '. | to_entries [] | "\(.key) \(.value)"' "${yaml}")
 echo "Theare are $(echo "${pairs}" | wc -l | xargs) pairs in ${yaml}"
