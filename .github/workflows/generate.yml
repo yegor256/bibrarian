@@ -21,6 +21,9 @@ name: generate
   push:
     branches:
       - master
+concurrency:
+  group: generate-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   generate:
     runs-on: ubuntu-24.04
