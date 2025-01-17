@@ -29,10 +29,39 @@ if [ -z "${target}" ]; then
     target="${self}/gh-pages"
 fi
 
+yq --version
+
 mkdir -p "${target}"
+head=$(git rev-parse --short HEAD)
+echo "Git head SHA: ${head}"
 (
     echo '<html><body>'
     echo '<p>Hello, world!</p>'
-    echo "<p>SHA: <tt>$(git rev-parse --short HEAD)</tt>.</p>"
+    echo "<p>SHA: <tt>${head}</tt>.</p>"
     echo '</body></html>'
 ) > "${target}/index.html"
+
+pairs=$(yq eval '. | to_entries [] | "\(.key) \(.value)"' "${yaml}")
+echo "Theare are $(echo "${pairs}" | wc -l | xargs) pairs in ${yaml}"
+while IFS= read -r pair; do
+    key=$(echo "${pair}" | cut -f1 -d' ')
+    href=$(echo "${pair}" | cut -f2 -d' ')
+    file=${target}/${key}.html
+    cat > "${file}" <<EOT
+    <!DOCTYPE html>
+    <html lang='en-US'>
+    <head>
+        <meta charset='utf-8'><title>Redirecting&hellip;</title>
+        <link rel='canonical' href='${href}'>
+        <script>location='${href}'</script>
+        <meta http-equiv='refresh' content='0; url=${href}'>
+        <meta name="robots" content="noindex">
+    </head>
+    <body>
+        <h1>Redirecting&hellip;</h1>
+        <a href='${href}'>Click here if you are not redirected.</a>
+    </body>
+    </html>
+EOT
+    echo "${file} created (${href})"
+done <<< "${pairs}"
