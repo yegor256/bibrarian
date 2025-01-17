@@ -30,4 +30,9 @@ if [ -z "${target}" ]; then
 fi
 
 mkdir -p "${target}"
-echo 'hello, world!' > "${target}/index.html"
+(
+    echo '<html><body>'
+    echo '<p>Hello, world!</p>'
+    echo "<p>SHA: <tt>$(git rev-parse --short HEAD)</tt>.</p>"
+    echo '</body></html>'
+) > "${target}/index.html"
