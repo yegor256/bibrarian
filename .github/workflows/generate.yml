@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Copyright (c) 2025 Yegor Bugayenko
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -17,17 +15,20 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-self=$(dirname "$0")
-yaml=$1
-target=$2
-
-if [ -z "${yaml}" ]; then
-    yaml="${self}/redirects.yml"
-fi
-if [ -z "${target}" ]; then
-    target="${self}/gh-pages"
-fi
-
-mkdir -p "${target}"
-echo 'hello, world!' > "${target}/index.html"
+---
+name: generate
+'on':
+  push:
+    branches:
+      - master
+jobs:
+  generate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./generate.sh redirects.yml gh-pages
+      - uses: JamesIves/github-pages-deploy-action@v4.7.2
+        with:
+          branch: gh-pages
+          folder: gh-pages
+          clean: true

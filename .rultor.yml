@@ -18,4 +18,4 @@
 ---
 merge:
   script: |
-    ./generate.sh
+    ./generate.sh redirects.yml gh-pages
