@@ -15,4 +15,4 @@ Because this is how it's configured in the `redirects.yml`.
 
 Feel free to add your links.
 
-JTTU stands for the "jump to the URL."
+**JTTU** stands for the "**j**ump **t**o **t**he **U**RL."
