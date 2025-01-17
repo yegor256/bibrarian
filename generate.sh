@@ -46,8 +46,8 @@ echo "Git head SHA: ${head}"
 pairs=$(yq '. | to_entries [] | "\(.key) \(.value)"' "${yaml}")
 echo "Theare are $(echo "${pairs}" | wc -l | xargs) pairs in ${yaml}"
 while IFS= read -r pair; do
-    key=$(echo "${pair}" | cut -f1 -d' ')
-    href=$(echo "${pair}" | cut -f2 -d' ')
+    key=$(echo "${pair}" | cut -f1 -d' ' | tr -d '"')
+    href=$(echo "${pair}" | cut -f2 -d' ' | tr -d '"')
     file=${target}/${key}.html
     cat > "${file}" <<EOT
     <!DOCTYPE html>
