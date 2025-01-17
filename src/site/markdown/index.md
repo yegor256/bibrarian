@@ -1,3 +1,0 @@
-# bibrarian.com
-
-to be continued...
