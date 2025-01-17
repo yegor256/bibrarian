@@ -41,6 +41,7 @@ cat > "${target}/index.html" <<EOT
 <p>This is a static URL redirector.</p>
 <p>Sources are in GitHub, in the <a href="https://github.com/yegor256/jttu">yegor256/jttu</a> repo.</p>
 <p>SHA: <tt>${head}</tt>.</p>
+<p>Updated: <tt>$(date)</tt>.</p>
 </body></html>
 EOT
 
