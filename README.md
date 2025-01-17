@@ -1,3 +1,7 @@
+# Static URL Shortener
+
+[![generate](https://github.com/yegor256/bibrarian/actions/workflows/generate.yml/badge.svg)](https://github.com/yegor256/bibrarian/actions/workflows/generate.yml)
+
 There are a few URLs in the `redirects.yml` file, which you
 can use as such:
 
