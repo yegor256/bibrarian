@@ -51,6 +51,7 @@ cat > "${target}/index.html" <<EOT
     <section>
         <p>This is a static URL redirector and shortener.</p>
         <p>The sources are in GitHub, in the <a href="https://github.com/yegor256/jttu">yegor256/jttu</a> repo.</p>
+        <p>URLs total: $(yq '. | to_entries [] | "1"' "${yaml}" | wc -l | xargs).</p>
         <p>SHA: <tt>${head}</tt>.</p>
         <p>Updated: <tt>$(date)</tt>.</p>
     </section>
