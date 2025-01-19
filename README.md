@@ -21,11 +21,11 @@ Feel free to add your links.
 On each Git push to the `master` branch, [GitHub Actions] job starts
 `generate.sh`, a Bash script. It parses the [YAML] file,
 finds all short names with their corresponding URLs,
-and then generates one HTML files per each link, like
+and then generates one HTML file per each link, like
 [this one][yegor256.html], for example.
 
 Then, the job commits all
-generated HTML files to the `gh-pages` branch of this repository.
+generated HTML files to the [`gh-pages`][gh-pages] branch of this repository.
 
 Once new files arrive to the branch, [GitHub Pages] server picks them
 up and makes them available at the [jttu.net](https://www.jttu.net)
@@ -37,3 +37,4 @@ by the `generate.sh`.
 [yegor256.html]: https://github.com/yegor256/jttu/blob/gh-pages/yegor256.html
 [GitHub Actions]: https://github.com/features/actions
 [GitHub Pages]: https://pages.github.com/
+[gh-pages]: https://github.com/yegor256/jttu/tree/gh-pages
