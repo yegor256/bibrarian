@@ -1,6 +1,7 @@
 # Static URL Shortener
 
 [![generate](https://github.com/yegor256/jttu/actions/workflows/generate.yml/badge.svg)](https://github.com/yegor256/jttu/actions/workflows/generate.yml)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/jttu/blob/master/LICENSE.txt)
 
 There are a few URLs in the [`redirects.yml`][YAML] file, which you
 can use as such:
