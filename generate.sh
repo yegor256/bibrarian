@@ -31,9 +31,11 @@ if [ -z "${target}" ]; then
     target="${self}/gh-pages"
 fi
 
+rm -rf "${target}"
+mkdir -p "${target}"
+
 yq --version
 
-mkdir -p "${target}"
 head=$(git rev-parse --short HEAD)
 echo "Git head SHA: ${head}"
 cat > "${target}/index.html" <<EOT
@@ -60,11 +62,15 @@ cat > "${target}/index.html" <<EOT
 EOT
 
 pairs=$(yq '. | to_entries [] | "\(.key) \(.value)"' "${yaml}")
-echo "Theare are $(echo "${pairs}" | wc -l | xargs) pairs in ${yaml}"
+echo "There are $(echo "${pairs}" | wc -l | xargs) pairs in ${yaml}"
 while IFS= read -r pair; do
     key=$(echo "${pair}" | cut -f1 -d' ' | tr -d '"')
     href=$(echo "${pair}" | cut -f2 -d' ' | tr -d '"')
     file=${target}/${key}.html
+    if [ -e "${file}" ]; then
+        echo "There is a duplicate in the YAML: ${key}"
+        exit 1
+    fi
     cat > "${file}" <<EOT
     <!DOCTYPE html>
     <html lang='en-US'>
