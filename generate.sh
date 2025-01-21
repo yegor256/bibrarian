@@ -42,14 +42,20 @@ cat > "${target}/index.html" <<EOT
 <!DOCTYPE html>
 <html lang='en-US'>
 <head>
+    <meta charset='UTF-8' />
+    <meta content='width=device-width, initial-scale=1.0' name='viewport' />
+    <meta content='URL shortener, URL redirector' name='keywords' />
+    <meta content='Jump To The URL' name='description' />
     <title>jttu.net</title>
-    <meta name="description"></a>
     <style>
-        p { font-family: sans-serif; font-size: 16pt; }
-        section { margin: 1em; }
+        section { font-family: sans-serif; font-size: 12pt; text-align: center; }
+        .outer { display:table; height:100%; left:0; position:absolute; top:0; width:100%; }
+        .outer > div { display:table-cell; vertical-align:middle; }
+        .outer > div > div { margin-left:auto; margin-right:auto; max-width:40em; }
     </style>
 </head>
 <body>
+    <div class='outer'><div><div>
     <section>
         <p>This is a static URL redirector and shortener.</p>
         <p>The sources are in GitHub, in the <a href="https://github.com/yegor256/jttu">yegor256/jttu</a> repo.</p>
