@@ -62,7 +62,7 @@ cat > "${target}/index.html" <<EOT
         <p>URLs total: $(yq '. | to_entries [] | "1"' "${yaml}" | wc -l | xargs).</p>
         <p>SHA: <tt>${head}</tt>.</p>
         <p>Updated: <tt>$(date)</tt>.</p>
-    </section>
+    </section></div></div></div>
 </body>
 </html>
 EOT
