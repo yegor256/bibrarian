@@ -17,20 +17,34 @@
 # SOFTWARE.
 ---
 # yamllint disable rule:line-length
-yegor256: https://www.yegor256.com/about-me.html
-redis2024rsal: https://www.reddit.com/r/selfhosted/comments/1bkhky1/
-elastic2021sspl: https://www.theregister.com/2021/01/18/elastics_doubling_down_on_open/
-mongo2018sspl: https://techcrunch.com/2018/10/16/mongodb-switches-up-its-open-source-license/
-balter2014rules: https://ben.balter.com/2014/11/06/rules-of-communicating-at-github/
-fowler2024ci: https://martinfowler.com/articles/continuousIntegration.html
-west2004object: https://amzn.to/266oJr4
-rita2009pmp: https://amzn.to/266pAYB
-myers2012art: https://amzn.to/1Y3qAbN
 arguelles2020: https://testing.googleblog.com/2020/08/code-coverage-best-practices.html
-social2017: https://www.thoughtworks.com/en-de/radar/techniques/social-code-analysis
 astels2004one: https://www.artima.com/weblogs/viewpost.jsp?thread=35578
+balter2014rules: https://ben.balter.com/2014/11/06/rules-of-communicating-at-github/
+batilo2022ways: https://www.sliceofexperiments.com/p/the-4-ways-to-run-your-unit-tests
 beck2018tcr: https://medium.com/@kentbeck_7670/test-commit-revert-870bbd756864
 bugayenko2018blame: https://cacm.acm.org/blogcacm/blame-free-quality-control/
-holub2003why: https://www.infoworld.com/article/2161183/why-getter-and-setter-methods-are-evil.html
+comartin2021: https://codeopinion.com/write-stable-code-using-coupling-metrics/
+deursen2014: https://avandeursen.com/2014/08/29/think-twice-before-using-the-maintainability-index/
+elastic2021sspl: https://www.theregister.com/2021/01/18/elastics_doubling_down_on_open/
+fowler2024ci: https://martinfowler.com/articles/continuousIntegration.html
+github2015licenses: https://github.blog/2015-03-09-open-source-license-usage-on-github-com/
+goode2014: https://engineering.fb.com/2014/01/07/core-infra/scaling-mercurial-at-facebook/
 holub2003extends: https://www.infoworld.com/article/2073649/why-extends-is-evil.html
+holub2003why: https://www.infoworld.com/article/2161183/why-getter-and-setter-methods-are-evil.html
+holub2004more: https://www.infoworld.com/article/2072302/more-on-getters-and-setters.html
+micco2016: https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html
+mongo2018sspl: https://techcrunch.com/2018/10/16/mongodb-switches-up-its-open-source-license/
+myers2012art: https://amzn.to/1Y3qAbN
+redis2024rsal: https://www.reddit.com/r/selfhosted/comments/1bkhky1/
+rita2009pmp: https://amzn.to/266pAYB
+social2017: https://www.thoughtworks.com/en-de/radar/techniques/social-code-analysis
+spertus2021: https://stackoverflow.blog/2021/12/23/best-practices-for-writing-code-comments/
 spolsky2000bugs: https://www.joelonsoftware.com/2000/11/08/painless-bug-tracking/
+west2004object: https://amzn.to/266oJr4
+yegor256: https://www.yegor256.com/about-me.html
+
+votruba2017: https://tomasvotruba.com/blog/2017/01/31/how-monolithic-repository-in-open-source-saved-my-laziness
+shelly2015flaws: https://software.intel.com/en-us/blogs/2008/08/22/flaws-of-object-oriented-modeling/
+pescio2011your: http://www.carlopescio.com/2011/04/your-coding-conventions-are-hurting-you.html
+hoare2009null: https://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare/
+android2024: https://stuff.mit.edu/afs/sipb/project/android/docs/training/articles/perf-tips.html
